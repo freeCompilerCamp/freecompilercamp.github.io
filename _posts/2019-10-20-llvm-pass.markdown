@@ -1,0 +1,272 @@
+---
+layout: post
+title:  "Writing an LLVM Pass"
+author: "@alokmishra.besu"
+date:   2019-10-20
+categories: beginner
+tags: [llvm,pass,functionpass]
+---
+
+### **Tips:**
+
+Code snippets are shown in one of three ways throughout this environment:
+
+1. Code that looks like `this` is sample code snippets that is usually part of an explanation.
+2. Code that appears in box like the one below can be clicked on and it will automatically be typed in to the appropriate terminal window:
+```.term1
+vim readme.txt
+```
+
+3. Code appearing in windows like the one below is code that you should type in yourself. Usually there will be a unique ID or other bit your need to enter which we cannot supply. Items appearing in <> are the pieces you should substitute based on the instructions.
+```
+Add your name here - <name>
+```
+
+## **Features**
+The LLVM Pass Framework is an important part of the LLVM system, because LLVM passes are where most of the interesting parts of the compiler exist. 
+Passes perform the transformations and optimizations that make up the compiler, they build the analysis results that are used by these transformations, and they are, above all, a structuring technique for compiler code.
+
+All LLVM passes are subclasses of the [Pass](http://llvm.org/doxygen/classllvm_1_1Pass.html) class, which implement functionality by overriding virtual methods inherited from Pass. 
+Depending on how our pass works, we should inherit from the ModulePass , CallGraphSCCPass, FunctionPass , or LoopPass, or RegionPass, or BasicBlockPass classes, which gives the system more information about what our pass does, and how it can be combined with other passes. 
+One of the main features of the LLVM Pass Framework is that it schedules passes to run in an efficient way based on the constraints that our pass meets (which are indicated by which class they derive from).
+
+We start by showing we how to construct a pass, everything from setting up the code, to compiling, loading, and executing it.
+
+## **A. LLVM Pass**
+Here we describe how to write a basic LLVM Pass.
+In this tutorial we will be writing a pass which is designed to print out the names of all functions and the functions referred to by these functions.
+
+### **A.1 Where to write the Pass**
+The safest location to write an LLVM Pass is in the LLVM source tree. 
+We will write our pass in the location $LLVM_SRC/lib/Transform.
+Let us go to that directory.
+```.term1
+cd $LLVM_SRC/lib/Transforms
+```
+Now let us create our project directory by the name FunctionsNames and get into it.
+```.term1
+mkdir FunctionsNames
+cd FunctionsNames
+```
+
+### **A.2 Setting up the build environment**
+We must set up a build script that will compile the source code for the new pass. 
+To do this create the file CMakeLists.txt as follows:
+```.term1
+cat <<EOF > CMakeLists.txt
+add_llvm_library( LLVMFunctionsNames MODULE
+  FunctionsNames.cpp
+
+  PLUGIN_TOOL
+  opt
+  )
+EOF
+```
+Also append the following line into CMakeLists.txt of the parent directory
+```.term1
+echo "add_subdirectory(FunctionsNames)" >> ../CMakeLists.txt
+```
+
+This build script specifies that FunctionsNames.cpp file in the current directory is to be compiled and linked into a shared object $(LEVEL)/lib/LLVMFunctionsNames.so that can be dynamically loaded by the `opt` tool via its *-load *option. 
+If our operating system uses a suffix other than .so (such as Windows or macOS), the appropriate extension will be used.
+
+Now that we have the build scripts set up, we just need to write the code for the pass itself.
+
+### **A.3 Basic code required**
+Now that we have a way to compile our new pass, we just have to write it. 
+Lets open the file
+```.term1
+vim FunctionsNames.cpp
+```
+and start out with:
+```
+#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Support/raw_ostream.h"
+
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Transforms/IPO/PassManagerBuilder.h"
+#include "llvm/IR/CallSite.h"
+```
+Let us use the namespace *llvm* as most of the functions we will use from the include files live in the llvm namespace.
+```
+using namespace llvm;
+```
+Next we should start out an anonymous namespace. 
+Anonymous namespaces are to C++ what the “static” keyword is to C (at global scope). 
+It makes the things declared inside of the anonymous namespace visible only to the current file. 
+```
+namespace {
+```
+Next we start writing our Pass.
+Let us name our pass as FunctionsNames.
+We will be operating on every function, so we can extend our pass as the FunctionPass.
+```
+  class FunctionsNames : public FunctionPass {
+```
+Next (as public) we declared the pass identifier for our pass and a constructor function instantiating the parent function with this identifier.
+```
+  public:
+    static char ID;
+    FunctionsNames() : FunctionPass(ID) {}
+```
+Next we write the logic of our Pass in the runOnFunction method, which overrides an abstract virtual method inherited from FunctionPass. 
+```
+    bool runOnFunction(Function &F) override {
+      // Print name of function
+      errs() << "*";
+      errs().write_escaped(F.getName()) << '\n'; 
+
+      for (auto& B : F) {    // Iterate over each Basic Blocks in Functions
+        for (auto& I : B) {  // Iterate over each Instructions in Basic Blocks
+          // Dynamically cast Instruction to CallInst. 
+          // This step will return false for any instruction which is 
+          // not a CallInst
+          if(CallInst *CI = dyn_cast<CallInst>(&I)) {
+            // Print out the function name
+            errs() << " |-" << CI->getCalledFunction()->getName() << "\n";
+          }
+        }
+      }
+      return false;
+    }
+```
+
+Once we have written all required methods, we end our class and the anonymous namespace
+```
+  }; // End of class name FunctionsNames
+} // End of anonymous namespace
+```
+Next we initialize pass ID here. 
+LLVM uses ID’s address to identify a pass, so initialization value is not important.
+```
+char FunctionsNames::ID = 0;
+```
+Lastly, we register our class `FunctionsNames`, giving it a command line argument "func-name", and a description "Display Function Names". 
+The last two arguments describe its behavior: 
+* if a pass walks CFG without modifying it then the third argument is set to true; 
+* if a pass is an analysis pass, for example dominator tree pass, then true is supplied as the fourth argument.
+
+```
+static RegisterPass<FunctionsNames> X("func-names", "Display Function Names",
+    false /* Only looks at CFG */,
+    false /* Analysis Pass */);
+```
+
+If we want to register the pass as a step of an existing pipeline, some extension points are provided, e.g. PassManagerBuilder::EP_EarlyAsPossible to apply our pass before any optimization, or PassManagerBuilder::EP_FullLinkTimeOptimizationLast to apply it after Link Time Optimizations.
+```
+static RegisterStandardPasses Y(
+    PassManagerBuilder::EP_EarlyAsPossible,
+    [](const PassManagerBuilder &Builder,
+      legacy::PassManagerBase &PM) { PM.add(new FunctionsNames()); });
+```
+
+That's it.
+The complete code should look like
+```
+#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Support/raw_ostream.h"
+
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Transforms/IPO/PassManagerBuilder.h"
+#include "llvm/IR/CallSite.h"
+//#include "llvm/IR/Instruction.h"
+
+using namespace llvm;
+
+namespace {
+  //struct FunctionsNames : public FunctionPass {
+  class FunctionsNames : public FunctionPass {
+  public:
+    static char ID;
+    FunctionsNames() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &F) override {
+      // Print name of function
+      errs() << "*";
+      errs().write_escaped(F.getName()) << '\n'; 
+
+      for (auto& B : F) {    // Iterate over each Basic Blocks in Functions
+        for (auto& I : B) {  // Iterate over each Instructions in Basic Blocks
+          // Dynamically cast Instruction to CallInst. 
+          // This step will return false for any instruction which is 
+          // not a CallInst
+          if(CallInst *CI = dyn_cast<CallInst>(&I)) {
+            // Print out the function name
+            errs() << " |-" << CI->getCalledFunction()->getName() << "\n";
+          }
+        }
+      }
+      return false;
+    }
+  }; // end of struct FunctionsNames
+}  // end of anonymous namespace
+
+char FunctionsNames::ID = 0;
+static RegisterPass<FunctionsNames> X("func-names", "Display Function Names",
+    false /* Only looks at CFG */,
+    false /* Analysis Pass */);
+
+static RegisterStandardPasses Y(
+    PassManagerBuilder::EP_EarlyAsPossible,
+    [](const PassManagerBuilder &Builder,
+      legacy::PassManagerBase &PM) { PM.add(new FunctionsNames()); });
+```
+
+### **A4. Building the pass**
+Now that it's all together, compile the file with a simple "make" command from our build directory and we should get a new file “lib/LLVMFunctionsNames.so". 
+```.term1
+cd $LLVM_BUILD
+make -j8
+```
+Note that everything in this file is contained in an anonymous namespace — this reflects the fact that passes are self contained units that do not need external interfaces (although they can have them) to be useful.
+
+### **A5. Running a pass with opt**
+Now that we have a brand new shiny shared object file, we can use the `opt` command to run an LLVM program through our pass.
+The [opt](https://llvm.org/docs/CommandGuide/opt.html) command is the modular LLVM optimizer and analyzer. It takes LLVM source files as input, runs the specified optimizations or analyses on it, and then outputs the optimized file or the analysis results. Because we registered our pass with RegisterPass, we will be able to use the opt tool to access it, once loaded.
+
+Let us create an example test code.
+```.term1
+cat <<EOF > test.c
+#include <stdio.h>
+
+void func1() {
+  printf("Called from func1\n");
+}
+
+void func2() {
+  printf("Calling func1 from func2\n");
+  func1();
+}
+
+int main()
+{
+  func1();
+  func2();
+  printf("End of main\n");
+  return 0;
+}
+EOF
+```
+Now we will compile this test code to extract its bitcode. 
+More information on how to do this can be found in our tutorial [Clang -- Basics of compilation](http://www.freecompilercamp.org/clang-basics).
+```.term1
+clang -emit-llvm -c test.c
+```
+We can now run the bitcode file (hello.bc) for the program through our transformation like this (or course, any bitcode file will work):
+```.term1
+opt -disable-output  -load lib/LLVMFunctionsNames.so -func-names < test.bc
+```
+You should get the following output
+```
+*func1
+ |-printf
+*func2
+ |-printf
+ |-func1
+*main
+ |-func1
+ |-func2
+ |-printf
+```

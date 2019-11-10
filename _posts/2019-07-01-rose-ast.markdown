@@ -1,0 +1,140 @@
+---
+layout: post
+title:  "AST - Get Familiar with ROSE AST"
+author: "@chunhualiao"
+date:   2019-08-09
+categories: beginner
+tags: [rose,ast]
+---
+
+# Tips:
+
+Code snippets are shown in one of three ways throughout this environment:
+
+1. Code that looks like `this` is sample code snippets that is usually part of an explanation.
+2. Code that appears in box like the one below can be clicked on and it will automatically be typed in to the appropriate terminal window:
+```.term1
+vim readme.txt
+```
+
+3. Code appearing in windows like the one below is code that you should type in yourself. Usually there will be a unique ID or other bit your need to enter which we cannot supply. Items appearing in <> are the pieces you should substitute based on the instructions.
+```
+Add your name here - <name>
+```
+
+## Features
+This is a tutorial to use a few tools to visualize AST
+
+---
+
+# A. Overview
+
+The goal of this tutorial is to learn how to use a few pre-built tools of ROSE to generate dot graphs of AST.
+AST stands for Abstract Syntax Tree, which is the internal tree representation of an input source code. 
+Getting familiar with AST is the first step to develop program analysis and translation tools operating on AST.
+
+# B. Build/Install AST Tools
+Build the pdf generator
+```.term1
+make -C $ROSE_BUILD/exampleTranslators/PDFGenerator install
+```
+
+Build and install the dot graph generators
+```.term1
+make -C $ROSE_BUILD/exampleTranslators/DOTGenerator install
+```
+
+# C. Obtain Example Input Codes
+
+Clone the rose-ast git repo
+```.term1
+git clone https://github.com/chunhualiao/rose-ast.git
+```
+Enter rose-ast
+```.term1
+cd rose-ast
+```
+Change a script which sets the environment variables for using ROSE
+```.term1
+vim set.rose
+```
+
+Please replace ROSE_INS's value to be /opt/install/rose_install
+
+Finally, source it to set the environment variables. 
+```.term1
+source ./set.rose
+```
+
+Test if rose-compiler is in your path
+```.term1
+which rose-compiler
+```
+
+The command line above should generate an output like
+```
+/opt/install/rose_install/bin/rose-compiler
+```
+
+# D. Generate a simple dot graph for an input file
+rose-ast already stores dot graphs and their pdf and png versions for a set of C/CPP/Fortran files. 
+You can browse these files.
+
+Alternatively, you can clean up everything and generate a dot graph by yourself.
+
+
+Clean up all previously generated dot files.
+```.term1
+make distclean
+```
+
+Generate a simple dot graph for func1.c
+```.term1
+dotGenerator -c func1.c
+```
+
+Check the generated dot file
+```.term1
+ls func1.c.dot
+```
+
+# E. Generate a whole dot graph for an input file
+A whole AST dot graph contains more information related to symbol tables, types, etc. 
+
+Generate a whole dot graph for func1.c
+```.term1
+dotGeneratorWholeASTGraph -c func1.c
+```
+
+Check the generated whole ast dot file
+```.term1
+ls func1.c_WholeAST.dot
+```
+
+
+# F. Generator a pdf output of AST
+Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files. 
+
+Generate a pdf output for class.cpp
+```.term1
+pdfGenerator -c class.cpp
+```
+
+Check the generated pdf file
+```.term1
+ls class.cpp.pdf
+```
+
+# G. Rebuild all dot graphs
+
+There is a makefile within rose-ast. You can use it to rebuild all the files.
+
+Rebuild all dot files
+```.term1
+make all
+```
+
+# References
+
+For more information about AST visualization, please check
+* https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/How_to_visualize_AST
