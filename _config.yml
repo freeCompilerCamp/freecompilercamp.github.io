@@ -9,10 +9,10 @@
 title: "Free Compiler Camp Classroom"
 email: 
 description: > # this means to ignore newlines until "baseurl:"
-  Play with docker tutorials
+  Play with Compilers tutorials
   
 baseurl: # the subpath of your site, e.g. /blog
-url: "http://classroom.freecompilercamp.org" # the base hostname & protocol for your site
+url: "http://freecompilercamp.org" # the base hostname & protocol for your site
 
 #sidebar
 default-image: docker-logo.svg # If there is no featured image in a post then this image will be showed. Also on all pages this image will be showed. Use a 500x250 image.
@@ -34,16 +34,16 @@ analytics: UA-89019737-1
 
 
 #social
-facebook: https://www.facebook.com/docker.run
-twitter: https://twitter.com/docker
-github: https://www.github.com/play-with-docker/play-with-docker.github.io
-twitter_username: docker
-youtube: https://youtube.com/docker.run
+#facebook: https://www.facebook.com/docker.run
+#twitter: https://twitter.com/docker
+github: https://github.com/freeCompilerCamp/play-with-compiler
+#twitter_username: docker
+#youtube: https://youtube.com/docker.run
 
 #facebook like box
-fb-app-id: 549480635219583
-fb-page-url: https://www.facebook.com/docker.run/
-fb-page-title: Docker
+#fb-app-id: 549480635219583
+#fb-page-url: https://www.facebook.com/docker.run/
+#fb-page-title: Docker
 
 # Sass style
 sass:
