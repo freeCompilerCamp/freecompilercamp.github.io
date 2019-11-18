@@ -1,15 +1,62 @@
-## Contributing to Tutorials ##
+Adding a tutorial involves two web pages.
+* One is a newly created tutorial page written in Markdown.  
+* The other is the landing page also written in Markdown, in which you need to add a link to the page of the new tutorial.
+  * For Clang/LLVM tutorials, the landing page is ./compiler-classroom/_posts/2019-11-06-clang-llvm-landing.markdown
+  * For ROSE tutorials, the landing page is ./compiler-classroom/_posts/2019-11-06-rose-landing.markdown
 
-Thank you so much for your interest in contributing to [Play with Docker](http://play-with-docker.com) tutorials. Docker has open source in its DNA, and has always worked closely with the community.
+After editing these two files, you can start a pull request. The main website has a cron job to automatically update itself based on changes to this repo's master branch.
 
-Just a few quick things to be aware of before you get started.
+### Tutorial Page
+Take the autoPar tutorial as an example.
+https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-07-01-rose-autopar.markdown
 
-We welcome issues and pull requests for either adding a new tutorial, or fixing a problem with an existing tutorial. This is a repository for tutorials that use Docker based projects as much as possible. So if there’s a Docker tool for what you’re describing, please use that.
+You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```freeCompilerCamp/compiler-classroom/_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later. 
 
-Anything you contribute will be under an Apache license. Docker will choose which tutorials to accept and reject, and will be able to take any tutorials here and put them in Docker documentation. Likewise, anything posted here may be forked by anyone on GitHub.
+#### 1. Update headers
 
-We will be following the lightweight version of the Docker contribution policies and procedures as explained in
-- [Docker documentation](https://docs.docker.com)
-- The [Docker engine repo](https://github.com/moby/moby/blob/master/CONTRIBUTING.md).
+Add title, author, date and so on.
 
-This largely boils down to [signing your PRs](https://github.com/moby/moby/blob/master/CONTRIBUTING.md#sign-your-work), following the Docker [trademark guidelines](https://www.docker.com/trademark-guidelines), and following the community guidelines.
+#### 2. Add content
+
+Write freely in Markdown. 
+
+Some special syntax: 
+* For the code only for browsing, use a pair of triple backticks \`\`\` to include them.
+* For the code clickable and executed in the sandbox, use ```.term1``` as code snippet type.
+
+For example,  in the following example, ```echo HELLO``` contained in ```.term1``` code snippet will print ``HELLO`` in the sandbox terminal.
+
+There are some built-in environment variables to faciliate the creation of command lines:
+* For ROSE: $ROSE_BUILD, 
+* For Clang/LLVM: $LLVM_PATH, $LLVM_BUILD, $LLVM_SRC
+
+Sometimes you want to insert a figure into your tutorial. You need to 
+* First create the figure and save it into a png file
+* Upload the png file to top_dir/compiler-classroom/images
+* Inside of your tutorial, add a link to the figure: 
+```
+![Your wonderful figure caption here](/images/your_figure_name.png)
+```
+
+#### 3. Update sandbox docker image (optionally)
+
+Currently in the sandbox terminal, basic development tools have been installed, such as ```gcc```, ```rose```, ```llvm``` and ```vim```. If any other tool is required for your tutorials, you can either ask the visitors to install them as part of your tutorials. Or you can add them in the docker image.
+
+To customize the sandbox, please check [Deploy FreeCC to AWS](https://github.com/chunhualiao/freeCompilerCamp/wiki/Deploy-FreeCC-to-AWS).
+
+## Landing Pages
+
+Again, we have two landing pages
+* One for Clang/LLVM tutorials: https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-11-06-clang-llvm-landing.markdown
+* The other for ROSE tutorials: https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-11-06-rose-landing.markdown
+
+For example, to add a new tutorial for ROSE, go to the ROSE's landing page and insert a link to your tutorial page. The targeted link is the file name mentioned above without date and extension. For example, the address to ```2019-07-01-rose-autopar.markdown``` is ```/rose-autopar```. A proper title should be provided as well.
+
+The modified section is shown as follows.
+```markdown
+[Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)
+  * This is a tool which can automatically insert OpenMP pragmas into input serial C/C++ codes.
+
+[Fixing a Bug in OpenMP Implementation](/rose-fix-bug-in-omp)
+  * This tutorial is to show how to fix OpenMP implementation bugs in ROSE compiler.
+```
