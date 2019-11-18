@@ -10,6 +10,10 @@ While this platform can be used to host any compiler tutorials, we specially col
 * play-with-compiler: the online sandbox based on play-with-docker, the content of this repo
   * Hosted at https://github.com/freeCompilerCamp/play-with-compiler
   
+# Contributing to Tutorials
+
+See instructions at https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/contribute.md
+
 # Installation
 You can install your own instance of this website. Please follow instructions at 
 * https://github.com/chunhualiao/freeCompilerCamp/wiki/Deploy-FreeCC-to-AWS
