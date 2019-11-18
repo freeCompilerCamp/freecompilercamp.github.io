@@ -1,16 +1,16 @@
 Adding a tutorial involves two web pages.
 * One is a newly created tutorial page written in Markdown.  
 * The other is the landing page also written in Markdown, in which you need to add a link to the page of the new tutorial.
-  * For Clang/LLVM tutorials, the landing page is ./compiler-classroom/_posts/2019-11-06-clang-llvm-landing.markdown
-  * For ROSE tutorials, the landing page is ./compiler-classroom/_posts/2019-11-06-rose-landing.markdown
+  * For Clang/LLVM tutorials, the landing page is ./_posts/2019-11-06-clang-llvm-landing.markdown
+  * For ROSE tutorials, the landing page is ./_posts/2019-11-06-rose-landing.markdown
 
 After editing these two files, you can start a pull request. The main website has a cron job to automatically update itself based on changes to this repo's master branch.
 
 ### Tutorial Page
 Take the autoPar tutorial as an example.
-https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-07-01-rose-autopar.markdown
+https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-07-01-rose-autopar.markdown
 
-You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```freeCompilerCamp/compiler-classroom/_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later. 
+You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```./_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later. 
 
 #### 1. Update headers
 
@@ -47,8 +47,8 @@ To customize the sandbox, please check [Deploy FreeCC to AWS](https://github.com
 ## Landing Pages
 
 Again, we have two landing pages
-* One for Clang/LLVM tutorials: https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-11-06-clang-llvm-landing.markdown
-* The other for ROSE tutorials: https://github.com/chunhualiao/freeCompilerCamp/blob/master/compiler-classroom/_posts/2019-11-06-rose-landing.markdown
+* One for Clang/LLVM tutorials: https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-11-06-clang-llvm-landing.markdown
+* The other for ROSE tutorials: https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-11-06-rose-landing.markdown
 
 For example, to add a new tutorial for ROSE, go to the ROSE's landing page and insert a link to your tutorial page. The targeted link is the file name mentioned above without date and extension. For example, the address to ```2019-07-01-rose-autopar.markdown``` is ```/rose-autopar```. A proper title should be provided as well.
 
