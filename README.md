@@ -4,10 +4,10 @@
 While this platform can be used to host any compiler tutorials, we specially collect some tutorials for OpenMP compilers. We have created some initial tutorials to train users to learn how to use the ROSE or Clang/LLVM compiler to support OpenMP.
 
 # Project Layout
-* compiler-classroom: the website's text content, hosted using gitpages (this repo).
+* compiler-classroom: the website's text content, hosted using gitpages (using this repo).
   * index.html  : the home page of the webpage
   * _posts  : a directory contains the markdown files for individual tutorials
-* play-with-compiler: the online sandbox based on play-with-docker, the content of this repo
+* play-with-compiler: the online sandbox based on play-with-docker
   * Hosted at https://github.com/freeCompilerCamp/play-with-compiler
   
 # Contributing to Tutorials
