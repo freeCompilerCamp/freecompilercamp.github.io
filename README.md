@@ -21,7 +21,9 @@ You can install your own instance of this website. Please follow instructions at
 # Contact Us
 This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344, and partially supported by the U.S. Dept. of Energy, Office of Science, ASCR SC-21), under contract DE-AC02-06CH11357. 
 
-This website is still under development (LLNL-WEB-789932). For questions and comments, please file issue tickets to this git repo. Alternatively, you can contact liao6@llnl.gov .
+This website is still under development (LLNL-WEB-789932). For questions and comments, please 
+* file issue tickets to https://github.com/chunhualiao/freeCompilerCamp/issues  
+* Alternatively, you can contact liao6@llnl.gov .
 
 # Publication
 List
