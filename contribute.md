@@ -4,7 +4,7 @@ Adding a tutorial involves two web pages.
   * For Clang/LLVM tutorials, the landing page is ./_posts/2019-11-06-clang-llvm-landing.markdown
   * For ROSE tutorials, the landing page is ./_posts/2019-11-06-rose-landing.markdown
 
-After editing these two files, you can start a pull request. The main website has a cron job to automatically update itself based on changes to this repo's master branch.
+After editing these two files, you can start a pull request. The changes will be made effective once the request is merged, using this Github Pages repo.
 
 ### Tutorial Page
 Take the autoPar tutorial as an example.
