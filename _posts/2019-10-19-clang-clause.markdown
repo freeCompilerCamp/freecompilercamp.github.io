@@ -444,6 +444,7 @@ Now you have a new test file `alloc2.c` which uses the `allocate` directive. The
 ```
 int main()
 {
+    int *A;
 #pragma omp allocate(A)
     return 0;
 }
