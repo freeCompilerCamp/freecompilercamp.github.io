@@ -194,7 +194,7 @@ EOF
 ```
 
 ```.term1
-echo add_clang_subdirectory(FindClassDecls) >> ../CMakeLists.txt
+echo "add_clang_subdirectory(FindClassDecls)" >> ../CMakeLists.txt
 ```
 
 ```.term1
