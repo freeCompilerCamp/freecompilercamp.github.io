@@ -176,7 +176,7 @@ Adding CMakefile
 cat << EOF > CMakeLists.txt
 set (LLVM_LINK_COMPONENTS Support)
 
-add_clang_tool(find-class-decls FindClassDecls.cpp_
+add_clang_tool(find-class-decls FindClassDecls.cpp)
 
 target_link_libraries(find-class-decls
   PRIVATE
@@ -187,10 +187,14 @@ target_link_libraries(find-class-decls
   clangRewriteFrontend
   clangSerialization
   clangTooling
-  }
+  )
 
 install(TARGETS find-class-decls RUNTIME DESTINATION bin)
 EOF
+```
+
+```.term1
+echo add_clang_subdirectory(FindClassDecls) >> ../CMakeLists.txt
 ```
 
 ```.term1
