@@ -31,6 +31,9 @@ Give Clang/LLVM a try with the following tutorials:
 [Clang -- Basics of compilation](/clang-basics)
   * This is a short introduction to the basics of compilation using Clang.
 
+[Clang -- Basics of AST manipulation](/clang-AST-basics)
+  * This is a short introduction to the basics of Clang traversal.
+
 [Adding a New Directive in OpenMP](/clang-new-directive)
   * In this tutorial we will cover how to add a token for a new OpenMP directive in Clang/LLVM compiler.
 
