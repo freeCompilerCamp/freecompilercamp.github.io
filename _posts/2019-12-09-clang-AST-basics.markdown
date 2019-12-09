@@ -164,9 +164,32 @@ public:
 
 int main(int argc, char **argv) {
   if (argc > 1) {
-    clang::tooling::runToolOnCode(std::make_unique<FindNamedClassAction>(), argv[1]);
+    FindNamedClassAction *FNC = new FindNamedClassAction();
+    clang::tooling::runToolOnCode(FNC, argv[1]);
   }
 }
+EOF
+```
+
+Adding CMakefile
+```.term1
+cat << EOF > CMakeLists.txt
+set (LLVM_LINK_COMPONENTS Support)
+
+add_clang_tool(find-class-decls FindClassDecls.cpp_
+
+target_link_libraries(find-class-decls
+  PRIVATE
+  clangAST
+  clangBasic
+  clangDriver
+  clangFrontend
+  clangRewriteFrontend
+  clangSerialization
+  clangTooling
+  }
+
+install(TARGETS find-class-decls RUNTIME DESTINATION bin)
 EOF
 ```
 
