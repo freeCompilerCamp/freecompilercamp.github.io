@@ -28,4 +28,4 @@ This website is still under development (LLNL-WEB-789932). For questions and com
 # Publication
 List
 * Anjia Wang, Alok Mishra, Chunhua Liao, Yonghong Yan, Barbara Chapman, FreeCompilerCamp.org: Training for OpenMP Compiler Development from Cloud, Sixth SC Workshop on Best Practices for HPC Training and Education: BPHTE19, 2019 [pdf](https://www.osti.gov/servlets/purl/1578246)
-* Alok Mishra, Anjia Wang, Chunhua Liao, Yonghong Yan, Barbara Chapman, FreeCompilerCamp: Online Training for Extending Compilers, SC'19 Research Poster submission, accepted (also selected as a Best Poster nominee, 5 out of 106 submissions).
+* Alok Mishra, Anjia Wang, Chunhua Liao, Yonghong Yan, Barbara Chapman, FreeCompilerCamp: Online Training for Extending Compilers, SC'19 Research Poster submission, accepted (also selected as a Best Poster nominee, 5 out of 106 submissions). [pdf](https://github.com/chunhualiao/pubdocs/blob/master/FreeCompilerCamp_Poster_SC19.pdf)
