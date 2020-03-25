@@ -70,6 +70,8 @@ echo "add_subdirectory(FunctionsNames)" >> ../CMakeLists.txt
 This build script specifies that FunctionsNames.cpp file in the current directory is to be compiled and linked into a shared object $(LEVEL)/lib/LLVMFunctionsNames.so that can be dynamically loaded by the `opt` tool via its *-load *option. 
 If our operating system uses a suffix other than .so (such as Windows or macOS), the appropriate extension will be used.
 
+add_llvm_library() is LLVM's internal cmake macro function defined in [cmake/modules/AddLLVM.cmake](https://github.com/llvm/llvm-project/blob/master/llvm/cmake/modules/AddLLVM.cmake). It accepts different arguments to indicate which type of library a specified source file will be build into, including SHARED, BUILDTREE_ONLY, MODULE, and INSTALL_WITH_TOOLCHAIN. In this tutorial, we build the source file into a dynamically loadable shared module. So we select MODULE. 
+
 Now that we have the build scripts set up, we just need to write the code for the pass itself.
 
 ### **A.3 Basic code required**
