@@ -184,8 +184,8 @@ namespace {
 
     bool runOnFunction(Function &F) override {
       // Print name of function
-      errs() << "*";
-      errs().write_escaped(F.getName()) << '\n'; 
+      outs() << "*";
+      outs().write_escaped(F.getName()) << '\n'; 
 
       for (auto& B : F) {    // Iterate over each Basic Blocks in Functions
         for (auto& I : B) {  // Iterate over each Instructions in Basic Blocks
@@ -194,7 +194,7 @@ namespace {
           // not a CallInst
           if(CallInst *CI = dyn_cast<CallInst>(&I)) {
             // Print out the function name
-            errs() << " |-" << CI->getCalledFunction()->getName() << "\n";
+            outs() << " |-" << CI->getCalledFunction()->getName() << "\n";
           }
         }
       }
