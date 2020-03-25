@@ -249,7 +249,7 @@ int main()
 }
 EOF
 ```
-Now we will compile this test code to extract its bitcode. 
+Now we will compile this test code to extract its bytecode. 
 More information on how to do this can be found in our tutorial [Clang -- Basics of compilation](http://www.freecompilercamp.org/clang-basics).
 ```.term1
 clang -emit-llvm -c test.c
