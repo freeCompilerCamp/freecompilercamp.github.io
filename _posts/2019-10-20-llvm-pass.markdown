@@ -270,8 +270,8 @@ You should get the following output
  |-func2
  |-printf
 ```
-### **A6. References **
 
+### **A6. References**
 This tutorial uses quite some LLVM classes and template functions. We list links to their references
 * [llvm::Pass Class Reference](http://llvm.org/doxygen/classllvm_1_1Pass.html): you can check the class hierarchy of llvm::Pass. It is obvious that llvm::FunctionPass has the most derived classes defined. 
   * [llvm::FunctionPass Class Reference](http://llvm.org/doxygen/classllvm_1_1FunctionPass.html)
@@ -279,3 +279,5 @@ This tutorial uses quite some LLVM classes and template functions. We list links
 * [llvm::BasicBlock Class Reference](https://llvm.org/doxygen/classllvm_1_1BasicBlock.html)
 * [llvm::Instruction](https://llvm.org/doxygen/classllvm_1_1Instruction.html) Instructions in LLVM IR
   * [llvm::CallInst Class Reference](https://llvm.org/doxygen/classllvm_1_1CallInst.html): This class represents a function call, abstracting a target machine's calling convention. The class hierachy shows that it has parent classes including llvm::Instruction and llvm::CallBase. 
+* [RegisterPass template](https://llvm.org/doxygen/structllvm_1_1RegisterPass.html)
+* [llvm::RegisterStandardPasses Struct Reference](https://llvm.org/doxygen/structllvm_1_1RegisterStandardPasses.html)
