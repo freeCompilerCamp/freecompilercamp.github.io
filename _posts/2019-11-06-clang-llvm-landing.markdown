@@ -49,6 +49,9 @@ Give Clang/LLVM a try with the following tutorials:
 [Extracting OpenMP Information from Programs using a Clang Plugin](/openmp-extractor)
   * This is a clang plugin that can parse programs with OpenMP directives and generate Json files containing a description about loops.
 
+[Getting Familar with LLVM IR](/llvm-ir)
+  *  In this tutorial we will explain how to understand LLVM IR using a simplest C program as an example.
+
 [Writing an LLVM Pass](/llvm-pass)
   *  In this tutorial we will cover how to construct a pass, everything from setting up the code, to compiling, loading, and executing it.
 
