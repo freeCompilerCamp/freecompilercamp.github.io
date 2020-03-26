@@ -6,17 +6,17 @@ Adding a tutorial involves two web pages.
 
 After editing these two files, you can start a pull request. The changes will be made effective once the request is merged, using this Github Pages repo.
 
-### Tutorial Page
+### 1. Tutorial Page
 Take the autoPar tutorial as an example.
 https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-07-01-rose-autopar.markdown
 
 You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```./_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later. 
 
-#### 1. Update headers
+#### a. Update headers
 
 Add title, author, date and so on.
 
-#### 2. Add content
+#### b. Add content
 
 Write freely in Markdown. 
 
@@ -38,13 +38,13 @@ Sometimes you want to insert a figure into your tutorial. You need to
 ![Your wonderful figure caption here](/images/your_figure_name.png)
 ```
 
-#### 3. Update sandbox docker image (optionally)
+#### c. Update sandbox docker image (optionally)
 
 Currently in the sandbox terminal, basic development tools have been installed, such as ```gcc```, ```rose```, ```llvm``` and ```vim```. If any other tool is required for your tutorials, you can either ask the visitors to install them as part of your tutorials. Or you can add them in the docker image.
 
 To customize the sandbox, please check [Deploy FreeCC to AWS](https://github.com/chunhualiao/freeCompilerCamp/wiki/Deploy-FreeCC-to-AWS).
 
-## Landing Pages
+## 2. Landing Pages
 
 Again, we have two landing pages
 * One for Clang/LLVM tutorials: https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-11-06-clang-llvm-landing.markdown
