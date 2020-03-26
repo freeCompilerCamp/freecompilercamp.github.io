@@ -46,7 +46,9 @@ You should see the version information after the commands above.
 
 ## **3. Obtain Example Input Codes**
 
-git clone git@github.com:chunhualiao/LLVM-IR.git
+```.term1
+git clone https://github.com/chunhualiao/LLVM-IR.git
+```
 
 This git repository contains 
 * a set of example C/C++ programs 
