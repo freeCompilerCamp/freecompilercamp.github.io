@@ -48,6 +48,7 @@ You should see the version information after the commands above.
 
 ```.term1
 git clone https://github.com/chunhualiao/LLVM-IR.git
+cd LLVM-IR
 ```
 
 This git repository contains 
@@ -101,7 +102,6 @@ func1.v2.c.ll and func1.v4.c.ll should be generated in the current path.
 Now let's look at the text dump of LLVM IR for a simplest C Function. 
 Lets open the input file first:
 ```.term1
-cd LLVM-IR
 cat func1.c
 ```
 You should see the following content: 
