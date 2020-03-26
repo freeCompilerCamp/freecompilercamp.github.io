@@ -29,7 +29,7 @@ The LLVM IR can be used in three different forms: as in in-memory compiler IR, a
 
 The goal of this tutorial is to learn how to use clang to dump out LLVM IR using a few simple example programs. Then we will guide the readers to consult the LLVM Language Reference Manual to understand the LLVM IR's text format.  
 
-## **2. Test Clang and LLVM **
+## **2. Test Clang and LLVM**
 
 Clang and LLVM have already been installed in the the docker-based online terminal on the right panel.
 
@@ -44,7 +44,7 @@ opt --version
 
 You should see the version information after the commands above.
 
-## **3. Obtain Example Input Codes **
+## **3. Obtain Example Input Codes**
 
 git clone git@github.com:chunhualiao/LLVM-IR.git
 
@@ -95,7 +95,7 @@ opt -S -mem2reg -instnamer func1.v2.c.ll -o func1.v4.c.ll
 
 func1.v2.c.ll and func1.v4.c.ll should be generated in the current path.
 
-### **5. Simplest Function **
+### **5. Simplest Function**
 Now let's look at the text dump of LLVM IR for a simplest C Function. 
 Lets open the input file first:
 ```.term1
@@ -137,7 +137,7 @@ You should see the following content:
  19 !2 = !{!"clang version 9.0.1 "}
 ```
 
-### **The High-Level Structure of the IR**
+### **6. The High-Level Structure of the IR**
 A module in LLVM is a translation unit of the input program. Each module consists of 
 * global variables (if present),
 * functions (if present), and 
@@ -155,7 +155,7 @@ It is also obvious that comments in the IR starts with ';'.
 
 Now, lets go to each section one by one to explain what each line means. 
 
-### **target information**
+### **7. Target Information**
 target datalayout = "layout specification" specifies how data is to be laid out in memory. 
 
 [LangRef.html#data-layout](https://llvm.org/docs/LangRef.html#data-layout) gives the full description of the layout specification. Essentially, the layout spec. string ("e-m:o-i64:64-f80:128-n8:16:32:64-S128") is a list of specifications separated by the minus sign. We can first break the string down into individual pieces and interpret each piece based on the language reference text.  
@@ -170,7 +170,7 @@ target datalayout = "layout specification" specifies how data is to be laid out 
 
 As you can see LLVM IR is machine dependent since it contains machine specific data layout and target information. 
 
-### **Function**
+### **8. Function**
 The LLVM IR for the function is quite straightforward:
 ```
   6 ; Function Attrs: nounwind ssp uwtable
@@ -193,7 +193,7 @@ To understand the full syntax and semantics of function, basic block and instruc
 * https://llvm.org/docs/LangRef.html#functions 
 * https://llvm.org/docs/LangRef.html#ret-instruction
 
-### **Function Attributes**
+### **9. Function Attributes**
 
 LLVM uses a set of attributes to communicate additional information about a function. These attributes can help LLVM better understand the semantics of functions and generate more efficient code.
 
@@ -202,7 +202,7 @@ LLVM uses a set of attributes to communicate additional information about a func
 * ssp: This attribute indicates that the function should emit a stack smashing protector.
 * uwtable: This attribute indicates that the ABI being targeted requires that an unwind table entry be produced for this function even if we can show that no exceptions passes by it.
 
-### **Named Metadata**
+### **10. Named Metadata**
 The last portion of the IR is ia collection of named metadata:
 ```
  14 !llvm.module.flags = !{!0, !1}
@@ -225,7 +225,7 @@ For example,
 * metadata !0 has the ID of "wchar_size" and the value of 4 (as shown at line 17). The behavior flag value is 1 (emitting an error if two values disagrees). 
 * metadata !1 has the ID of "PIC Level" and the value of 2 (as shown at line 18). The behavior flag value is 7 (taking the max of the two values).
 
-### **References**
+### **11. References**
 The following links are useful for further information:
 * [LLVM Language Reference Manual](https://llvm.org/docs/LangRef.html): This is the LLVM IR specification or LLVM assembly languge reference. You can find syntax, semantics, and exmaples of all LLVM IR constructs. 
 * [Introduction to LLVM](https://youtu.be/J5xExRGaIIY): Youtube Tutorial presented by E. Christopher & J. Doerfert, 2019 LLVM Developers’ Meeting. The command line options used by this tutorial come from this tutorial. 
