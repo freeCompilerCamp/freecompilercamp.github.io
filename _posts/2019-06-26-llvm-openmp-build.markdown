@@ -7,7 +7,7 @@ categories: beginner
 tags: [llvm,clang,openmp,gpu,offloading]
 ---
 
-Llvm-8.0.0 now has GPU offloading support in their OpenMP implementation. But building and using this offloading support can sometimes be confusing. I have tried several ways of building LLVM, and failed several times. Finally I found a way which works for me. Personally I prefer to first build and install llvm/clang, and then use this installation to build OpenMP-8.0.0. This is the way which worked for me. In this tutorial I will be explaining the steps to first build llvm-8.0.0 with clang-8.0.0 and then use it to build openmp-8.0.0 with offloading support.
+Llvm-10.0.0 now has GPU offloading support in their OpenMP implementation. But building and using this offloading support can sometimes be confusing. I have tried several ways of building LLVM, and failed several times. Finally I found a way which works for me. Personally I prefer to first build and install llvm/clang, and then use this installation to build OpenMP-10.0.0. This is the way which worked for me. In this tutorial I will be explaining the steps to first build llvm-10.0.0 with clang-10.0.0 and then use it to build openmp-10.0.0 with offloading support.
 
 
 ---
@@ -28,7 +28,7 @@ Add your name here - <name>
 ```
 
 **Concepts in this exercise:**
-# A. Building llvm-8.0.0 with CMake
+# A. Building llvm-10.0.0 with CMake
 ##### 1. Prerequisite softwares:
 ##### 2. Setup the following environment variables in our system
 ##### 3. Download LLVM and Clang
@@ -48,7 +48,7 @@ Add your name here - <name>
 
 LLVM is already built and installed ($LLVM_PATH) in this environment. The LLVM source code can be found on $LLVM_SRC. A normal LLVM build might take a couple of hours to complete. The next section (section A) is for people who want to learn about how to install LLVM. If you  are just interested in building OpenMP in LLVM please go to [Section B](#openmp). 
 
-## A. Building llvm-8.0.0 with CMake
+## A. Building llvm-10.0.0 with CMake
 **[CMake](http://www.cmake.org/)**  is a cross-platform build-generator tool. CMake does not directly build the project, it generates the files needed by our build system *(GNU make, ninja, etc.)* for building LLVM.
  
 We can either download the tar files from **[LLVM Download page](http://releases.llvm.org/download.html)** or we can checkout from their git repo. Here I will be using the download page, but git works in similar way.
@@ -82,19 +82,19 @@ export LLVM_PATH=<Path where LLVM need to be installed>
 Note - LLVM is already downloaded into $LLVM_SRC. If you are trying to install in you personal system, run the following commands to download llvm and clang.
 
 ```
-wget http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz
-tar -xf llvm-8.0.0.src.tar.xz
-export LLVM_SRC=$PWD/llvm-8.0.0.src
-cd llvm-8.0.0.src/tools
-wget http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz
-tar -xf cfe-8.0.0.src.tar.xz
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/llvm-10.0.0.src.tar.xz
+tar -xf llvm-10.0.0.src.tar.xz
+export LLVM_SRC=$PWD/llvm-10.0.0.src
+cd llvm-10.0.0.src/tools
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang-10.0.0.src.tar.xz
+tar -xf clang-10.0.0.src.tar.xz
 ```
 ### A.4.1 Build with make
 Create a build directory in $HOME and get into it
 ```.term1
 mkdir llvm_build && cd llvm_build
 ```
-Run the cmake command. Here we are building llvm-8.0.0 and clang-8.0.0 using make build system.
+Run the cmake command. Here we are building llvm-10.0.0 and clang-10.0.0 using make build system.
 CMAKE_BUILD_TYPE specifies the build type on single-configuration generators. Here we are giving the build type as RELEASE. We can also use DEBUG, if we want to build llvm in debug mode.
 ```WARNING``` - building llvm in debug mode will normally consume over 20GB of our space.
 
@@ -154,7 +154,7 @@ export CPLUS_INCLUDE_PATH=$LLVM_PATH/include:CPLUS_INCLUDE_PATH
 
 Optional environment variables
 ```.term1
-export CLANG_VERSION=8.0.0
+export CLANG_VERSION=10.0.0
 export CLANG_PATH=$LLVM_PATH
 export CLANG_BIN=$LLVM_PATH/bin
 export CLANG_LIB=$LLVM_PATH/lib
@@ -169,17 +169,17 @@ The major prerequisite for building OpenMP with offloading support is that gcc v
 ### B.2 Download OpenMP
 Get the OpenMP source code
 ```.term1
-wget http://releases.llvm.org/8.0.0/openmp-8.0.0.src.tar.xz
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/openmp-10.0.0.src.tar.xz
 ```
-Untar openmp-8.0.0.src.tar.xz
+Untar openmp-10.0.0.src.tar.xz
 ```.term1
-tar -xf openmp-8.0.0.src.tar.xz
+tar -xf openmp-10.0.0.src.tar.xz
 ```
 
 ### B.3 Build with make
-Goto openmp-8.0.0.src
+Goto openmp-10.0.0.src
 ```.term1
-cd openmp-8.0.0.src
+cd openmp-10.0.0.src
 ```
 Create a build directory and get into it
 ```.term1
