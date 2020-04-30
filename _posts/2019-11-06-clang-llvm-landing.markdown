@@ -31,6 +31,9 @@ Give Clang/LLVM a try with the following tutorials:
 [Clang -- Basics of compilation](/clang-basics)
   * This is a short introduction to the basics of compilation using Clang.
 
+[ClangCheck -- Basics of AST error checking](/clang-check)
+  * This is a short introduction to the basics of ClangCheck tool. 
+
 [Clang -- Basics of AST manipulation](/clang-AST-basics)
   * This is a short introduction to the basics of Clang traversal.
 
