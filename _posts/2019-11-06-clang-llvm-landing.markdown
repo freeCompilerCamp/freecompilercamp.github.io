@@ -34,6 +34,9 @@ Give Clang/LLVM a try with the following tutorials:
 [ClangCheck -- Basics of AST error checking](/clang-check)
   * This is a short introduction to the basics of ClangCheck tool. 
 
+[Libtooling -- a library to support writing standalone tools based on Clang](/libtooling)
+  * This presents a basic walkthrough of how to write a tool using LibTooling.
+
 [Clang -- Basics of AST manipulation](/clang-AST-basics)
   * This is a short introduction to the basics of Clang traversal.
 

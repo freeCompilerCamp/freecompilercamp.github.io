@@ -99,7 +99,7 @@ bool VisitCXXRecordDecl(CXXRecordDecl *Declaration) {
 }
 ```
 
-## ** Putting all together ** 
+## **Putting all together** 
 Now we can combine all of the above into a small example program:
 
 ```.term1
