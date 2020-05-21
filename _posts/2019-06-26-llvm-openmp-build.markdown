@@ -62,8 +62,7 @@ We can either download the tar files from **[LLVM Download page](http://releases
 ### A.1 Prerequisite softwares:
 1. GNU cmake (version 2.8 and above)
 2. Gcc (version 5 and above. Keep below version 7 for OpenMP)
-3. Python (version 2.7 and above)
-4. libelf, libffi, pkg-config
+3. libelf, libffi, pkg-config
 
 On Ubuntu 18.04, you can install all prerequisite software by typing the following commands:
 ```
@@ -78,7 +77,6 @@ All three software packages have been installed in the terminal on the right sid
 ```
 $ which gcc
 $ which cmake
-$ which python
 ```
 
 ### A.2 Setup the following environment variables in our system
@@ -95,7 +93,7 @@ export LLVM_PATH=<Path where LLVM need to be installed>
  ```
 
 ### A.3 Download LLVM and Clang
-Note - LLVM is already downloaded into $LLVM_SRC. If you are trying to install in you personal system, run the following commands to download llvm and clang.
+Note - LLVM's 10.x release is already cloned into $LLVM_SRC. If you are trying to install in you personal system, run the following commands to download llvm and clang.
 
 ```
 git clone https://github.com/llvm/llvm-project.git llvm-10.0.0.src
@@ -117,7 +115,7 @@ CMAKE_INSTALL_PREFIX specifies the install directory used by install command.
 
 Other commonly used parameter are CMAKE_C_COMPILER and CMAKE_CXX_COMPILER for telling make which C compiler to use.
 ```.term1
-cmake -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC
+cmake -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC/llvm
 ```
 
 You need to know the Compute Capability version of your GPU. https://developer.nvidia.com/cuda-gpus lists such information. For example, some typical GPUs and their CC versions are:
@@ -154,7 +152,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS enables or disables output of compile commands dur
 
 The commands used to build using ninja are as follows:
 ```.term1
-cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC
+cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC/llvm
 ```
 Once the required build files are created, we can start building using ninja just like before.
 ```.term1
@@ -186,20 +184,20 @@ export CLANG_BIN=$LLVM_PATH/bin
 export CLANG_LIB=$LLVM_PATH/lib
 ```
 
-## <a name="openmp"></a> B. Rebuilding OpenMP with CMake using Clang
+## <a name="openmp"></a> B. Rebuilding Clang using Clang
 
 ### B.1 Build with make
 
 ```.term1
-mkdir build-openmp
-cd build-openmp
+mkdir build2
+cd build2
 ```
 OpenMP building is quite small compared to llvm/clang. We can still use the ninja build system and TMPDIR to speedup our build process, but it won't make much of a difference.
 
 The following cmake command line will configure the build we want
 
 ```.term1
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 $(LLVM_SRC)/projects/openmp
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 $(LLVM_SRC)/llvm
 ```
 
 As always make will build OpenMP
