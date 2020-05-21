@@ -7,8 +7,12 @@ categories: beginner
 tags: [llvm,clang,openmp,gpu,offloading]
 ---
 
-Llvm-10.0.0 now has GPU offloading support in their OpenMP implementation. But building and using this offloading support can sometimes be confusing. I have tried several ways of building LLVM, and failed several times. Finally I found a way which works for me. Personally I prefer to first build and install llvm/clang, and then use this installation to build OpenMP-10.0.0. This is the way which worked for me. In this tutorial I will be explaining the steps to first build llvm-10.0.0 with clang-10.0.0 and then use it to build openmp-10.0.0 with offloading support.
+Llvm-10.0.0 now has GPU offloading support in their OpenMP implementation. But building and using this offloading support can sometimes be confusing. I have tried several ways of building LLVM, and failed several times. Finally I found a way which works for me. Personally I prefer to 
+* first build and install llvm/clang using GCC, and then 
+* use this fresh llvm installation to build OpenMP-10.0.0. 
+This is the way which worked for me. 
 
+In this tutorial I will be explaining the steps to first build llvm-10.0.0 with clang-10.0.0 and then use it to build openmp-10.0.0 with offloading support.
 
 ---
 
@@ -57,6 +61,16 @@ We can either download the tar files from **[LLVM Download page](http://releases
 1. GNU cmake (version 2.8 and above)
 2. Gcc (version 5 and above. Keep below version 7 for OpenMP)
 3. Python (version 2.7 and above)
+4. libelf, libffi, pkg-config
+
+On Ubuntu 18.04, you can install all prerequisite software by typing the following commands:
+```
+sudo apt update
+sudo apt install build-essential
+sudo apt install cmake
+sudo apt install -y libelf-dev libffi-dev
+sudo apt install -y pkg-config
+```
 
 All three software packages have been installed in the terminal on the right side. We just need to confirm this:
 ```
@@ -89,7 +103,11 @@ cd llvm-10.0.0.src/tools
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang-10.0.0.src.tar.xz
 tar -xf clang-10.0.0.src.tar.xz
 ```
-### A.4.1 Build with make
+The directory layout should be:
+* llvm-10.0.0.src
+  * tools/clang
+
+### A.4.1 Build Clang/LLVM with make
 Create a build directory in $HOME and get into it
 ```.term1
 mkdir llvm_build && cd llvm_build
@@ -102,7 +120,7 @@ CMAKE_INSTALL_PREFIX specifies the install directory used by install command.
 
 Other commonly used parameter are CMAKE_C_COMPILER and CMAKE_CXX_COMPILER for telling make which C compiler to use.
 ```.term1
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC
 ```
 For boosting performance sometimes we can use the /dev/shm as our temporary directory. /dev/shm is a temporary file storage filesystem, i.e., tmpfs, that uses RAM for the backing store. In an incremental build system a lot of temporary files are created while compilation. /tmp is the location for temporary files as defined in the Filesystem Hierarchy Standard, which is followed by almost all Unix and Linux distributions. This location is access by the TMPDIR environment variable. To make the process of compilation faster we can set the TMPDIR environment variable to point to a tmpfs directory, like /dev/shm. Caution should be taken before enabling this option. If we do not have enough RAM, this step might have an adverse effect on compilation.
 ```.term1
@@ -209,16 +227,43 @@ make install
 ## C. Compiling code with offloading support
 Note: The terminal on the right side does not have cuda installed. So you cannot really compile, link and run the OpenMP code with offloading support in the terminal. The instructions below are used to guide you to try it on a machine with cuda installed. 
 
-To compile a code with OpenMP GPU offloading support we must provide some compile time parameters to clang. Most common parameters are:
+To compile a code with OpenMP GPU offloading support we must provide some compile time parameters to clang. 
+
+You can copy& paste the following example code into the terminal and save it to be ongpu.c
 ```
-clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda --cuda-path=<CUDA_INSTALL_PATH> -Xopenmp-target -march=sm_XX <file>
+#include <stdio.h>
+#include <omp.h>
+
+int main()
+{
+  int runningOnGPU = 0;
+  /* Test if GPU is available using OpenMP4.5 */
+#pragma omp target map(from:runningOnGPU)
+  {
+    if (omp_is_initial_device() == 0)
+      runningOnGPU = 1;
+  }
+  /* If still running on CPU, GPU must not be available */
+  if (runningOnGPU)
+    printf("### Able to use the GPU! ### \n");
+  else
+    printf("### Unable to use the GPU, using CPU! ###\n");
+
+  return 0;
+}
+```
+
+Most common parameters are:
+```
+clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda ongpu.c
 ```
 Here, 
-
 * -fopenmp instructs clang that it need to compile an OpenMP code.
 * -fopenmp-targets instructs clang to use nvptx64-nvidia-cuda as the target device.
-* --cuda-path suggests the location where cuda is installed.  
-* -Xopenmp-target -march set the target architecture. For instance, while building for P100 we should use -Xopenmp-target -march=sm_60, while for V100 we should use -Xopenmp-target -march=sm_70
+
+Optional options
+* --cuda-path=<CUDA_INSTALL_PATH> suggests the location where cuda is installed.  
+* -Xopenmp-target -march=sm_37  set the target architecture. For instance, while building for P100 we should use -Xopenmp-target -march=sm_60, while for V100 we should use -Xopenmp-target -march=sm_70
 
 Before using clang to build OpenMP code for GPU offloading, we should always check if the compatible runtime is present or not. For instance, if we need to build for compute capability 3.5 we should check whether the library libomptarget-nvptx-sm_35.bc is present in the directory  $LLVM_PATH/lib. If not, then we should rebuild OpenMP with support for that compute capability.
 
