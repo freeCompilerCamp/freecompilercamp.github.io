@@ -97,15 +97,27 @@ Note - LLVM is already downloaded into $LLVM_SRC. If you are trying to install i
 
 ```
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/llvm-10.0.0.src.tar.xz
-tar -xf llvm-10.0.0.src.tar.xz
-export LLVM_SRC=$PWD/llvm-10.0.0.src
-cd llvm-10.0.0.src/tools
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang-10.0.0.src.tar.xz
-tar -xf clang-10.0.0.src.tar.xz
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/openmp-10.0.0.src.tar.xz
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/compiler-rt-10.0.0.src.tar.xz
+
+
+tar xf llvm-10.0.0.src.tar.xz
+tar xf clang-10.0.0.src.tar.xz
+tar xf openmp-10.0.0.src.tar.xz
+tar xf compiler-rt-10.0.0.src.tar.xz
+
+mv clang-10.0.0.src llvm-10.0.0.src/tools/clang
+mv openmp-10.0.0.src llvm-10.0.0.src/projects/openmp
+mv compiler-rt-10.0.0.src llvm-10.0.0.src/projects/compiler-rt
+
+export LLVM_SRC=$PWD/llvm-10.0.0.src
 ```
 The directory layout should be:
 * llvm-10.0.0.src
   * tools/clang
+  * projects/openmp
+  * projects/compiler-rt
 
 ### A.4.1 Build Clang/LLVM with make
 Create a build directory in $HOME and get into it
@@ -120,8 +132,19 @@ CMAKE_INSTALL_PREFIX specifies the install directory used by install command.
 
 Other commonly used parameter are CMAKE_C_COMPILER and CMAKE_CXX_COMPILER for telling make which C compiler to use.
 ```.term1
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC
+cmake -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC
 ```
+
+You need to know the Compute Capability version of your GPU. https://developer.nvidia.com/cuda-gpus lists such information. For example, some typical GPUs and their CC versions are:
+* Tesla K80 3.7
+* Tesla P100 6.0
+* Tesla V100 7.0
+
+Explanation for the cmake options used:
+* We set the CMAKE_C_COMPILER and CMAKE_CXX_COMPILER to point to gcc and g++ respectively
+* CLANG_OPENMP_NVPTX_DEFAULT_ARCH sets the default architecture when not passing the value during compilation. We should adjust the default to match the environment we’ll be using most of the time. The architecture must be prefix with sm_60, so Clang configured with the sm_60 command will build for the Tesla P100 by default.
+* LIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES applies to the runtime libraries: It specifies a list of architectures that the libraries will be built for. This is an important parameter. As we cannot run on GPUs without a compatible runtime, we should pass all architectures we care about. Also, please note that the values are passed without the dot, so compute capability 7.0 becomes 70. We can also build for multiple compute capabilities by separating them with a comma. For instance, if we want to build for compute capabilities 3.5, 6.0 and 7.0, then use the parameter as -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70. We can only build for compute capabilities over 3.5
+
 For boosting performance sometimes we can use the /dev/shm as our temporary directory. /dev/shm is a temporary file storage filesystem, i.e., tmpfs, that uses RAM for the backing store. In an incremental build system a lot of temporary files are created while compilation. /tmp is the location for temporary files as defined in the Filesystem Hierarchy Standard, which is followed by almost all Unix and Linux distributions. This location is access by the TMPDIR environment variable. To make the process of compilation faster we can set the TMPDIR environment variable to point to a tmpfs directory, like /dev/shm. Caution should be taken before enabling this option. If we do not have enough RAM, this step might have an adverse effect on compilation.
 ```.term1
 export TMPDIR=/dev/shm 
@@ -146,7 +169,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS enables or disables output of compile commands dur
 
 The commands used to build using ninja are as follows:
 ```.term1
-cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC
+cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC
 ```
 Once the required build files are created, we can start building using ninja just like before.
 ```.term1
@@ -178,42 +201,21 @@ export CLANG_BIN=$LLVM_PATH/bin
 export CLANG_LIB=$LLVM_PATH/lib
 ```
 
-## <a name="openmp"></a> B. Building OpenMP with CMake
-Once llvm is installed building OpenMP is pretty straight forward. Here also we can use ninja or make. Following tutorial is only for make build system.
+## <a name="openmp"></a> B. Rebuilding OpenMP with CMake using Clang
 
-### B.1 Prerequisite
-The major prerequisite for building OpenMP with offloading support is that gcc version cannot be over 7. So either use gcc with version below 7, or disable gcc and use our currently built clang as compiler. In this tutorial we are using our llvm/clang compiler to build openmp.
+### B.1 Build with make
 
-### B.2 Download OpenMP
-Get the OpenMP source code
 ```.term1
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/openmp-10.0.0.src.tar.xz
-```
-Untar openmp-10.0.0.src.tar.xz
-```.term1
-tar -xf openmp-10.0.0.src.tar.xz
-```
-
-### B.3 Build with make
-Goto openmp-10.0.0.src
-```.term1
-cd openmp-10.0.0.src
-```
-Create a build directory and get into it
-```.term1
-mkdir build && cd build
+mkdir build-openmp
+cd build-openmp
 ```
 OpenMP building is quite small compared to llvm/clang. We can still use the ninja build system and TMPDIR to speedup our build process, but it won't make much of a difference.
 
 The following cmake command line will configure the build we want
 
 ```.term1
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_35  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35 ..
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 $(LLVM_SRC)/projects/openmp
 ```
-Explanation for the cmake options used:
-* We set the CMAKE_C_COMPILER and CMAKE_CXX_COMPILER to point to our current clang installation - $LLVM_PATH\bin\clang.
-* CLANG_OPENMP_NVPTX_DEFAULT_ARCH sets the default architecture when not passing the value during compilation. We should adjust the default to match the environment we’ll be using most of the time. The architecture must be prefix with sm_, so Clang configured with the sm_60 command will build for the Tesla P100 by default.
-* LIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES applies to the runtime libraries: It specifies a list of architectures that the libraries will be built for. This is an important parameter. As we cannot run on GPUs without a compatible runtime, we should pass all architectures we care about. Also, please note that the values are passed without the dot, so compute capability 7.0 becomes 70. We can also build for multiple compute capabilities by separating them with a comma. For instance, if we want to build for compute capabilities 3.5, 6.0 and 7.0, then use the parameter as -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70. We can only build for compute capabilities over 3.5
 
 As always make will build OpenMP
 
