@@ -14,6 +14,8 @@ This is the way which worked for me.
 
 In this tutorial I will be explaining the steps to first build llvm-10.0.0 with clang-10.0.0 and then use it to build openmp-10.0.0 with offloading support.
 
+Note that the online terminal runs on a virtual machine without GPU. So the instructions here may generate some warnings for unsupported options.  You should find a machine with GPU installed. 
+
 ---
 
 # Tips:
@@ -96,28 +98,11 @@ export LLVM_PATH=<Path where LLVM need to be installed>
 Note - LLVM is already downloaded into $LLVM_SRC. If you are trying to install in you personal system, run the following commands to download llvm and clang.
 
 ```
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/llvm-10.0.0.src.tar.xz
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang-10.0.0.src.tar.xz
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/openmp-10.0.0.src.tar.xz
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/compiler-rt-10.0.0.src.tar.xz
-
-
-tar xf llvm-10.0.0.src.tar.xz
-tar xf clang-10.0.0.src.tar.xz
-tar xf openmp-10.0.0.src.tar.xz
-tar xf compiler-rt-10.0.0.src.tar.xz
-
-mv clang-10.0.0.src llvm-10.0.0.src/tools/clang
-mv openmp-10.0.0.src llvm-10.0.0.src/projects/openmp
-mv compiler-rt-10.0.0.src llvm-10.0.0.src/projects/compiler-rt
-
+git clone https://github.com/llvm/llvm-project.git llvm-10.0.0.src
 export LLVM_SRC=$PWD/llvm-10.0.0.src
+cd $LLVM_SRC
+git checkout -b release/10.x origin/release/10.x
 ```
-The directory layout should be:
-* llvm-10.0.0.src
-  * tools/clang
-  * projects/openmp
-  * projects/compiler-rt
 
 ### A.4.1 Build Clang/LLVM with make
 Create a build directory in $HOME and get into it
