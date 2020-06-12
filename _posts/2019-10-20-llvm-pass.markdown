@@ -38,10 +38,10 @@ In this tutorial we will be writing a pass which is designed to print out the na
 
 ### **A.1 Where to write the Pass**
 The safest location to write an LLVM Pass is in the LLVM source tree. 
-We will write our pass in the location $LLVM_SRC/lib/Transform.
+We will write our pass in the location $LLVM_SRC/llvm/lib/Transform.
 Let us go to that directory.
 ```.term1
-cd $LLVM_SRC/lib/Transforms
+cd $LLVM_SRC/llvm/lib/Transforms
 ```
 Now let us create our project directory by the name FunctionsNames and get into it.
 ```.term1
@@ -220,7 +220,7 @@ static RegisterStandardPasses Y(
 Now that it's all together, compile the file with a simple "make" command from our build directory and we should get a new file “lib/LLVMFunctionsNames.so". 
 ```.term1
 cd $LLVM_BUILD
-make -j8
+ninja -j8
 ```
 Note that everything in this file is contained in an anonymous namespace — this reflects the fact that passes are self contained units that do not need external interfaces (although they can have them) to be useful.
 
@@ -283,3 +283,5 @@ This tutorial uses quite some LLVM classes and template functions. We list links
   * [llvm::CallInst Class Reference](https://llvm.org/doxygen/classllvm_1_1CallInst.html): This class represents a function call, abstracting a target machine's calling convention. The class hierachy shows that it has parent classes including llvm::Instruction and llvm::CallBase. 
 * [RegisterPass template](https://llvm.org/doxygen/structllvm_1_1RegisterPass.html)
 * [llvm::RegisterStandardPasses Struct Reference](https://llvm.org/doxygen/structllvm_1_1RegisterStandardPasses.html)
+
+Source file of this tutorial: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-10-20-llvm-pass.markdown)
