@@ -26,9 +26,6 @@ Give Clang/LLVM a try with the following tutorials:
 [Clang -- An Introduction](/clang-intro) 
   * This is a short introduction on what is clang and how it can be used.
 
-[Building OpenMP Support in LLVM](/llvm-openmp-build)
-  * In this tutorial we cover how to build Clang/LLVM and enable OpenMP support in it.
-
 [Clang -- Basics of compilation](/clang-basics)
   * This is a short introduction to the basics of compilation using Clang.
 
@@ -41,6 +38,17 @@ Give Clang/LLVM a try with the following tutorials:
 [Clang -- Basics of AST manipulation](/clang-AST-basics)
   * This is a short introduction to the basics of Clang traversal.
 
+[Clang Plugin Example](/clang-plugin)
+  * This is a tutorial about how to write a short plugin in Clang which modify the source code as required.
+
+### OpenMP Related
+
+[Building OpenMP Support in LLVM](/llvm-openmp-build)
+  * In this tutorial we cover how to build Clang/LLVM and enable OpenMP support in it.
+
+[Extracting OpenMP Information from Programs using a Clang Plugin](/openmp-extractor)
+  * This is a clang plugin that can parse programs with OpenMP directives and generate Json files containing a description about loops.
+
 [Adding a New Directive in OpenMP](/clang-new-directive)
   * In this tutorial we will cover how to add a token for a new OpenMP directive in Clang/LLVM compiler.
 
@@ -49,12 +57,6 @@ Give Clang/LLVM a try with the following tutorials:
 
 [Identifying a Clause of new Directive in OpenMP](/clang-clause) 
   * In this tutorial we will cover how to identify and add a clause for the new OpenMP directive in Clang/LLVM compiler.
-
-[Clang Plugin Example](/clang-plugin)
-  * This is a tutorial about how to write a short plugin in Clang which modify the source code as required.
-
-[Extracting OpenMP Information from Programs using a Clang Plugin](/openmp-extractor)
-  * This is a clang plugin that can parse programs with OpenMP directives and generate Json files containing a description about loops.
 
 ### LLVM Related
 
