@@ -5,6 +5,7 @@ author: "@peihunglin"
 date:   2019-12-09
 categories: beginner
 tags: [clang,preprocessor,compiler,ast,traversal,lowering]
+image: freecompilercamp/pwc:llvm10
 ---
 
 ## **Tips:**
