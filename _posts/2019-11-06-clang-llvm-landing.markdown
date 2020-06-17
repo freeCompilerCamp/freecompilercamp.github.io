@@ -64,7 +64,10 @@ Give Clang/LLVM a try with the following tutorials:
   *  In this tutorial we will explain how to understand LLVM IR using a simplest C program as an example.
 
 [Writing an LLVM Pass](/llvm-pass)
-  *  In this tutorial we will cover how to construct a pass, everything from setting up the code, to compiling, loading, and executing it.
+  *  In this tutorial we will cover how to construct a pass, everything from setting up the code, to compiling, loading, and executing it. This pass only traverse the LLVM IR and extract information from it. 
+
+[Modifying LLVM IR using an LLVM Pass](/llvm-ir-mod)
+  *  In this tutorial we will show how to modify/change LLVM IR, using a LLVM pass to replace binary operations with a multiply operation.
 
 ## More Reading: References
   * [LLVM Official Website](https://www.llvm.org/)
