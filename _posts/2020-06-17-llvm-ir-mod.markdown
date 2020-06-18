@@ -24,7 +24,7 @@ Add your name here - <name>
 
 ## **1. Overview**
 
-The goal of this tutorial is to learn how to use IRBuilder to modify LLVM IR using a simple example program. We assume you have already took the previous more fundamental tutorials:
+The goal of this tutorial is to learn how to use IRBuilder to modify LLVM IR using a simple example program. We assume you have already taken the previous more fundamental tutorials:
 * [Getting Familar with LLVM IR](http://freecompilercamp.org/llvm-ir)
 * [Writing an LLVM Pass](http://freecompilercamp.org/llvm-pass) 
 
