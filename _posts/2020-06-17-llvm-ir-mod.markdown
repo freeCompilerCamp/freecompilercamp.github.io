@@ -23,11 +23,10 @@ Add your name here - <name>
 ```
 
 ## **1. Overview**
-The LLVM IR (Intermediate Representation) is a Static Single Assignment (SSA) based representation that provides type safety, low-level operations, flexibility, and the capability of representing all supported high-level languages such as C/C++, Objective-C, and Fortran. It is the common code representation used throughout all phases of LLVM. LLVM IR is a low-level programming language similar to assembly. As a result, it is also called LLVM assembly language. 
 
-The LLVM IR can be used in three different forms: as in in-memory compiler IR, as an on-disk bitcode file, and as a human readable text asembly language file. These three forms are equivalent. Tools are available to convert from one form to another.
-
-The goal of this tutorial is to learn how to use iIRBuilder to modify LLVM IR using a simple example program. 
+The goal of this tutorial is to learn how to use IRBuilder to modify LLVM IR using a simple example program. We assume you have already took the previous more fundamental tutorials:
+* [Getting Familar with LLVM IR](http://freecompilercamp.org/llvm-ir)
+* [Writing an LLVM Pass](http://freecompilercamp.org/llvm-pass) 
 
 ## **2. Test Clang and LLVM**
 
