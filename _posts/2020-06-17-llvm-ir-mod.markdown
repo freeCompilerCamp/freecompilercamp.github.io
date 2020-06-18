@@ -133,7 +133,7 @@ For brevilty, the program does not implement the removal of the replaced binary 
 
 ### **5. Build the LLVM Pass**
 
-This tutorial builds the LLVM pass out side of LLVM's source tree. It uses CMake build system's support for exporting LLVM libraries as importable CMake targets. 
+This tutorial's sourcetree lives independent from LLVM.  It uses CMake build system's support for exporting LLVM libraries as importable CMake targets. Essentially, it has a build system using an installed copy of LLVM. 
 
 Two CMakeLists.txt files are used. The first one is located at the top level project directory.
 ```.term1
