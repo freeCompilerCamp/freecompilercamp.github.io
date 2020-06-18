@@ -55,7 +55,7 @@ This git repository contains:
 * CMakeList.text to build the program
 * Example programs as the input of the LLVM pass
 
-### **4. Look Into the Source File
+### **4. Look Into the Source File**
 
 You can use vim to look into the source 
 ```.term1
@@ -131,7 +131,7 @@ And for each user, we reset its operand to the newly created instruction (line 3
 
 For brevilty, the program does not implement the removal of the replaced binary operation. 
 
-### ** 5. Build the LLVM Pass
+### **5. Build the LLVM Pass**
 
 To give it a try:
 ```.term1
@@ -149,7 +149,7 @@ Scanning dependencies of target SkeletonPass
 [100%] Built target SkeletonPass
 ```
 
-### **6. Run the LLVM Pass
+### **6. Run the LLVM Pass**
 
 We first test the input program to see its behavior before the LLVM IR modification.
 
