@@ -133,7 +133,56 @@ For brevilty, the program does not implement the removal of the replaced binary 
 
 ### **5. Build the LLVM Pass**
 
-To give it a try:
+This tutorial builds the LLVM pass out side of LLVM's source tree. It uses CMake build system's support for exporting LLVM libraries as importable CMake targets. 
+
+Two CMakeLists.txt files are used. The first one is located at the top level project directory.
+```.term1
+cat CMakelists.txt
+```
+
+You should see the following content:
+```
+1  cmake_minimum_required(VERSION 3.1)
+2  project(Skeleton)
+3 
+4  # support C++14 features used by LLVM 10.0.0
+5  set(CMAKE_CXX_STANDARD 14)
+6 
+7  find_package(LLVM REQUIRED CONFIG)
+8  add_definitions(${LLVM_DEFINITIONS})
+9  include_directories(${LLVM_INCLUDE_DIRS})
+10 link_directories(${LLVM_LIBRARY_DIRS})
+11
+12 add_subdirectory(skeleton)  # Use your pass name here.
+```
+LLVM is a supported package in CMake. The build system will automatically find the installed clang/llvm and extract definitions related to include and library paths. 
+
+The second CMakelists.txt is located in the subfolder skeleton:
+
+```.term1
+cat skeleton/CMakelists.txt
+```
+
+You should see the following content:
+```
+1 add_library(SkeletonPass MODULE
+2    # List your source files here.
+3    Skeleton.cpp
+4 )
+
+6 # Use C++11 to compile our pass (i.e., supply -std=c++11).
+7 target_compile_features(SkeletonPass PRIVATE cxx_range_for cxx_auto_type)
+
+9 # LLVM is (typically) built with no C++ RTTI. We need to match that;
+10 # otherwise, we'll get linker errors about missing RTTI data.
+11 set_target_properties(SkeletonPass PROPERTIES
+12    COMPILE_FLAGS "-fno-rtti"
+13 )
+.. rest is omitted
+```
+The source file of this pass is compiled as a library (line 1-4). Additional compiler features and flags are specified to compile the source file (line 7 and line 11-13). 
+
+Now give it a try to build the pass:
 ```.term1
 mkdir build
 cd build/
@@ -188,5 +237,6 @@ Now the execution result should be 20 since the LLVM pass replaces the binary op
 ### **7. References**
 The following links are useful for further information:
 * This tutorial is based on the content from http://www.cs.cornell.edu/~asampson/blog/llvm.html .
+* https://llvm.org/docs/CMake.html#embedding-llvm-in-your-project : how to build your project using an installed version of LLVM. 
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-06-17-llvm-ir-mod.markdown)
