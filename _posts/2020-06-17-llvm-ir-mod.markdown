@@ -124,7 +124,7 @@ You should see the following content:
 This program uses the FunctionPass as the base class to get access to its member function runOnFunction() as shown in line 16.
 Inside of this function, a nested loop is used to iterate over all instructions within all basic blocks (line 17 and 18).
 
-Line 19 uses dynamic casting to check if an instruction is a binary operator. If yes, IRBuilder is used to specify the insersion point (the binary instruction) and to create a multiply instruction using the existing two operands (line 21 through 26).
+Line 19 uses dynamic casting to check if an instruction is a binary operator. If yes, IRBuilder is used to specify the insertion point (the binary instruction) and to create a multiply instruction using the existing two operands (line 21 through 26).
 
 Once the new instruction is created. Another loop (line 30) is used to find all places using the original binary instruction. 
 And for each user, we reset its operand to the newly created instruction (line 32).   
