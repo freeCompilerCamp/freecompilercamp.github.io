@@ -5,7 +5,7 @@ author: "@ouankou"
 date:   2019-07-26
 categories: beginner
 tags: [rose,openmp,lowering,parallelization]
-image: freecompilercamp/pwc:16.04
+image: freecompilercamp/pwc:rose-bug
 ---
 
 # Tips:
@@ -44,8 +44,7 @@ Plese execute the following code to check out an old version of ROSE with a bug,
 
 ```.term1
 cd $ROSE_SRC &&
-git remote add sol https://github.com/ouankou/rose.git &&
-git fetch sol
+git checkout -b v0.9.11.138
 ```
 
 ## B. Reproduce the Bug
@@ -161,46 +160,46 @@ The function `isCanonicalForLoop()` is a function within a namespace called `Sag
 We exit the editor and open this file to check why it retrieves the wrong stride expression:
 
 ```.term1
-vim $ROSE_SRC/src/frontend/SageIII/sageInterface/sageInterface.C +11462 
+vim $ROSE_SRC/src/frontend/SageIII/sageInterface/sageInterface.C +11436
 ```
 
 After examining the code (shown below), we found that this function had a bug so it retrieved the right-hand side (rhs) operator of the entire increment expression `i=i+1`, instead the rhs of the add operator.
 
 ```
 // relevant sageInterface.C source code implementing retrieval of the stride expression
-11572   SgExpression* incr = fs->get_increment(); // grab the increment part of the loop
-11573   SgVarRefExp* incr_var = NULL;
-11574   switch (incr->variantT()) {  // handle various forms of loop increment expressions
+11546   SgExpression* incr = fs->get_increment(); // grab the increment part of the loop
+11547   SgVarRefExp* incr_var = NULL;
+11548   switch (incr->variantT()) {  // handle various forms of loop increment expressions
 ... 
-11585     case V_SgAssignOp: { // res = var + incr (or) var - incr (or) incr + var (not allowed: incr-var)
-11586       incr_var=isSgVarRefExp(SkipCasting(isSgBinaryOp(incr)->get_lhs_operand()));
+11559     case V_SgAssignOp: { // res = var + incr (or) var - incr (or) incr + var (not allowed: incr-var)
+11560       incr_var=isSgVarRefExp(SkipCasting(isSgBinaryOp(incr)->get_lhs_operand()));
 ...
-11599       if(SgVarRefExp* varRefExp=isSgVarRefExp(SkipCasting(isSgBinaryOp(arithOp)->get_lhs_operand()))) {
-11600         // cases : var + incr, var - incr
-11601         incr_var=varRefExp;
-11602         stepast=isSgBinaryOp(incr)->get_rhs_operand();
-11603       } else if(SgVarRefExp* varRefExp=isSgVarRefExp(SkipCasting(isSgBinaryOp(arithOp)->get_rhs_operand()))) {
-11604         if(isSgAddOp(arithOp)) {
-11605           // case : incr + var (not allowed: incr-var)
-11606           incr_var=varRefExp;
-11607           stepast=isSgBinaryOp(incr)->get_lhs_operand();
-11608         }
-11609       }
-
+11573       if(SgVarRefExp* varRefExp=isSgVarRefExp(SkipCasting(isSgBinaryOp(arithOp)->get_lhs_operand()))) {
+11674         // cases : var + incr, var - incr
+11675         incr_var=varRefExp;
+11676         stepast=isSgBinaryOp(incr)->get_rhs_operand();
+11677       } else if(SgVarRefExp* varRefExp=isSgVarRefExp(SkipCasting(isSgBinaryOp(arithOp)->get_rhs_operand()))) {
+11678         if(isSgAddOp(arithOp)) {
+11679           // case : incr + var (not allowed: incr-var)
+11680           incr_var=varRefExp;
+11681           stepast=isSgBinaryOp(incr)->get_lhs_operand();
+11682         }
+11683       }
+...
 ``` 
 We are done with the diagnosis of the bug. 
 
 ## D. Fix the Bug
 
-You can directly go to 11602 of sageInterface.C to do the fix. 
+You can directly go to 11576 of sageInterface.C to do the fix.
 
-On the line 11602 and 11607, change the variable ```incr``` to ```arithOp```. 
+On the line 11576 and 11581, change the variable ```incr``` to ```arithOp```.
 ```
----11602        stepast=isSgBinaryOp(incr)->get_rhs_operand();
-+++11602        stepast=isSgBinaryOp(arithOp)->get_rhs_operand();
+---11576        stepast=isSgBinaryOp(incr)->get_rhs_operand();
++++11576        stepast=isSgBinaryOp(arithOp)->get_rhs_operand();
 ...
----11607          stepast=isSgBinaryOp(incr)->get_lhs_operand();
-+++11607          stepast=isSgBinaryOp(arithOp)->get_lhs_operand();
+---11581          stepast=isSgBinaryOp(incr)->get_lhs_operand();
++++11581          stepast=isSgBinaryOp(arithOp)->get_lhs_operand();
 ```
 Save your changes and quite your editor (e.g. Use ```:wq``` to save and quit for vim).
 
