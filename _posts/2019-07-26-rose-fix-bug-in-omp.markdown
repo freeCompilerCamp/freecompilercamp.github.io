@@ -5,6 +5,7 @@ author: "@ouankou"
 date:   2019-07-26
 categories: beginner
 tags: [rose,openmp,lowering,parallelization]
+image: freecompilercamp/pwc:16.04
 ---
 
 # Tips:
