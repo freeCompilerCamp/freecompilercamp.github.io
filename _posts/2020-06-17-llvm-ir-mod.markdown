@@ -137,7 +137,7 @@ This tutorial's sourcetree lives independent from LLVM.  It uses CMake build sys
 
 Two CMakeLists.txt files are used. The first one is located at the top level project directory.
 ```.term1
-cat CMakelists.txt
+cat CMakeLists.txt
 ```
 
 You should see the following content:
@@ -160,7 +160,7 @@ LLVM is a supported package in CMake. The build system will automatically find t
 The second CMakelists.txt is located in the subfolder skeleton:
 
 ```.term1
-cat skeleton/CMakelists.txt
+cat skeleton/CMakeLists.txt
 ```
 
 You should see the following content:
