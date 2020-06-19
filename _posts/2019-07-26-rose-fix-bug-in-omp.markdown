@@ -198,8 +198,8 @@ On the line 11576 and 11581, change the variable ```incr``` to ```arithOp```.
 ---11576        stepast=isSgBinaryOp(incr)->get_rhs_operand();
 +++11576        stepast=isSgBinaryOp(arithOp)->get_rhs_operand();
 ...
----11581          stepast=isSgBinaryOp(incr)->get_lhs_operand();
-+++11581          stepast=isSgBinaryOp(arithOp)->get_lhs_operand();
+---11581        stepast=isSgBinaryOp(incr)->get_lhs_operand();
++++11581        stepast=isSgBinaryOp(arithOp)->get_lhs_operand();
 ```
 Save your changes and quite your editor (e.g. Use ```:wq``` to save and quit for vim).
 
@@ -226,7 +226,6 @@ Run the binary and it shows ```3.141593```.
 The generated source code also calculates the loop stride correctly.
 ```.term1
 vim rose_bug_parallel_for_in_rose.c +46
-
 ```
 We can see the loop scheduler now has the right stride of value 1 used as its 3rd parameter.
 ```
