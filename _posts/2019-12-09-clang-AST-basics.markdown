@@ -104,7 +104,7 @@ bool VisitCXXRecordDecl(CXXRecordDecl *Declaration) {
 Now we can combine all of the above into a small example program:
 
 ```.term1
-cd $LLVM_SRC/tools/clang/tools
+cd $LLVM_SRC/clang/tools
 ```
 
 ```.term1
@@ -165,8 +165,7 @@ public:
 
 int main(int argc, char **argv) {
   if (argc > 1) {
-    FindNamedClassAction *FNC = new FindNamedClassAction();
-    clang::tooling::runToolOnCode(FNC, argv[1]);
+    clang::tooling::runToolOnCode(std::make_unique<FindNamedClassAction>(), argv[1]);
   }
 }
 EOF
@@ -199,7 +198,7 @@ echo "add_clang_subdirectory(FindClassDecls)" >> ../CMakeLists.txt
 ```
 
 ```.term1
-cd $LLVM_BUILD && make -j8 install > /dev/null
+cd $LLVM_BUILD && ninja -j8 install > /dev/null
 ```
 
 ```.term1
