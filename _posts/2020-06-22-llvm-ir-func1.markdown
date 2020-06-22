@@ -53,7 +53,7 @@ This git repository contains:
 * tut1.cpp: the LLVM source file to build LLVM IR for the function,
 * makefile: makefile with targets to dump LLVM IR and build the program.
 
-### **4. Look Into the Function to be Built**
+## **4. Look Into the Function to be Built**
 
 You can use cat to look into the source file with a simple function:
 ```.term1
@@ -100,7 +100,7 @@ If you have finished [Getting Familar with LLVM IR](http://freecompilercamp.org/
 To simplify this tutorial, we will build add and mul instructions, ignoring nsw (“No Signed Wrap”). 
 nsw is used to indicate the result value of the instructions is a poison value if signed overflow occurs. 
 
-### **5. Look Into the LLVM Program**
+## **5. Look Into the LLVM Program**
 
 Now let's look at the program building a module and a function.
 
@@ -260,7 +260,7 @@ We create a new basic block at line 61 by calling its constructor. All we need t
 
 The final step in creating our function is to create the instructions that make it up. Our mul_add function is composed of just three instructions: a multiply, an add, and a return. IRBuilder gives us a simple interface for constructing these instructions and appending them to the “entry” block. Each of the calls to IRBuilder returns a Value* that represents the value yielded by the instruction. You’ll also notice that, above, x, y, and z are also Value*'s, so it's clear that instructions operate on Value*'s.
 
-### **6. Build and Test the Program**
+## **6. Build and Test the Program**
 
 This tutorial's sourcetree lives independent from LLVM.  
 It uses a makefile to build the executable, using an installed copy of LLVM. 
@@ -303,8 +303,7 @@ rm -rf mul_add.ll
 llvm-dis mul_add.bc
 cat mul_add.ll
 ```
-
-### **7. References**
+## **7. References**
 
 This tutorial is based on the content from https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html .
 
