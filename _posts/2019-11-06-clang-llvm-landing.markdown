@@ -69,6 +69,10 @@ Give Clang/LLVM a try with the following tutorials:
 [Modifying LLVM IR using an LLVM Pass](/llvm-ir-mod)
   *  In this tutorial we will show how to modify/change LLVM IR, using a LLVM pass to replace any binary operation with a multiply operation.
 
+[Creating a Module with a Function using IRBuilder](/llvm-ir-func1)
+  *  In this tutorial we will show how to create a module with a function with a few statements, using IRBuilder.
+
+
 ## More Reading: References
   * [LLVM Official Website](https://www.llvm.org/)
   
