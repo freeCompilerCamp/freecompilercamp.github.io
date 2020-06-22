@@ -31,6 +31,9 @@ Give ROSE a try with the following tutorials:
 [Traversing the ROSE AST](/rose-ast-traversal)
   * This is a tutorial to build your own tool traversing ROSE AST to find things of your interests.
 
+[Working with Complex Types](/rose-complex-types)
+  * This is a tutorial for working with more complex types when traversing the ROSE AST.
+
 [Modifying the ROSE AST](/rose-ast-modification)
   * This is a tutorial to build your own source code translator by modifying ROSE AST.
 
