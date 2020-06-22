@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Creating a function using LLVM IR"
+title:  "Creating a function using LLVM IRBuilder"
 author: "@chunhualiao"
 date:   2020-06-22
 categories: beginner
