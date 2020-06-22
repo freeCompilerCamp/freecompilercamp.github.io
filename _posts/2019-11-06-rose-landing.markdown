@@ -22,6 +22,9 @@ This series of tutorials will help you
 ## Hands-on Learning
 Give ROSE a try with the following tutorials:
 
+[ROSE - An Introduction](/rose-intro)
+  * This is a short introduction to ROSE, its features and use cases, and how to use it.
+
 [Getting Familiar with the ROSE AST](/rose-ast)
   * This is a tutorial to use a few tools to visualize AST.
 
