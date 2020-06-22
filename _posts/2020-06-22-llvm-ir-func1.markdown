@@ -180,9 +180,9 @@ You should see the following screen output (excerpt for the function only):
  67   return mod;
  68 }
 ```
-We first declare a makeLLVMModule() function (line 16), which will do the real work of creating the module. 
-
 Line 1 through 12 of the program contains the appropriate LLVM header files. 
+
+We declare a makeLLVMModule() function (line 16), which will do the real work of creating the module. 
 
 Inside of the main function: the first segment is pretty simple: it creates an LLVM “module” (line 21). 
 In LLVM, a module represents a single unit of code that is to be processed together. 
