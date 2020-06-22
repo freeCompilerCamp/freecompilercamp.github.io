@@ -67,8 +67,8 @@ You should see the following content:
 3 }
 ```
 
-This source file contains a simple mul_add function to perform the mutliply-add operations using three parameters x, y, and z. 
-In order to build LLVM IR representing this function, we can using clang to dump out its LLVM IR as a reference. 
+This source file contains a simple mul_add function to perform a mutliply-add operation using three parameters x, y, and z. 
+In order to build the LLVM IR representing this function, we can using clang to dump out its LLVM IR as a reference. 
 
 Type the following command line to generate mul_add.ll, the text output of LLVM IR of mul_add.c:
 ```.term1
