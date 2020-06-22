@@ -243,3 +243,5 @@ longer maintained) resources, including several tutorials and a user manual.
   is a community-editable documentation for ROSE.
 * The [ROSE website](http://rosecompiler.org/) also contains useful information
   about ROSE and its goals.
+
+Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-06-11-rose-intro.markdown)
