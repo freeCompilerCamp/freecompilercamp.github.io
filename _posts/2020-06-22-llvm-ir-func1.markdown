@@ -55,7 +55,7 @@ This git repository contains:
 
 ### **4. Look Into the Function to be Built**
 
-You can use vim to look into the source file
+You can use cat to look into the source file with a simple function:
 ```.term1
 cat mul_add.c
 ```
