@@ -305,6 +305,6 @@ cat mul_add.ll
 ```
 ## **7. References**
 
-This tutorial is based on the content from https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html .
+This tutorial is based on the content from [https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html](https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html).
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-06-22-llvm-ir-func1.markdown)
