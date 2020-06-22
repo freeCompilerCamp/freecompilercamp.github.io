@@ -205,17 +205,8 @@ A PassManager, as should be obvious from its name, manages passes: it is respons
 Finally, we write the created module containing the function into a bitcode file named mul_add.bc at line from 33 through 35.
 
 Now onto the interesting part: creating and populating a module inside makeLLVMModule():
-* Line 43 creates a new Module object
+* Line 43 creates a new Module object.
 * Line 45 through 49 construct the function by calling getOrInsertFunction() on our module, passing in the name, return type, and argument types of the function. In the case of our mul_add function, that means one 32-bit integer for the return value and three 32-bit integers for the arguments. 
-
-The details of all classes and member functions of LLVM can be found at https://llvm.org/doxygen/index.html . For example, https://llvm.org/doxygen/classllvm_1_1Module.html lists documentation about LLVM::Module, including getOrInsertFunction().
- 
-Module::getOrInsertFunction() looks up the specified function in the module symbol table. There are several possibilities:
-* If it does not exist, add a prototype for the function and return it.
-* Otherwise, if the existing function has the correct prototype, return the existing function.
-* Finally, the function exists but has the wrong prototype: return the function with a constantexpr cast to the right prototype.
-In all cases, the returned value is a FunctionCallee wrapper around the 'FunctionType T' passed in, as well as a 'Value' either of the Function or the bitcast to the function.
-So at line 50, we get the callee of mul_add_fun and cast it to a pointer to Function. 
 
 ```
  45   FunctionCallee mul_add_fun = mod->getOrInsertFunction("mul_add",
@@ -225,6 +216,15 @@ So at line 50, we get the callee of mul_add_fun and cast it to a pointer to Func
  49       Type::getInt32Ty(Context));
  50   Function *mul_add = cast<Function> (mul_add_fun.getCallee());
 ```
+
+The details of all classes and member functions of LLVM can be found at https://llvm.org/doxygen/index.html . For example, https://llvm.org/doxygen/classllvm_1_1Module.html lists documentation about LLVM::Module, including getOrInsertFunction().
+ 
+Module::getOrInsertFunction() looks up the specified function in the module symbol table. There are several possibilities:
+* If it does not exist, add a prototype for the function and return it.
+* Otherwise, if the existing function has the correct prototype, return the existing function.
+* Finally, the function exists but has the wrong prototype: return the function with a constantexpr cast to the right prototype.
+In all cases, the returned value is a FunctionCallee wrapper around the 'FunctionType T' passed in, as well as a 'Value' either of the Function or the bitcast to the function.
+So at line 50, we get the callee of mul_add_fun and cast it to a pointer to Function. 
 
 Line 52 sets the calling convention for our new function to be the C calling convention. This isn’t strictly necessary, but it ensures that our new function will interoperate properly with C code.
 
