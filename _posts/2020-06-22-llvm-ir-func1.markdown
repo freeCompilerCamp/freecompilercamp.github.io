@@ -194,6 +194,13 @@ Line 24 runs the LLVM module verifier on our newly created module. While this pr
 Next, Line 27 through 30 instantiate an LLVM PassManager and run the PrintModulePass on our module. 
 LLVM uses an explicit pass infrastructure to manage optimizations and various other things. 
 A PassManager, as should be obvious from its name, manages passes: it is responsible for scheduling them, invoking them, and ensuring the proper disposal after we’re done with them. For this example, we’re just using a trivial pass that prints out our module in textual form.
+```
+ 26   //Prints the module IR
+ 27   ModulePass *m = createPrintModulePass(outs(), "Module IR printer");
+ 28   legacy::PassManager PM;
+ 29   PM.add(m);
+ 30   PM.run(*Mod);
+```
 
 Finally, we write the created module containing the function into a bitcode file named mul_add.bc at line from 33 through 35.
 
