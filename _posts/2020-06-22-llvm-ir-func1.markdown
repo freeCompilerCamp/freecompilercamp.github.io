@@ -100,7 +100,6 @@ If you have finished [Getting Familar with LLVM IR](http://freecompilercamp.org/
 To simplify this tutorial, we will build add and mul instructions, ignoring nsw (“No Signed Wrap”). 
 nsw is used to indicate the result value of the instructions is a poison value if signed overflow occurs. 
 
-
 ### **5. Look Into the LLVM Program**
 
 Now let's look at the program building a module and a function.
@@ -188,7 +187,6 @@ Inside of the main function: the first segment is pretty simple: it creates an L
 In LLVM, a module represents a single unit of code that is to be processed together. 
 A module contains things like global variables, function declarations, and implementations. 
 
-
 Line 24 runs the LLVM module verifier on our newly created module. While this probably isn’t really necessary for a simple module like this one, it's always a good idea, especially if you’re generating LLVM IR based on some input. The verifier will print an error message if your LLVM module is malformed in any way.
 
 Next, Line 27 through 30 instantiate an LLVM PassManager and run the PrintModulePass on our module. 
@@ -203,6 +201,13 @@ A PassManager, as should be obvious from its name, manages passes: it is respons
 ```
 
 Finally, we write the created module containing the function into a bitcode file named mul_add.bc at line from 33 through 35.
+
+```
+ 32    // Write IR to a bitcode file
+ 33   FILE* mul_add_file = fopen("mul_add.bc", "w+");
+ 34   raw_fd_ostream bitcodeWriter(fileno(mul_add_file), true);
+ 35   WriteBitcodeToFile(*Mod, bitcodeWriter);
+```
 
 Now onto the interesting part: creating and populating a module inside makeLLVMModule():
 * Line 43 creates a new Module object.
