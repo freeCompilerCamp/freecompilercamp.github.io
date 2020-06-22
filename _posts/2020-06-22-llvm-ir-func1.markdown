@@ -298,6 +298,11 @@ entry:
 The module IR is extactly what we want to create. Additionally, there is a mul_add.bc file created under the current path.
 You can use llvm-dis to convert it to a text file and check its content. It should be the same as the text output we just saw above.
 
+```.term1
+rm -rf mul_add.ll 
+llvm-dis mul_add.bc
+cat mul_add.ll
+```
 
 ### **7. References**
 
