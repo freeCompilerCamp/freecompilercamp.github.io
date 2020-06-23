@@ -15,6 +15,17 @@ You can create a new similar Markdown file named ```2019-07-01-rose-your-tutoria
 #### a. Update headers
 
 Add title, author, date and so on.
+The docker image used for sandbox could be specified here. Currently, we provide the following images.
+- `freecompilercamp/pwc:full`: it contains both LLVM 10 and ROSE. If no image is specified by user, this one is used by default.
+- `freecompilercamp/pwc:llvm10`: it contains only LLVM 10.
+- `freecompilercamp/pwc:rose`: it contains only a release version of ROSE.
+- `freecompilercamp/pwc:rose-debug`: it contains a debug build of ROSE, `-O0` is used by default.
+- `freecompilercamp/pwc:rose-bug`: it contains an old version of ROSE that has a loop stride bug.
+
+For example, to specify to use the image of LLVM 10, add the following line to the header of tutorial markdown file.
+```
+image: freecompilercamp/pwc:llvm10
+```
 
 #### b. Add content
 
