@@ -5,6 +5,7 @@ author: "@ouankou"
 date:   2019-07-01
 categories: beginner
 tags: [rose,openmp,autopar,parallelization]
+image: freecompilercamp/pwc:rose
 ---
 
 # Tips:
