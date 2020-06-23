@@ -5,6 +5,7 @@ author: "@chunhualiao"
 date:   2019-08-29
 categories: beginner
 tags: [rose,ast,traversal]
+image: freecompilercamp/pwc:rose-debug
 ---
 
 # Tips:
