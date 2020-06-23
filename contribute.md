@@ -22,9 +22,10 @@ The docker image used for sandbox could be specified here. Currently, we provide
 - `freecompilercamp/pwc:rose-debug`: it contains a debug build of ROSE, `-O0` is used by default.
 - `freecompilercamp/pwc:rose-bug`: it contains an old version of ROSE that has a loop stride bug.
 
-For example, to specify to use the image of LLVM 10, add the following line to the header of tutorial markdown file.
+For example, to specify to use the image of ROSE in the tutorial above, add the following line to the header of [tutorial markdown file](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-07-01-rose-autopar.markdown
+).
 ```
-image: freecompilercamp/pwc:llvm10
+image: freecompilercamp/pwc:rose
 ```
 
 #### b. Add content
