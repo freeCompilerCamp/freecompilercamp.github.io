@@ -120,7 +120,7 @@ ROSE is already included and built in FreeCompilerCamp terminal environments.
 There are three main directories of ROSE:
 
 - `~/build/rose_build`, referenced by environment variable `${ROSE_BUILD}`
-- `~/install/rose_install`
+- `~/install/rose_install`, referenced by environment variable `${ROSE_PATH}`
 - `~/source/rose_src`, referenced by environment variable `${ROSE_SRC}`
 
 The build and install directories differ in that the install directory contains
