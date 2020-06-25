@@ -38,24 +38,12 @@ Most languages support the general concept of modifiers to types, declarations, 
 Here, we will look at some tutorial code to demonstrate how to access the *volatile* modifier used in the declaration of types for variables. We demonstrate that the modifier is not present in the `SgVariableDeclaration` or the `SgVariableDefinition`, but is located in the `SgModifierType` used to wrap the type returned from the `SgInitializedName` (the variable in the variable declaration).
 
 #### Example ####
-Consider the source code example below, showing the use of the `volatile` type modifier.
-```c++
-// Input example of use of "volatile" type modifier
-volatile int a, *b;
-
-void foo()
-{
-	for (volatile int y = 0; y < 10; y++)
-	{
-	}
-}
-
-int main(int argc, char* argv[])
-{
-	return 0;
-}
+Let's take a look at source code example for this section, showing use of the `volatile` type modifier.
+```.term1
+cd ${ROSE_BUILD}/tutorial
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/volatile_ex.cxx
+cat volatile_ex.cxx
 ```
-You should save this code to `${ROSE_BUILD}/tutorial` as `volatile_ex.cxx`, as we will use it shortly.
 
 It will be helpful to refer to the AST generated from the ROSE PDF generator tool. It can be downloaded <a href="/images/volatile_ex.cxx.pdf" target="_blank">here (click to open in a new tab)</a>. Of importance are the `SgInitializedName` IR nodes which contain information about variables in our source code. This is where modifiers such as *volatile* are contained instead of `SgVariableDeclaration`. 
 
@@ -73,7 +61,7 @@ Let's run this traversal tool with our sample code above. Be sure to exit Vim fi
 cd ${ROSE_BUILD}/tutorial
 make volatileTypeModifier
 ```
-And then run it, assuming that the input code has been named `volatile_ex.cxx`:
+And then run it with out input source code:
 ```.term1
 ./volatileTypeModifier volatile_ex.cxx
 ```
@@ -85,49 +73,11 @@ The analysis of functions often requires the query of the function types. This t
 
 #### Examples ####
 
-We will use the following code snippet for this section and those following. Please save it as `function_param_ex.cxx` to `${ROSE_BUILD}/tutorial`. 
-```c++
-// Templated class declaration used in template parameter example code
-template <typename T>
-class templateClass
-{
-	public:
-		int x;
-
-		void foo(int);
-		void foo(double);
-};
-
-// Overloaded functions for testing overloaded function resolution
-void foo(int);
-void foo(double)
-{
-	int x = 1;
-	int y;
-
-	// Added to allow non-trivial CFG
-	if (x)
-		y = 2;
-	else
-		y = 3;
-}
-
-int main(int argc, char* argv[])
-{
-	foo(42);
-	foo(3.14159265);
-
-	templateClass<char> instantiatedClass;
-	instantiatedClass.foo(7);
-	instantiatedClass.foo(7.0);
-
-	for (int i = 0; i < 4; i++)
-	{
-		int x;
-	}
-
-	return 0;
-}
+We will use the following code snippet for this section and those following.
+```.term1
+cd ${ROSE_BUILD}/tutorial
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/function_param_ex.cxx
+cat function_param_ex.cxx
 ```
 Notice that there is a lot going on in this source code - we have overloaded functions, template parameters, and a templated class. We will discuss how ROSE handles these cases in the following sections; for now, let us only focus on function parameter types.
 
@@ -189,39 +139,13 @@ The output shows each function call of `foo` being resolved by an overloaded fun
 In this tutorial, we will look at a translator that reads an application (a modified version of the previous input) and outputs some information about each instantiated template, including the template arguments. As a brief note, ROSE provides special handling for C++ templates because template instantiation must be controlled by the compiler. Templates that require instantiation are instantiated by ROSE and can be seen in the traversal of the AST (and transformed). Any templates that can be instantiated by the backend compiler **and** *are not transformed* are not output within the code generation phase.
 
 #### Example ####
-For this section, we will consider the input source code below, which a slightly modified version of the previous two sections' input:
-```c++
-// Templated class declaration used in template parameter example code
-template <typename T>
-class templatedClass
-{
-	public:
-		int x;
-
-		void foo(int);
-		void foo(double);
-};
-
-int main()
-{
-	templatedClass<char> instantiatedClass;
-	instantiatedClass.foo(7);
-	instantiatedClass.foo(7.0);
-
-	templatedClass<int> instantiatedClassInt;
-	templatedClass<float> instantiatedClassFloat;
-	templatedClass<templatedClass<char>> instantiatedClassNestedChar;
-
-	for (int i = 0; i < 4; i++)
-	{
-		int x;
-	}
-
-	return 0;
-}
+For this section, we will consider some templated example source code, which a slightly modified version of the previous two sections' input:
+```.term1
+cd ${ROSE_BUILD}/tutorial
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/template_param_ex.cxx
+cat template_param_ex.cxx
 ```
-Please save this code as `template_param_ex.cxx` in `${ROSE_BUILD}/tutorial`.
-
+Notice that this code contains a templated class, and we make several instantiations of that class. In this example, we will look into extracting the template parameters from these instantiated objects.
 The translator of interest for this section is `templateParameter`:
 ```.term1
 vim ${ROSE_SRC}/tutorial/templateParameter.C
