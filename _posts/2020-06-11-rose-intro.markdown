@@ -140,7 +140,7 @@ environment and can be viewed by
 cat ${ROSE_SRC}/tutorial/identityTranslator.C
 ```
 
-You may also use your favorite text editor to open source files (nano, vim, and emacs). Alternatively, see the code below.
+Recall you may simply click on terminal snippets such as the one above to immediately execute the commands in the terminal. You may also use your favorite text editor to open source files (nano, vim, and emacs). Alternatively, see the code below.
 
 ```cpp
 #include "rose.h"
@@ -180,27 +180,11 @@ cd ${ROSE_BUILD}/tutorial
 make identityTranslator
 ```
 
-To showcase the identity translator, create a new C++ file named
-```sampleInput.cxx``` and paste the following code (or your own code, if you
-like!):
-```cpp
-// Example input file for ROSE tutorial
-#include <iostream>
-// Main function int main()
-
-typedef float Real;
-
-int main( )
-{
-  int x=0;
-  bool value = false ;
-
-  for (int i=0; i < 4; i++) {
-    int x;
-  }
-
-  return 0;
-}
+To showcase the identity translator, we will run some simple input source code through the translator and view its output. First, we will obtain the sample input code, `sampleInput.cxx`, from GitHub via `wget` and save it into the `${ROSE_BUILD}/tutorial` directory, where our identity translator tool is built. We also show the content of the file in the terminal; please take a moment to breifly look it over.
+```.term1
+cd ${ROSE_BUILD/tutorial
+wget https://github.com/freeCompilerCamp/code-for-rose-tutorials/blob/master/rose-intro/sampleInput.cxx
+cat sampleInput.cxx
 ```
 
 To run this sample input code through the identity translator, we simply provide
@@ -215,25 +199,17 @@ translator also called the backend of ROSE, the resulting source code is also
 compiled by a vendor compiler (gcc in this case). The resulting ```a.out``` is
 the result of this compilation.
 
+We can view the ROSE output source by 
+
+```.term1
+cat rose_sampleInput.cxx
+```
+
 Note that the output code is nearly identical to the input source code, save for
 whitespace. We expect this, of course, since this is the purpose of the identity
 translator.
-```cpp
-// Example input file for ROSE tutorial
-#include <iostream>
-// Main function int main()
-typedef float Real;
 
-int main()
-{
-  int x = 0;
-  bool value = false;
-  for (int i = 0; i < 4; i++) {
-    int x;
-  }
-  return 0;
-}
-```
+Feel free to experiment with the identity translator using your own source code as input!
 
 # F. Additional Resources
 * The [ROSE Github Wiki](https://github.com/rose-compiler/rose/wiki) contains additional information on ROSE, including how to
