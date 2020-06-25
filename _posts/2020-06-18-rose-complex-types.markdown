@@ -14,9 +14,9 @@ Code snippets are shown in one of three ways throughout this environment:
 1. Code that looks like `this` is sample code snippets that is usually part of
    an explanation.
 2. Code that appears in box like the one below can be clicked on and it will
-   automatically be typed in to the appropriate terminal window: 
+   automatically be typed in to the appropriate terminal window:
    ```.term1
-   vim readme.txt 
+   vim readme.txt
    ```
 
 3. Code appearing in windows like the one below is code that you should type in
@@ -24,7 +24,7 @@ Code snippets are shown in one of three ways throughout this environment:
    which we cannot supply. Items appearing in <> are the pieces you should
    substitute based on the instructions.  
    ```
-   Add your name here - <name> 
+   Add your name here - <name>
    ```
 
 ## Features ##
@@ -45,7 +45,7 @@ wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/
 cat volatile_ex.cxx
 ```
 
-It will be helpful to refer to the AST generated from the ROSE PDF generator tool. It can be downloaded <a href="/images/volatile_ex.cxx.pdf" target="_blank">here (click to open in a new tab)</a>. Of importance are the `SgInitializedName` IR nodes which contain information about variables in our source code. This is where modifiers such as *volatile* are contained instead of `SgVariableDeclaration`. 
+It will be helpful to refer to the AST generated from the ROSE PDF generator tool. It can be downloaded <a href="/images/volatile_ex.cxx.pdf" target="_blank">here (click to open in a new tab)</a>. Of importance are the `SgInitializedName` IR nodes which contain information about variables in our source code. This is where modifiers such as *volatile* are contained instead of `SgVariableDeclaration`.
 
 The source code of the ROSE traversal tool that looks for volatile modifiers can be viewed in Vim by
 ```.term1
@@ -66,7 +66,7 @@ And then run it with out input source code:
 ./volatileTypeModifier volatile_ex.cxx
 ```
 
-From the output, we see that we have performed a successful AST traversal, and for each `SgVariableDeclaration`, `SgVariableDefinition`, and `SgInitializedName` IR nodes, we print some relevant information about volatile modifiers. As we expected, `isVolatile` is false for all `SgVariableDeclaration` and `SgVariableDefinition` nodes. For `SgInitializdName` nodes, we print the variable name, its type, whether or not it is volatile, and the modifier nodes. Note that `a` and `y` are volatile nodes. Although `b` is volatile-quantified, our tool does not realize this because the type of `b` is `SgPointerType`. This behavior is expected as `volatile int *b` is a pointer *to* a volatile variable, rather than a volatile pointer. 
+From the output, we see that we have performed a successful AST traversal, and for each `SgVariableDeclaration`, `SgVariableDefinition`, and `SgInitializedName` IR nodes, we print some relevant information about volatile modifiers. As we expected, `isVolatile` is false for all `SgVariableDeclaration` and `SgVariableDefinition` nodes. For `SgInitializdName` nodes, we print the variable name, its type, whether or not it is volatile, and the modifier nodes. Note that `a` and `y` are volatile nodes. Although `b` is volatile-quantified, our tool does not realize this because the type of `b` is `SgPointerType`. This behavior is expected as `volatile int *b` is a pointer *to* a volatile variable, rather than a volatile pointer.
 
 ## B. Function Parameter Types ##
 The analysis of functions often requires the query of the function types. This tutorial example shows how to obtain the function parameter types for any function. Note that functions also have a type which is based on their signature, a combination of their return type and function parameter types. Any functions sharing the same return type and function parameter types have the same function type (the function type, a `SgFunctionType` IR node, will be shared between such functions).
@@ -83,10 +83,10 @@ Notice that there is a lot going on in this source code - we have overloaded fun
 
 Let's take a look at the source code of the `typeInfoFromFunctionParameter` translator, included with ROSE, that reads an application (our source code above) and outputs information about the function parameter types for each function. This information includes the order of the function declaration in the global scope, name of the function, and the types of each parameter declared in the function declaration. We can view this source code in Vim by
 ```.term1
-vim ${ROSE_SRC}/tutorial/typeInfoFromFunctionParameters.C 
+vim ${ROSE_SRC}/tutorial/typeInfoFromFunctionParameters.C
 ```
 
-In this translator, we do not explicitly traverse the AST as in previous examples; instead, we can use the alternate method of using the Query Library to search for nodes with a specific type. This is useful for simple translators, such as this one. To query the AST in this regard, we use the `NodeQuery` namespace to obtain a container of `SgNode`s corresponding to the type being searched for. `NodeQuery::querySubTree` takes as parameters the root `SgProject` node and the IR node type to search for. In our case, we are looking for `V_SgFunctionDeclaration`. Many SAGE classes/nodes in ROSE contain static variants, prefixed by `V_`, that can be used for queries. We perform this query in line 17 of the translator. 
+In this translator, we do not explicitly traverse the AST as in previous examples; instead, we can use the alternate method of using the Query Library to search for nodes with a specific type. This is useful for simple translators, such as this one. To query the AST in this regard, we use the `NodeQuery` namespace to obtain a container of `SgNode`s corresponding to the type being searched for. `NodeQuery::querySubTree` takes as parameters the root `SgProject` node and the IR node type to search for. In our case, we are looking for `V_SgFunctionDeclaration`. Many SAGE classes/nodes in ROSE contain static variants, prefixed by `V_`, that can be used for queries. We perform this query in line 17 of the translator.
 
 Once we have all the nodes of type `SgFunctionDeclaration`, we iterate through the container (line 20) and keep track of how many function declarations we have encountered so far. We then create a pointer to the current type so that we may use its member functions (lines 23-24). Note that there are a number of builtin functions defined as part of the g++ and gcc compatibility and these are output as well. These are marked as *compiler generated functions* within ROSE. We would like to differentiate between the two different types, and this is what the conditional on line 27 is doing. We continue so long as we are not working with a compiler generated function.
 
@@ -103,10 +103,10 @@ Run the translator on our `function_param_ex.cxx` input file by
 ./typeInfoFromFunctionParameters function_param_ex.cxx
 ```
 
-After 3,506 compiler generated functions, we see our own function declaration `foo` (and `main`). Note that the `foo` function is overloaded, but the translator has no issue identifying them as separate entities. In each case, we are able to print the parameter types. 
+After 3,506 compiler generated functions, we see our own function declaration `foo` (and `main`). Note that the `foo` function is overloaded, but the translator has no issue identifying them as separate entities. In each case, we are able to print the parameter types.
 
 ## C. Resolving Overloaded Functions ##
-In this section, we will look at a translator that reads an application (the same `function_param_ex.cxx` source code as above) and reposts on the mapping between function calls and function declarations. This is trivial since all overloaded function resolution is done within the frontend and so need not be computed (this is because all type resolution is done in the frontend and stored in the AST explicitly). Other compiler infrastructures often require this to be figured out from the AST, when type resolution is unavailable, and while not too hard for C, this is particularly complex for C++ (due to overlapping and type promotion within function arguments).
+In this section, we will look at a translator that reads an application (the same `function_param_ex.cxx` source code as above) and reposts on the mapping between function calls and function declarations. This is trivial since all overloaded function resolution is done within the frontend and so need not be computed (this is because all type resolution is done in the frontend and stored in the AST explicitly). Other compiler infrastructures often require this to be figured out from the AST, when type resolution is unavailable, and while not too hard for C, this is particularly complex for C++ (due to overloading and type promotion within function arguments).
 
 #### Example ####
 This translator is known as `resolveOverloadedFunction` and is available at
@@ -116,9 +116,11 @@ vim ${ROSE_SRC}/tutorial/resolveOverloadedFunction.C
 
 In this translator, we follow much of the same initial procedure to perform a subtree query as in the previous section. This time, however, we are interested in `SgFunctionCallExp` nodes, and so we use `V_SgFunctionCallExp` as the parameter to the subtree query. `SgFunctionCallExp` represents the *general* concept of a C++ function call and is an expression. Once we have it on lines 22-23, we obtain the actual expression using the `get_function()` member function. This object will let us perform a more detailed analysis of function expressions in the input source code.
 
-We can determine if our function expression is a function being called with the `SgFunctionRefExp` class, which represents actual functions being called (e.g., `foo`), on line 29-31. If this returned object is `NULL`, the node in the AST represents a *member function*, as this is (technically) not a called function in terms of the `SgFunctionRefExp` class. Otherwise, we have a non-member function, as in our two calls to the `foo` function in the input source code. We make these checks with the conditional starting on line 32.
+`SgFunctionCallExp.get_function()` gives us the general concept of a specific function call, e.g., `foo()`. In C, and more so in C++, the left-hand side of a function call (e.g., `foo`) is itself an expression. This expression may be simple, such as in the case when a free-standing function is called directly; for example, by calling `foo()`. In this case, the left-hand side is an `SgFunctionRefExp`. Notice that we obtain this expression on line 29.
 
-The next step is to determine the *symbol* of the function. This represents the function name, and in the case of a member function, represents the entire class + member name, such as `instantiatedClass.foo()` in our input code. For non-member functions, we need only obtain the symbol using the `get_symbol()` function on the `SgFunctionRefExp` object, which returns an `SgFunctionSymbol`. We do this on line 35. For member functions, we need to extract the right-hand side of the binary dot operator expression. This easily done by obtaining the `SgDotExp` object from the function expression and using the `get_rhs_operand()` function on this object (lines 40-43). Once this is done, we obtain a `SgMemberFunctionRefExp` object, which represents a member function call. From there, we can simply use the `get_symbol()` function as before. 
+Of course, the left-hand side of a function call can be significantly more complicated and can be quite arbitrary. We could have a C++ call to a member function (e.g., `bar.foo()`), or have a family of function calls if the function is virtual. There could also be arbitrary expressions producing function pointers (e.g., `(******(foo))()`). For pointer-based structures or objects, member functions would also be accessed with the arrow operator (e.g., `bar->foo()`). As a result, it can often be tricky to analyze left-hand sides of function call expressions. Fortunately, ROSE provides a library function that takes in a call expression and fills a vector with a set of function declarations that could be called (see Section F for more details). There are also some expression-based classes that allow us to extract the left-hand side easier; e.g., `SgDotOp` representing the dot operator.
+
+In our example here, we will keep things simple and look into the case where the left-hand side is either a free-standing function or is a member function accessed via the dot operator. In the latter case, the `SgFunctionRefExp` object obtained previously will be `NULL`, as the left-hand side is more complicated than a simple free-standing function. Otherwise, we can obtain the left-hand side by simply extracting the `SgFunctionSymbol`, which represents the function name, via the `get_symbol()` function of the `SgFunctionRefExp` (lines 32-36). For member functions, we need to obtain the expression from the right-hand side of the dot operator (line 41). Note, however, that the returned expression here will no longer be of type `SgFunctionRefExp`, as discussed previously. Instead, it is an object of class `SgMemberFunctionRefExp`. Once we have this object, we can obtain the symbol through the same `get_symbol()` function as previously (lines 42-45).
 
 Finally, on lines 52-60, we obtain the final function declaration through a `SgFunctionDeclaration` object. We need the symbol to do this; this object also gives us information about the function declaration in the input source code, such as its location. Lines 56-59 print this information; notice that we are able to resolve overloaded functions using this methodology through the use of `SgFunctionSymbol`. That is, despite having overloaded function calls, we are able to distinguish between them.  
 
@@ -166,7 +168,8 @@ The output shows each template class instantiation that appears in the input sou
 In this chapter, we have gotten familiar with working with various complex types in ROSE. We learned about traversing the AST and searching for nodes of interest, both with a traversal and with a query. We looked at examples involving type and declaration modifiers, function and template parameter extraction, and overloaded function resolution. There are many other types that can be searched with the AST in ROSE. We recommend looking into the ROSE API to learn more.
 
 ## F. Additional Resources ##
-* The [ROSE HTML reference page](http://rosecompiler.org/ROSE_HTML_Reference/index.html) contains a full doxygenerated API that may be helpful in writing your own tools that search for specific types in the AST. 
+* ROSE provides a library function that takes in a call expression and fills a vector with a set of function declarations that could be called. If a callee cannot be determined exactly (as in the case with a function pointer), the set of functions returned is an overapproximation. The [CallGraph.h](http://rosecompiler.org/ROSE_HTML_Reference/CallGraph_8h_source.html) header contains this function `CallTargetSet::getPropertiesForExpression`.
+* The [ROSE HTML reference page](http://rosecompiler.org/ROSE_HTML_Reference/index.html) contains a full doxygenerated API that may be helpful in writing your own tools that search for specific types in the AST.
 * The [ROSE User manual](http://rosecompiler.org/uploads/ROSE-UserManual.pdf) contains some more information about AST queries in Chapter 6.
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-06-18-rose-complex-types.markdown)
