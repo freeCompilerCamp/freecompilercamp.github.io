@@ -183,7 +183,7 @@ make identityTranslator
 To showcase the identity translator, we will run some simple input source code through the translator and view its output. First, we will obtain the sample input code, `sampleInput.cxx`, from GitHub via `wget` and save it into the `${ROSE_BUILD}/tutorial` directory, where our identity translator tool is built. We also show the content of the file in the terminal; please take a moment to breifly look it over.
 ```.term1
 cd ${ROSE_BUILD/tutorial
-wget https://github.com/freeCompilerCamp/code-for-rose-tutorials/blob/master/rose-intro/sampleInput.cxx
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-intro/sampleInput.cxx
 cat sampleInput.cxx
 ```
 
