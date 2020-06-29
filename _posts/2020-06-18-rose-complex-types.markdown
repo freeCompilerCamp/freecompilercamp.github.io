@@ -38,23 +38,28 @@ Most languages support the general concept of modifiers to types, declarations, 
 Here, we will look at some tutorial code to demonstrate how to access the *volatile* modifier used in the declaration of types for variables. We demonstrate that the modifier is not present in the `SgVariableDeclaration` or the `SgVariableDefinition`, but is located in the `SgModifierType` used to wrap the type returned from the `SgInitializedName` (the variable in the variable declaration).
 
 #### Example ####
-Let's take a look at source code example for this section, showing use of the `volatile` type modifier.
+Let's take a look at the source code example for this section, showing use of the `volatile` type modifier.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/volatile_ex.cxx
 cat volatile_ex.cxx
 ```
-
-It will be helpful to refer to the AST generated from the ROSE PDF generator tool. It can be downloaded <a href="/images/volatile_ex.cxx.pdf" target="_blank">here (click to open in a new tab)</a>. Of importance are the `SgInitializedName` IR nodes which contain information about variables in our source code. This is where modifiers such as *volatile* are contained instead of `SgVariableDeclaration`.
+Notice we have three volatile variables: `a`, `b`, and `y`. `b` is actually a pointer to a volatile variable, rather than a volatile variable itself.
 
 The source code of the ROSE traversal tool that looks for volatile modifiers can be viewed in Vim by
 ```.term1
 vim ${ROSE_SRC}/tutorial/volatileTypeModifier.C
 ```
 
-For each IR node we visit, we check if it is of type `SgInitializedName`, as volatile modifiers are contained within those nodes (lines 14-15). If we have an `SgInitializedName` node, then we print its name (e.g., `a`) and get its type (lines 17-18). The type indicates the variable type; e.g., for `b`, it is an `SgPointerType` as it is a pointer, and for `a` it is an `SgModifierType` as volatile variables act as modifiers. If our `SgInitializedName` contains a modifier type, we check if it is the volatile modifier and print it if so (lines 21-26). Line 24 uses the `SgModifierType` object to determine if there is a volatile modifier contained within this `SgInitializedName`. This is done by using the `get_typeModifier()` member function of the `SgModifierType` object, followed by the `get_constVolatileModifier()` and `isVolatile()` member functions. Note that these items are not contained within the `SgInitializedName` nodes on the generated PDF for brevity, but are indeed part of the nodes and are exposed to the ROSE API. Lines 28-38 print out the list of associated `SgModifierType` nodes; however, this class is not currently used in ROSE and can be ignored.
+Here, we perform a standard AST traversal. In particular, we are looking for nodes of type `SgInitializedName` that represent the notion of a variable in a declaration. The general concept of a variable declaration is represented by `SgVariableDeclaration`. Similarly, variable definitions/initializations are represented by `SgVaraibleDefinition`. It is important to note that, in ROSE, each `SgVaraibleDeclaration` contains **only one** `SgInitializedName`. We can see this from an excerpt of the AST corresponding to the sample `volatile_ex.cxx` source, in particular the portion corresponding to the variable `a`:
 
-Finally, in lines 40-54, we demonstrate that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, as one may expect. In this code, even though the `isVolatile()` function can be obtained from the `SgVariableDeclaration` and `SgVariableDefinition` classes, volatile modifiers are not exposed to those nodes, so we expect this portion of the code to always print `false` for any IR nodes of these types encountered.
+![An excerpt of the AST corresponding to the sample input code above, for volatile variable a. Note that SgVariableDeclaration contains exactly one SgInitializedName in ROSE.](/images/SgInitializedName_Example.png)
+
+The concept of type modifiers in ROSE is represented via the `SgModifierType` class, a subclass of `SgType`. The type modifier itself is represented by the `SgTypeModifier` class; we can obtain the latter from the former via the `get_typeModifier()` function. Although exposed through the API, it is important to note that type modifiers are **not** present in `SgVariableDeclaration` or `SgVariableDefinition` objects; they can only be reliably obtained via the `SgModifierType` returned from `SgInitializedName`. 
+
+Let us now discuss the source of the translator with these considerations in mind. For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15). If we have a node of this type, we print its name (e.g., `a`) and get its type via the `get_type()` member function. Note that this returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using the `get_typeModifier()` function to return a `SgTypeModifier`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`. Lines 28-38 can be ignored as the `SgModifierTypes` class is not currently used in ROSE.
+
+Finally, lies 40-54 demonstrate that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, despite being exposed to the API. We expect this portion of the code to always print `false` for any IR nodes of these types encountered.
 
 Let's run this traversal tool with our sample code above. Be sure to exit Vim first. First, we build it:
 ```.term1
@@ -169,7 +174,7 @@ In this chapter, we have gotten familiar with working with various complex types
 
 ## F. Additional Resources ##
 * ROSE provides a library function that takes in a call expression and fills a vector with a set of function declarations that could be called. If a callee cannot be determined exactly (as in the case with a function pointer), the set of functions returned is an overapproximation. The [CallGraph.h](http://rosecompiler.org/ROSE_HTML_Reference/CallGraph_8h_source.html) header contains this function `CallTargetSet::getPropertiesForExpression`.
-* The [ROSE HTML reference page](http://rosecompiler.org/ROSE_HTML_Reference/index.html) contains a full doxygenerated API that may be helpful in writing your own tools that search for specific types in the AST.
+* The [ROSE HTML reference page](http://rosecompiler.org/ROSE_HTML_Reference/index.html) contains a full doxygenerated API that may be helpful in writing your own tools that search for specific types in the AST. Classes referenced in this tutorial can also be viewed here for more information.
 * The [ROSE User manual](http://rosecompiler.org/uploads/ROSE-UserManual.pdf) contains some more information about AST queries in Chapter 6.
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-06-18-rose-complex-types.markdown)
