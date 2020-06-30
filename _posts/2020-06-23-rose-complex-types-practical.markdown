@@ -12,11 +12,14 @@ tags: [rose, practical]
 Implement a ROSE translator that traverses the AST and prints the data type and name for each `const` type-quantified variable. Use a standard pre-order traversal (rather than the Query Library). Run your translator with the following input code:
 
 ```c++
+#include <cstdint>
+#include <cmath>
+
 const uint64_t foo = 632356;
 
 void bar() {
 	const float PI = 3.1415926;
-	x = atan2(3 * PI / 2);
+	float x = atan2(3 * PI, 2);
 }
 
 int main(int argc, char* argv[]) {
