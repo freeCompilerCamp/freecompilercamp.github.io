@@ -7,8 +7,8 @@ tags: [rose,compiler,landing]
 categories:
 terms: 0
 ---
-This series of tutorials will help you 
-  
+This series of tutorials will help you
+
   * Get familiar with the key concepts of ROSE
 
   * Write your own code analyzers
@@ -16,7 +16,7 @@ This series of tutorials will help you
   * Build customized code translators
 
   * Debug your translators
-  
+
   * Try out prebuilt ROSE-based tools
 
 ## Hands-on Learning
@@ -33,6 +33,7 @@ Give ROSE a try with the following tutorials:
 
 [Working with Complex Types](/rose-complex-types)
   * This is a tutorial for working with more complex types when traversing the ROSE AST.
+  * [Practical](/rose-complex-types-practical)
 
 [Modifying the ROSE AST](/rose-ast-modification)
   * This is a tutorial to build your own source code translator by modifying ROSE AST.
