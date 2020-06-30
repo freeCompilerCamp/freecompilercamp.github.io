@@ -59,14 +59,14 @@ The concept of type modifiers in ROSE is represented via the `SgModifierType` cl
 
 Let us now discuss the source of the translator with these considerations in mind. For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15). If we have a node of this type, we print its name (e.g., `a`) and get its type via the `get_type()` member function. Note that this returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using the `get_typeModifier()` function to return a `SgTypeModifier`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`. Lines 28-38 can be ignored as the `SgModifierTypes` class is not currently used in ROSE.
 
-Finally, lies 40-54 demonstrate that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, despite being exposed to the API. We expect this portion of the code to always print `false` for any IR nodes of these types encountered.
+Finally, lines 40-54 demonstrate that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, despite being exposed to the API. We expect this portion of the code to always print `false` for any IR nodes of these types encountered.
 
 Let's run this traversal tool with our sample code above. Be sure to exit Vim first. First, we build it:
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 make volatileTypeModifier
 ```
-And then run it with out input source code:
+And then run it with our input source code:
 ```.term1
 ./volatileTypeModifier volatile_ex.cxx
 ```
