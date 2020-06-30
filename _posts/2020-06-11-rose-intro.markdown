@@ -1,4 +1,4 @@
---- 
+---
 layout: post
 title:  "ROSE - An Introduction"
 author: "@vec4"
@@ -14,9 +14,9 @@ Code snippets are shown in one of three ways throughout this environment:
 1. Code that looks like `this` is sample code snippets that is usually part of
    an explanation.
 2. Code that appears in box like the one below can be clicked on and it will
-   automatically be typed in to the appropriate terminal window: 
+   automatically be typed in to the appropriate terminal window:
    ```.term1
-   vim readme.txt 
+   vim readme.txt
    ```
 
 3. Code appearing in windows like the one below is code that you should type in
@@ -24,10 +24,10 @@ Code snippets are shown in one of three ways throughout this environment:
    which we cannot supply. Items appearing in <> are the pieces you should
    substitute based on the instructions.  
    ```
-   Add your name here - <name> 
+   Add your name here - <name>
    ```
 
-## Features ## 
+## Features ##
 This tutorial consists of a brief introduction to the ROSE compiler,
 its infrastructure and capabilities, and how it can be used. Some simple
 examples will be shown using the terminal environment.
@@ -41,8 +41,8 @@ should have a basic understanding of the purpose of ROSE and be familiar with
 the layout of its infrastructure. This will prepare the reader for subsequent
 tutorials on specific ROSE components.
 
-# B. The ROSE Compiler 
-ROSE is an open-source compiler infrastructure used to build source-to-source program 
+# B. The ROSE Compiler
+ROSE is an open-source compiler infrastructure used to build source-to-source program
 transformation and analysis tools, especially for large-scale applications
 written in various languages (C, C++, Fortran, OpenMP, and others). Tools ROSE
 is capable of building include those for static and dynamic analysis, program
@@ -58,7 +58,7 @@ forms of compiler analysis, common transformations, and code generation; for
 binary analysis, tools include disassembly, function boundary detection, and
 common forms of analysis. ROSE itself also provides a set of tools to support
 user's own forms of analysis and specialized transformations, such as a full
-OpenMP compiler built using the ROSE infrastructure. 
+OpenMP compiler built using the ROSE infrastructure.
 
 At its core, ROSE consists of three parts:
 1. The frontend, which addresses language specific parsers (and binary
@@ -73,7 +73,7 @@ representing the structure of the source code and/or binary executable and is
 held in memory for optimal performance. The nodes used to define the AST graph
 are an intermediate representation (IR); common within compiler research as a
 way of representing the structure of software absent syntax details (commas,
-semi-colons, whitespace, etc.). 
+semi-colons, whitespace, etc.).
 
 The **midend** provides mechanisms to traverse and manipulate the AST. This is where
 transformations are made, as well as optimizations and analyses, such as
@@ -184,7 +184,7 @@ To showcase the identity translator, we will run some simple input source code t
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-intro/sampleInput.cxx
-cat sampleInput.cxx
+cat -n sampleInput.cxx
 ```
 
 To run this sample input code through the identity translator, we simply provide
@@ -199,10 +199,10 @@ translator also called the backend of ROSE, the resulting source code is also
 compiled by a vendor compiler (gcc in this case). The resulting ```a.out``` is
 the result of this compilation.
 
-We can view the ROSE output source by 
+We can view the ROSE output source by
 
 ```.term1
-cat rose_sampleInput.cxx
+cat -n rose_sampleInput.cxx
 ```
 
 Note that the output code is nearly identical to the input source code, save for
@@ -214,7 +214,7 @@ Feel free to experiment with the identity translator using your own source code 
 # F. Additional Resources
 * The [ROSE Github Wiki](https://github.com/rose-compiler/rose/wiki) contains additional information on ROSE, including how to
 build it from source on a personal machine. There are also links to older (no
-longer maintained) resources, including several tutorials and a user manual. 
+longer maintained) resources, including several tutorials and a user manual.
 * The [ROSE Wikibook](https://en.wikibooks.org/wiki/ROSE_Compiler_Framework)
   is a community-editable documentation for ROSE.
 * The [ROSE website](http://rosecompiler.org/) also contains useful information

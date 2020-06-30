@@ -42,7 +42,7 @@ Let's take a look at the source code example for this section, showing use of th
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/volatile_ex.cxx
-cat volatile_ex.cxx
+cat -n volatile_ex.cxx
 ```
 Notice we have three volatile variables: `a`, `b`, and `y`. `b` is actually a pointer to a volatile variable, rather than a volatile variable itself.
 
@@ -55,7 +55,7 @@ Here, we perform a standard AST traversal. In particular, we are looking for nod
 
 ![An excerpt of the AST corresponding to the sample input code above, for volatile variable a. Note that SgVariableDeclaration contains exactly one SgInitializedName in ROSE.](/images/SgInitializedName_Example.png)
 
-The concept of type modifiers in ROSE is represented via the `SgModifierType` class, a subclass of `SgType`. The type modifier itself is represented by the `SgTypeModifier` class; we can obtain the latter from the former via the `get_typeModifier()` function. Although exposed through the API, it is important to note that type modifiers are **not** present in `SgVariableDeclaration` or `SgVariableDefinition` objects; they can only be reliably obtained via the `SgModifierType` returned from `SgInitializedName`. 
+The concept of type modifiers in ROSE is represented via the `SgModifierType` class, a subclass of `SgType`. The type modifier itself is represented by the `SgTypeModifier` class; we can obtain the latter from the former via the `get_typeModifier()` function. Although exposed through the API, it is important to note that type modifiers are **not** present in `SgVariableDeclaration` or `SgVariableDefinition` objects; they can only be reliably obtained via the `SgModifierType` returned from `SgInitializedName`.
 
 Let us now discuss the source of the translator with these considerations in mind. For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15). If we have a node of this type, we print its name (e.g., `a`) and get its type via the `get_type()` member function. Note that this returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using the `get_typeModifier()` function to return a `SgTypeModifier`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`. Lines 28-38 can be ignored as the `SgModifierTypes` class is not currently used in ROSE.
 
@@ -82,7 +82,7 @@ We will use the following code snippet for this section and those following.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/function_param_ex.cxx
-cat function_param_ex.cxx
+cat -n function_param_ex.cxx
 ```
 Notice that there is a lot going on in this source code - we have overloaded functions, template parameters, and a templated class. We will discuss how ROSE handles these cases in the following sections; for now, let us only focus on function parameter types.
 
@@ -150,7 +150,7 @@ For this section, we will consider some templated example source code, which a s
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/template_param_ex.cxx
-cat template_param_ex.cxx
+cat -n template_param_ex.cxx
 ```
 Notice that this code contains a templated class, and we make several instantiations of that class. In this example, we will look into extracting the template parameters from these instantiated objects.
 The translator of interest for this section is `templateParameter`:
