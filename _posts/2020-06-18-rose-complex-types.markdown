@@ -51,13 +51,15 @@ The source code of the ROSE traversal tool that looks for volatile modifiers can
 vim ${ROSE_SRC}/tutorial/volatileTypeModifier.C
 ```
 
-Here, we perform a standard AST traversal. In particular, we are looking for nodes of type `SgInitializedName` that represent the notion of a variable in a declaration. The general concept of a variable declaration is represented by `SgVariableDeclaration`. Similarly, variable definitions/initializations are represented by `SgVaraibleDefinition`. It is important to note that, in ROSE, each `SgVaraibleDeclaration` contains **only one** `SgInitializedName`. We can see this from an excerpt of the AST corresponding to the sample `volatile_ex.cxx` source, in particular the portion corresponding to the variable `a`:
+Here, we perform a standard AST traversal. In particular, we are looking for nodes of type `SgInitializedName` that represent the notion of a variable in a declaration. The general concept of a variable declaration is represented by `SgVariableDeclaration`. Similarly, variable definitions/initializations are represented by `SgVaraibleDefinition`. It is important to note that, in ROSE, each `SgVaraibleDeclaration` contains **only one** `SgInitializedName`. We can see this from a small excerpt of the AST corresponding to the sample `volatile_ex.cxx` source, in particular the portion corresponding to the variable `a`:
 
-![An excerpt of the AST corresponding to the sample input code above, for volatile variable a. Note that SgVariableDeclaration contains exactly one SgInitializedName in ROSE.](/images/SgInitializedName_Example.png)
+<p align="center">
+  <img src="/images/SgInitializedName_Example.png" />
+</p>
 
 The concept of type modifiers in ROSE is represented via the `SgModifierType` class, a subclass of `SgType`. The type modifier itself is represented by the `SgTypeModifier` class; we can obtain the latter from the former via the `get_typeModifier()` function. Although exposed through the API, it is important to note that type modifiers are **not** present in `SgVariableDeclaration` or `SgVariableDefinition` objects; they can only be reliably obtained via the `SgModifierType` returned from `SgInitializedName`.
 
-Let us now discuss the source of the translator with these considerations in mind. For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15). If we have a node of this type, we print its name (e.g., `a`) and get its type via the `get_type()` member function. Note that this returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using the `get_typeModifier()` function to return a `SgTypeModifier`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`. Lines 28-38 can be ignored as the `SgModifierTypes` class is not currently used in ROSE.
+Let us now discuss the source of the translator with these considerations in mind. For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15) and print its name and type if so. Note that `get_type()` returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using `get_typeModifier()`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`. Lines 28-38 can be ignored as the `SgModifierTypes` class is not currently used in ROSE.
 
 Finally, lines 40-54 demonstrate that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, despite being exposed to the API. We expect this portion of the code to always print `false` for any IR nodes of these types encountered.
 
@@ -78,7 +80,7 @@ The analysis of functions often requires the query of the function types. This t
 
 #### Examples ####
 
-We will use the following code snippet for this section and those following.
+We will use the following code snippet for this section and the following.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/function_param_ex.cxx
