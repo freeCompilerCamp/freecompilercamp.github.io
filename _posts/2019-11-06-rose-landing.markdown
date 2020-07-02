@@ -7,8 +7,8 @@ tags: [rose,compiler,landing]
 categories:
 terms: 0
 ---
-This series of tutorials will help you 
-  
+This series of tutorials will help you
+
   * Get familiar with the key concepts of ROSE
 
   * Write your own code analyzers
@@ -16,12 +16,13 @@ This series of tutorials will help you
   * Build customized code translators
 
   * Debug your translators
-  
+
   * Try out prebuilt ROSE-based tools
 
 ## Hands-on Learning
 Give ROSE a try with the following tutorials:
 
+### Getting Started with ROSE
 [ROSE - An Introduction](/rose-intro)
   * This is a short introduction to ROSE, its features and use cases, and how to use it.
 
@@ -37,6 +38,7 @@ Give ROSE a try with the following tutorials:
 [Modifying the ROSE AST](/rose-ast-modification)
   * This is a tutorial to build your own source code translator by modifying ROSE AST.
 
+### OpenMP with ROSE
 [Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)
   * This is a tool which can automatically insert OpenMP pragmas into input serial C/C++ codes.
 
