@@ -176,6 +176,9 @@ The output shows each template class instantiation that appears in the input sou
 ## E. Summary ##
 In this chapter, we have gotten familiar with working with various complex types in ROSE. We learned about traversing the AST and searching for nodes of interest, both with a traversal and with a query. We looked at examples involving type and declaration modifiers, function and template parameter extraction, and overloaded function resolution. There are many other types that can be searched with the AST in ROSE. We recommend looking into the ROSE API to learn more.
 
+### Practical ###
+We encourage you to check your understanding of this section by completing the related [Practical](/rose-complex-types-practical).
+
 ## F. Additional Resources ##
 * ROSE provides a library function that takes in a call expression and fills a vector with a set of function declarations that could be called. If a callee cannot be determined exactly (as in the case with a function pointer), the set of functions returned is an overapproximation. The [CallGraph.h](http://rosecompiler.org/ROSE_HTML_Reference/CallGraph_8h_source.html) header contains this function `CallTargetSet::getPropertiesForExpression`.
 * The [ROSE HTML reference page](http://rosecompiler.org/ROSE_HTML_Reference/index.html) contains a full doxygenerated API that may be helpful in writing your own tools that search for specific types in the AST. Classes referenced in this tutorial can also be viewed here for more information.
