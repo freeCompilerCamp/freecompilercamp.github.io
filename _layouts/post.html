@@ -98,7 +98,14 @@ layout: default
           console.log('In _config.yml, the site url does not match the url you are serving from, so no analytics were pushed.')
       }
     {% endif %}
-    pwd.newSession([{selector: '.term1'}, {selector: '.term2'}, {selector: '.term3'}], {baseUrl: '{{site.pwdurl}}', ImageName: '{{page.image}}'});
+
+    // If a docker image is not specified in the tutorial, the default one in the config file will be used.
+    var docker_image = '{{page.image}}';
+    if (docker_image == '') {
+      docker_image = '{{site.default_docker_image}}';
+    };
+
+    pwd.newSession([{selector: '.term1'}, {selector: '.term2'}, {selector: '.term3'}], {baseUrl: '{{site.pwdurl}}', ImageName: docker_image});
     $(".panel-left").resizable({
         handleSelector: ".splitter",
         resizeHeight: false,
