@@ -13,7 +13,7 @@ This purpose of this practical is to test your understanding of working with som
 This is an "open-book" exercise and you may use the terminal and any resources. The [ROSE API](http://rosecompiler.org/ROSE_HTML_Reference/index.html) may be particularly useful.
 
 ### Task ###
-Implement a ROSE translator that traverses the AST and prints the SAGE data type (e.g., `SgTypeInt`) and name for each `const` type-quantified variable. Use a standard pre-order traversal (rather than the Query Library). Run your translator with the following input code:
+Implement a ROSE translator that traverses the AST and prints the SAGE data type (e.g., `SgTypeInt`) and name for each `const` type-qualified variable. Use a standard pre-order traversal (rather than the Query Library). Run your translator with the following input code:
 
 ```c++
 #include <cstdint>
@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
 Save your output to a file called `const_output.txt` in the `${ROSE_SRC}/practicals` directory. The expected output is below. Please format it exactly as shown.
 
 ```
-Found a const type-quantified variable: foo (SgTypeInt)
-Found a const type-quantified variable: PI (SgTypeFloat)
+Found a const type-qualified variable: foo (SgTypeInt)
+Found a const type-qualified variable: PI (SgTypeFloat)
 ```
 
 #### Setting Up The Environment ####
