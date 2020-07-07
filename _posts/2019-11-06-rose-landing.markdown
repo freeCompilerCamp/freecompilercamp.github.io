@@ -39,6 +39,9 @@ Give ROSE a try with the following tutorials:
 [Modifying the ROSE AST](/rose-ast-modification)
   * This is a tutorial to build your own source code translator by modifying ROSE AST.
 
+[Debugging Translators](/rose-debugging)
+  * This is a tutorial for debugging ROSE translators.
+
 ### OpenMP with ROSE
 [Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)
   * This is a tool which can automatically insert OpenMP pragmas into input serial C/C++ codes.
