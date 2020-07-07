@@ -5,7 +5,6 @@ author: "@vec4"
 date: 2020-06-23
 categories: practical
 tags: [rose, practical]
-image: freecompilercamp/pwc:full
 ---
 
 ## Check Your Understanding ##
