@@ -45,7 +45,7 @@ If you see the configuration flags above, ROSE is all set for debugging.
 
 Before debugging, you should make sure that your input code can be handled by ROSE's builtin identity translator (for example, `rose-compiler input.cxx`) in order to ensure that there are no errors with the input code itself. Your input code should also be as small as possible and be localized to the error of interest (i.e., trigger only the error you are interested in). It is very difficult to debug translators that process thousands of lines of code.
 
-The choice of debugger for ROSE translators and ROSE itself is gdb. gdb is a debugger that provides a controlled execution environment for you to inspect your program and determine if it running the way you expect. Like most debuggers, it allows you to set breakpoints at points in your program and analyze how variables and other information changes as you control execution.
+The choice of debugger for ROSE translators and ROSE itself is gdb. gdb is a debugger that provides a controlled execution environment for you to inspect your program and determine if it is running the way you expect. Like most debuggers, it allows you to set breakpoints at points in your program and analyze how variables and other information changes as you control execution.
 
 ## Debugging Your Translator ##
 If your translator is built without libtool, we can just use gdb as usual. For libtool built translators (usually this is for internal ROSE translators), some additional steps are needed that we will discuss at the end of this tutorial. Be sure your translator is compiled with the `-g` flag to enable debugging information!  
@@ -90,7 +90,7 @@ To start gdb with the translator and its arguments, we use
 gdb -args ./visitorTraversal traversal_ex.cxx
 ```
 
-At this point, we are running the gdb debugger and any commands issued while in the debugging environment pertain to the gdb.
+At this point, we are running the gdb debugger and any commands issued while in the debugging environment pertain to gdb.
 
 It is usually good practice to run the program without setting breakpoints first to see if it can run normally, or to reproduce an assertion failure or segmentation fault. We can do this with the `r` command while in gdb debugging mode. In this case, our translator runs without any error and prints the expected output.
 
@@ -114,7 +114,7 @@ Note that the casted `n` is indeed of the type we expect. Of course, we also hav
 p isSgForStatement(n)->get_file_info()->get_line()
 ```
 
-As mentioned before, the first for loop is on line 19, as confirmed by our debugging process.
+As mentioned before, the first for loop is on line 19, as confirmed by our debugging process. As a self exercise, you may want to continue the process to print the source code location of the second for loop.
 
 ## Useful Debugging Tips for Your Translators ##
 The above example shows a simple process of debugging a translator written for ROSE. Here, we describe some useful tips when debugging your own, larger translators. We will continue to use the same translator for illustration.
@@ -139,16 +139,12 @@ Let's now run the program until the second breakpoint is hit by using command `r
 
 Once the breakpoint for the `post_construction_initialization()` function is reached, we could take a look at the function call stacks leading to this stop of the breakpoint with command `bt`. Note you can clearly see the callchain from the main function all the way to the breakpoint. This can be very useful for debugging purposes.
 
-```.term1
-bt
-```
-
 Finally, we can finish our current debugging execution with command `c` to continue, which will trigger the breakpoint once more on the passthrough for the second for loop. Issuing `c` again will complete the execution.
 
 #### Set Conditional Breakpoints ####
 In real codes, there are hundreds of objects of the same class type (e.g., `SgForStatement`). Many of them come from header files and will be present in the AST. We should only stop when it matches the one we want to inspect. Often, we can use the memory address of the object as a condition.
 
-In gdb, this is a somewhat syntactically tricky. For example, the command below adds a condition to our second breakpoint to ensure we stop only when the pointer is equal *to the SgForStatement corresponding to the second for loop* (recall that each for loop is a separate IR node in the AST). We have to check the memory address, but we have this readily available from our debugging in the previous section when we triggered the `post_construction_initialization()` breakpoint on the second time. You should replace `<memory_address>` with the address printed by the triggering of the second breakpoint (where it says `this=<memory_address>`).
+In gdb, this is a somewhat syntactically tricky. For example, the command below adds a condition to our second breakpoint to ensure we stop only when the pointer is equal *to the `SgForStatement` corresponding to the second for loop* (recall that each for loop is a separate IR node in the AST). We have to check the memory address, but we have this readily available from our debugging in the previous section when we triggered the `post_construction_initialization()` breakpoint on the second time. You should replace `<memory_address>` with the address printed by the triggering of the second breakpoint (where it says `this=<memory_address>`).
 
 ```.term1
 cond 2 (unsigned long)this==(unsigned long)<memory_address>
@@ -169,7 +165,7 @@ For example, we want to watch the value changes to the parent field of the `SgFo
   * Once the internal variables are visible in gdb at the proper breakpoint, we can grab the memory address of the internal variable. This requires your knowledge of how internal variables are named. You can either look at the class declaration of the object, or guess it by convention. For example, mostly something with an access function like `get_something()` has a corresponding internal variable named `p_something` in ROSE AST node types.
   * Finally, we have to watch the dereferenced value of the memory address (`watch *address`). Watching the memory address (via `watch address`) is to watch a constant value. It won't work.
 
-Run the program again with `r` while in debugging mode. As before, the second for loop will be reached due to our conditional breakpoint; all others will be skipped. Let's watch the data member storing the parent pointer of the AST node. We need to first obtain the memory address corresponding to this pointer. We print this first via `p &p_parent`. With the memory address obtained, we can set a watchpoint with the memory address. Remember, we *must* dereference the address! You should replace `<memory_address>` with the address printed by the previous command.
+Run the program again with `r` while in debugging mode. As before, the second for loop will be reached due to our conditional breakpoint; all others will be skipped. Let's watch the data member storing the parent pointer of the AST node. We need to first obtain the memory address corresponding to this pointer, which can be output via `p &p_parent`. With the memory address obtained, we can set a watchpoint with the memory address. Remember, we *must* dereference the address! You should replace `<memory_address>` with the address printed by the previous command.
 
 ```.term1
 p &p_parent
@@ -178,7 +174,7 @@ watch *<memory_address>
 
 Now, we can watch the value changes to this memory address as the program executes. Restart the program from the beginning with command `r`. Notice that any value changes are displayed. It is useful to then view the stack trace via the `bt` command to check when the first time the value is changed by the constructor of the ancestor node `SgNode`.
 
-Continuing the execution with `c` will show another value change to the address. At this point, we found the `p_parent` field being changed by a call to `set_parent()`. We could then inspect the call stack and other things of interests with `bt`.
+Continuing the execution with `c` will show another value change to the address by the `post_construction_initialization()` function. An additional `c` will reveal that the `p_parent` field is changed by a call to `set_parent()`. We could then inspect the call stack and other things of interests with `bt`.
 
 Finishing the execution with an additional `c` will complete the run and no more value changes to the memory address will be output, as expected.
 
@@ -188,12 +184,18 @@ Translators internal to ROSE (also called in-tree ROSE translators) are built us
 Instead, there are two choices:
   1. Find the real executable in the .lib directory then debug the real executables there
   2. Use libtool command line as follows (recommended):
-  `libtool --mode=execute gdb --args ./built_in_translator file1.c`
+  ```shell
+  libtool --mode=execute gdb --args ./built_in_translator file1.c
+  ```
 
 If you can set up alias command in your .bashrc, add the following:
-`alias debug='libtool --mode=execute gdb -args'`
+```shell
+alias debug='libtool --mode=execute gdb -args'
+```
 then all your debugging sessions can be as simple as
-`debug ./built_in_translator file1.c`
+```shell
+debug ./built_in_translator file1.c
+```
 
 The remaining steps are the same as a regular gdb session with the typical operations, such as breakpoints, printing data, etc.
 
