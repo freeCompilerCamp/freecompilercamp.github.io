@@ -200,7 +200,7 @@ debug ./built_in_translator file1.c
 The remaining steps are the same as a regular gdb session with the typical operations, such as breakpoints, printing data, etc.
 
 ## Additional Resources ##
-  * Additional gdb resources include this [cheat sheet](https://kapeli.com/cheat_sheets/GDB.docset/Contents/Resources/Documents/index), [this guide](https://beej.us/guide/bggdb/), and the [official documentation](https://kapeli.com/cheat_sheets/GDB.docset/Contents/Resources/Documents/index).
+  * Additional gdb resources include this [cheat sheet](https://kapeli.com/cheat_sheets/GDB.docset/Contents/Resources/Documents/index), [this guide](https://beej.us/guide/bggdb/), and the [official documentation](https://www.gnu.org/software/gdb/documentation/). This [resource](https://github.com/MattPD/cpplinks/blob/master/debugging.md#gdb) from @MattPD also contains a heap of useful gdb and C++ debugging resources.
   * Some examples of debugging libtool-based and in-tree ROSE translators can be found [here](https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/How_to_debug_a_translator#A_translator_shipped_with_ROSE). This page also contains a small crash course in gdb.
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-06-rose-debugging.markdown)
