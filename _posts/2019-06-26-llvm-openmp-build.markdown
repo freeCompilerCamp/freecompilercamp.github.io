@@ -5,6 +5,8 @@ author: "@alokmishra.besu"
 date:   2019-06-26
 categories: beginner
 tags: [llvm,clang,openmp,gpu,offloading]
+image: freecompilercamp/pwc:llvm10
+pwc: http://lab.racedetection.org
 ---
 
 Llvm-10.0.0 now has GPU offloading support in their OpenMP implementation. But building and using this offloading support can sometimes be confusing. I have tried several ways of building LLVM, and failed several times. Finally I found a way which works for me. Personally I prefer to 
