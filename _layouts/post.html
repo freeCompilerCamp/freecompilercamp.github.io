@@ -100,12 +100,18 @@ layout: default
     {% endif %}
 
     // If a docker image is not specified in the tutorial, the default one in the config file will be used.
-    var docker_image = '{{page.image}}';
-    if (docker_image == '') {
-      docker_image = '{{site.default_docker_image}}';
+    var dockerImage = '{{page.image}}';
+    if (dockerImage == '') {
+      dockerImage = '{{site.default_docker_image}}';
     };
 
-    pwd.newSession([{selector: '.term1'}, {selector: '.term2'}, {selector: '.term3'}], {baseUrl: '{{site.pwdurl}}', ImageName: docker_image});
+    // Specify the PWC server that will be used.
+    var pwcUrl = '{{page.pwc}}';
+    if (pwcUrl == '') {
+      pwcUrl = '{{site.pwdurl}}';
+    };
+
+    pwd.newSession([{selector: '.term1'}, {selector: '.term2'}, {selector: '.term3'}], {baseUrl: pwcUrl, ImageName: dockerImage});
     $(".panel-left").resizable({
         handleSelector: ".splitter",
         resizeHeight: false,
