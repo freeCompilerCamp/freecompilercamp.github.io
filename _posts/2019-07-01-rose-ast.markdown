@@ -5,6 +5,8 @@ author: "@chunhualiao"
 date:   2019-08-09
 categories: beginner
 tags: [rose,ast]
+image: freecompilercamp/pwc:rose
+pwc: http://lab.racedetection.org
 ---
 
 # Tips:
