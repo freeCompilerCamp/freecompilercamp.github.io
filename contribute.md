@@ -34,20 +34,18 @@ image: freecompilercamp/pwc:rose
 Write freely in Markdown.
 
 Some special syntax:
-* For the code only for browsing, use a pair of triple backticks \`\`\` to include them.
-* For browsing code with line numbers, use the following syntax, replacing ```<language>``` and ```<your_code>``` with your input:
+* For the code only for browsing, use a pair of triple backticks \`\`\` to include them. You can style your syntax based on various languages by placing the language name immediately after the first three backticks. A list of supported languages can be found [here](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers).
+* For browsing code with line numbers, use the following syntax, replacing ```cpp``` and ```<your_code>``` with your choice of language and your input code:
 ```markdown
-&lt;figure class="lineno-container">;
-&#123;% highlight <language> linenos %}
+<figure class="lineno-container">
+{% highlight cpp linenos %}
 <your_code>
-&#123;% endhighlight #}
-&lt;/figure>;
+{% endhighlight %}
+</figure>
 ```
-* For the code clickable and executed in the sandbox, use ```.term1``` as code snippet type.
+* For the code clickable and executed in the sandbox, use ```.term1``` as code snippet type (after the first three backticks).
 
 For example,  in the following example, ```echo HELLO``` contained in ```.term1``` code snippet will print ``HELLO`` in the sandbox terminal.
-
-You can style your syntax based on various languages; for browsing code without line numbers, place the language immediately after the first three backticks, and for browsing code with line numbers, place the language in the ```&#123;% highlight <language> linenos %}``` component. A list of supported languages can be found [here](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers).
 
 There are some built-in environment variables to faciliate the creation of command lines:
 * For ROSE: $ROSE_BUILD,
