@@ -10,7 +10,7 @@ After editing these two files, you can start a pull request. The changes will be
 Take the autoPar tutorial as an example.
 https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2019-07-01-rose-autopar.markdown
 
-You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```./_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later. 
+You can create a new similar Markdown file named ```2019-07-01-rose-your-tutorial.markdown``` and put it in the folder ```./_posts```. Please note that the file must follow the date-tutorial-name.markdown convention to be linked to a parent web page later.
 
 #### a. Update headers
 
@@ -31,22 +31,32 @@ image: freecompilercamp/pwc:rose
 
 #### b. Add content
 
-Write freely in Markdown. 
+Write freely in Markdown.
 
-Some special syntax: 
+Some special syntax:
 * For the code only for browsing, use a pair of triple backticks \`\`\` to include them.
+* For browsing code with line numbers, use the following syntax, replacing ```<language>``` and ```<your_code>``` with your input:
+```markdown
+&lt;figure class="lineno-container">;
+&#123;% highlight <language> linenos %}
+<your_code>
+&#123;% endhighlight #}
+&lt;/figure>;
+```
 * For the code clickable and executed in the sandbox, use ```.term1``` as code snippet type.
 
 For example,  in the following example, ```echo HELLO``` contained in ```.term1``` code snippet will print ``HELLO`` in the sandbox terminal.
 
+You can style your syntax based on various languages; for browsing code without line numbers, place the language immediately after the first three backticks, and for browsing code with line numbers, place the language in the ```&#123;% highlight <language> linenos %}``` component. A list of supported languages can be found [here](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers).
+
 There are some built-in environment variables to faciliate the creation of command lines:
-* For ROSE: $ROSE_BUILD, 
+* For ROSE: $ROSE_BUILD,
 * For Clang/LLVM: $LLVM_PATH, $LLVM_BUILD, $LLVM_SRC
 
-Sometimes you want to insert a figure into your tutorial. You need to 
+Sometimes you want to insert a figure into your tutorial. You need to
 * First create the figure and save it into a png file
 * Upload the png file to top_dir/compiler-classroom/images
-* Inside of your tutorial, add a link to the figure: 
+* Inside of your tutorial, add a link to the figure:
 ```
 ![Your wonderful figure caption here](/images/your_figure_name.png)
 ```

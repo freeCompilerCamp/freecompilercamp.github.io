@@ -7,10 +7,10 @@
 
 # Site settings
 title: "Free Compiler Camp Classroom"
-email: 
+email:
 description: > # this means to ignore newlines until "baseurl:"
   Play with Compilers tutorials
-  
+
 baseurl: # the subpath of your site, e.g. /blog
 url: "http://freecompilercamp.org" # the base hostname & protocol for your site
 
@@ -24,6 +24,7 @@ copyright:
    link: 'https://docker.com'
 
 # Build settings
+highlighter: rouge
 markdown: kramdown
 permalink: /:title/
 paginate: 6
