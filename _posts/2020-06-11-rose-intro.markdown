@@ -142,7 +142,8 @@ cat ${ROSE_SRC}/tutorial/identityTranslator.C
 
 Recall you may simply click on terminal snippets such as the one above to immediately execute the commands in the terminal. You may also use your favorite text editor to open source files (nano, vim, and emacs). Alternatively, see the code below.
 
-```cpp
+<figure class="lineno-container">
+{% highlight cpp linenos %}
 #include "rose.h"
 
 int main( int argc, char * argv[] ){
@@ -161,7 +162,8 @@ int main( int argc, char * argv[] ){
     // Generate source code from AST and call the vendor's compiler
     return backend(project);
 }
-```
+{% endhighlight %}
+</figure>
 
 A few notes about the code:
 * The include file `rose.h` is a large header file containing all ROSE includes.

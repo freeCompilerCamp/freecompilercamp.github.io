@@ -15,7 +15,8 @@ This is an "open-book" exercise and you may use the terminal and any resources. 
 ### Task ###
 Implement a ROSE translator that traverses the AST and prints the SAGE data type (e.g., `SgTypeInt`) and name for each `const` type-qualified variable. Use a standard pre-order traversal (rather than the Query Library). Run your translator with the following input code:
 
-```c++
+<figure class="lineno-container">
+{% highlight cpp linenos %}
 #include <cstdint>
 #include <cmath>
 
@@ -29,7 +30,8 @@ void bar() {
 int main(int argc, char* argv[]) {
 	return 0;
 }
-```
+{% endhighlight %}
+</figure>
 
 Save your output to a file called `const_output.txt` in the `${ROSE_SRC}/practicals` directory. The expected output is below. Please format it exactly as shown.
 
