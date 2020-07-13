@@ -41,7 +41,7 @@ Here, we will look at some tutorial code to demonstrate how to access the *volat
 Let's take a look at the source code example for this section, showing use of the `volatile` type modifier.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/volatile_ex.cxx
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/volatile_ex.cxx
 cat -n volatile_ex.cxx
 ```
 Notice we have three volatile variables: `a`, `b`, and `y`. `b` is actually a pointer to a volatile variable, rather than a volatile variable itself.
@@ -83,7 +83,7 @@ The analysis of functions often requires the query of the function types. This t
 We will use the following code snippet for this section and the following.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/function_param_ex.cxx
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/function_param_ex.cxx
 cat -n function_param_ex.cxx
 ```
 Notice that there is a lot going on in this source code - we have overloaded functions, template parameters, and a templated class. We will discuss how ROSE handles these cases in the following sections; for now, let us only focus on function parameter types.
@@ -153,7 +153,7 @@ In this tutorial, we will look at a translator that reads an application (a modi
 For this section, we will consider some templated example source code, which a slightly modified version of the previous two sections' input:
 ```.term1
 cd ${ROSE_BUILD}/tutorial
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/template_param_ex.cxx
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/template_param_ex.cxx
 cat -n template_param_ex.cxx
 ```
 Notice that this code contains a templated class, and we make several instantiations of that class. In this example, we will look into extracting the template parameters from these instantiated objects.
