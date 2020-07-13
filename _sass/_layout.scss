@@ -287,3 +287,20 @@ pre:not(.highlight) {
         background-color: #eeefff;
     }
 }
+
+// Some custom styling for collapsible code blocks
+.code-collapsible {
+    padding-bottom: 10px;
+
+    // Header
+    summary {
+      cursor: pointer;
+      background-color: #ced0fd;
+      //font-size: 20px;
+    }
+}
+
+// When collapse is open, add no padding
+details[open] {
+    padding-bottom: 0px;
+}

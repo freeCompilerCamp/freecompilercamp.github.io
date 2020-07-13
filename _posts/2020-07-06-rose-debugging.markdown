@@ -62,6 +62,67 @@ Let's go through an example of debugging a simple ROSE translator that performs 
 cat -n ${ROSE_SRC}/tutorial/visitorTraversal.C
 ```
 
+<details class="code-collapsible">
+<summary>Click here to view source code.</summary>
+
+<figure class="lineno-container">
+{% highlight c++ linenos %}
+// ROSE is a tool for building preprocessors, this file is an example preprocessor built with ROSE.
+// rose.C: Example (default) ROSE Preprocessor: used for testing ROSE infrastructure
+
+#include "rose.h"
+
+class visitorTraversal : public AstSimpleProcessing
+   {
+     public:
+          visitorTraversal();
+          virtual void visit(SgNode* n);
+          virtual void atTraversalEnd();
+   };
+
+visitorTraversal::visitorTraversal()
+   {
+   }
+
+void visitorTraversal::visit(SgNode* n)
+   {
+     if (isSgForStatement(n) != NULL)
+        {
+          printf ("Found a for loop ... \n");
+        }
+   }
+
+void visitorTraversal::atTraversalEnd()
+   {
+     printf ("Traversal ends here. \n");
+   }
+
+int
+main ( int argc, char* argv[] )
+   {
+  // Initialize and check compatibility. See Rose::initialize
+     ROSE_INITIALIZE;
+
+     if (SgProject::get_verbose() > 0)
+          printf ("In visitorTraversal.C: main() \n");
+
+     SgProject* project = frontend(argc,argv);
+     ROSE_ASSERT (project != NULL);
+
+  // Build the traversal object
+     visitorTraversal exampleTraversal;
+
+  // Call the traversal function (member function of AstSimpleProcessing)
+  // starting at the project node of the AST, using a preorder traversal.
+     exampleTraversal.traverseInputFiles(project,preorder);
+
+     return 0;
+   }
+{% endhighlight %}
+</figure>
+
+</details>
+
 Essentially, we perform a standard pre-order AST traversal and search for `SgForStatement` nodes that represent for loops.
 
 We need to build this tool in order to debug it. In previous tutorials, we often used the default makefile included in the `${ROSE_BUILD}/tutorial` directory to build tutorial translators. However, this makefile uses libtool to build the executable script for the translator. We will look at how to debug libtool-based executables later in this chapter; here, instead, we will use a simple makefile that builds an x86_64 executable with gcc that gdb recognizes with no additional setup.
@@ -75,11 +136,80 @@ wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/
 make
 ```
 
+<details class="code-container">
+<summary>Click here to view source code.</summary>
+
+<figure class="lineno-collapsible">
+{% highlight c++ linenos %}
+// Templated class declaration used in template parameter example code
+template <typename T>
+class templateClass
+   {
+     public:
+          int x;
+          void foo(int);
+          void foo(double);
+   };
+
+// Overloaded functions for testing overloaded function resolution
+void foo(int);
+
+void foo(double)
+   {
+     int x = 1;
+     int y;
+
+     for (int i=0; i < 4; i++)
+        {
+          int x;
+        }
+
+  // Added to allow non-trivial CFG
+     if (x)
+        y = 2;
+     else
+        y = 3;
+   }
+
+int main()
+   {
+     foo(42);
+     foo(3.14159265);
+
+     templateClass<char> instantiatedClass;
+     instantiatedClass.foo(7);
+     instantiatedClass.foo(7.0);
+
+     for (int i=0; i < 4; i++)
+        {
+          int x;
+        }
+
+     return 0;
+   }
+{% endhighlight %}
+</figure>
+
+</details>
+
 Finally, let's take a look at the output of the translator by running it with the supplied input code. As we expect, it finds two for loops during the traversal.
 
 ```.term1
 ./visitorTraversal traversal_ex.cxx
 ```
+
+<details class="code-collapsible">
+<summary>Click here to view output.</summary>
+
+<figure class="lineno-container">
+{% highlight linenos %}
+Found a for loop ...
+Found a for loop ...
+Traversal ends here.
+{% endhighlight %}
+</figure>
+
+</details>
 
 #### Debugging Our Example ####
 Now, let's take a look at a sample debugging process for the above example.

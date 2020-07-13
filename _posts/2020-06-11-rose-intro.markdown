@@ -137,10 +137,13 @@ infrastructure.
 The source code for the identity translator is already available in the terminal
 environment and can be viewed by
 ```.term1
-cat ${ROSE_SRC}/tutorial/identityTranslator.C
+cat -n ${ROSE_SRC}/tutorial/identityTranslator.C
 ```
 
-Recall you may simply click on terminal snippets such as the one above to immediately execute the commands in the terminal. You may also use your favorite text editor to open source files (nano, vim, and emacs). Alternatively, see the code below.
+Recall you may simply click on terminal snippets such as the one above to immediately execute the commands in the terminal. You may also use your favorite text editor to open source files (nano, vim, and emacs). Alternatively, we provide collapsible code output within tutorial text:
+
+<details class="code-collapsible">
+<summary>Click here to view source code.</summary>
 
 <figure class="lineno-container">
 {% highlight cpp linenos %}
@@ -165,6 +168,8 @@ int main( int argc, char * argv[] ){
 {% endhighlight %}
 </figure>
 
+</details>
+
 A few notes about the code:
 * The include file `rose.h` is a large header file containing all ROSE includes.
 * The line `SgProject* project = frontend(argc,argv);` is what builds the entire AST with a SgProject node serving as root. Both argc and argv are passed to the call of frontend so that any command line arguments passed to the tool are relayed to the compiler.
@@ -182,12 +187,39 @@ cd ${ROSE_BUILD}/tutorial
 make identityTranslator
 ```
 
-To showcase the identity translator, we will run some simple input source code through the translator and view its output. First, we will obtain the sample input code, `sampleInput.cxx`, from GitHub via `wget` and save it into the `${ROSE_BUILD}/tutorial` directory, where our identity translator tool is built. We also show the content of the file in the terminal; please take a moment to breifly look it over.
+To showcase the identity translator, we will run some simple input source code through the translator and view its output. First, we will obtain the sample input code, `sampleInput.cxx`, from GitHub via `wget` and save it into the `${ROSE_BUILD}/tutorial` directory, where our identity translator tool is built. We then show the output of the source code.
 ```.term1
 cd ${ROSE_BUILD}/tutorial
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-intro/sampleInput.cxx
 cat -n sampleInput.cxx
 ```
+
+<details class="code-collapsible">
+<summary>Click here to view source code.</summary>
+
+<figure class="lineno-container">
+{% highlight cpp linenos %}
+// Example input file for ROSE tutorial
+#include <iostream>
+// Main function int main()
+
+typedef float Real;
+
+int main( )
+{
+  int x=0;
+  bool value = false ;
+
+  for (int i=0; i < 4; i++) {
+    int x;
+  }
+
+  return 0;
+}
+{% endhighlight %}
+</figure>
+
+</details>
 
 To run this sample input code through the identity translator, we simply provide
 the filename as a parameter to the built identityTranslator binary:
@@ -206,6 +238,30 @@ We can view the ROSE output source by
 ```.term1
 cat -n rose_sampleInput.cxx
 ```
+
+<details class="code-collapsible">
+<summary>Click here to view output source code.</summary>
+
+<figure class="lineno-container">
+{% highlight cpp linenos %}
+// Example input file for ROSE tutorial
+#include <iostream>
+// Main function int main()
+typedef float Real;
+
+int main()
+{
+  int x = 0;
+  bool value = false;
+  for (int i = 0; i < 4; i++) {
+    int x;
+  }
+  return 0;
+}
+{% endhighlight %}
+</figure>
+
+</details>
 
 Note that the output code is nearly identical to the input source code, save for
 whitespace. We expect this, of course, since this is the purpose of the identity
