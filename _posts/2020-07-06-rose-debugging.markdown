@@ -136,10 +136,10 @@ wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/
 make
 ```
 
-<details class="code-container">
+<details class="code-collapsible">
 <summary>Click here to view source code.</summary>
 
-<figure class="lineno-collapsible">
+<figure class="lineno-container">
 {% highlight c++ linenos %}
 // Templated class declaration used in template parameter example code
 template <typename T>
