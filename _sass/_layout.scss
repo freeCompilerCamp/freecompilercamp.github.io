@@ -304,3 +304,18 @@ pre:not(.highlight) {
 details[open] {
     padding-bottom: 0px;
 }
+
+// Prevents bootstrap from making code containers fluid
+// This is especially useful for code containers that use custom line numbers
+.customlines-container {
+  pre code {
+    white-space: pre;
+  }
+
+  // Styles the code to be consistent
+  pre {
+    color: #333;
+    background-color: #eeefff;
+    padding: 5px;
+  }
+}
