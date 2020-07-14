@@ -165,9 +165,8 @@ int main(int argc, char * argv[])
 
 Here, we perform a standard pre-order AST traversal. Let's first take a look at lines 14-26 of the `visit()` function. Lines 28-38 of the translator can be ignored as the `SgModifierTypes` class is no longer used in ROSE.
 
-
-
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 14  SgInitializedName* initializedName = isSgInitializedName(n);
 15  if (initializedName != NULL)
 16  {
@@ -181,13 +180,15 @@ Here, we perform a standard pre-order AST traversal. Let's first take a look at 
 24      bool isVolatile = modifierType->get_typeModifier().get_constVolatileModifier().isVolatile();
 25      printf ("   initializedName: SgModifierType: isVolatile = %s \n",(isVolatile == true) ? "true" : "false");
 26    }
-```
+{% endhighlight %}
+</figure>
 
 For each IR node we visit, we check if it is of type `SgInitializedName` (lines 14-15) and print its name and type if so. Note that `get_type()` returns the general `SgType` object, from which we must obtain the `SgModifierType` object on line 21. If we do indeed have a type modifier from this variable, we use a series of member functions to determine if it is volatile on line 24 using `get_typeModifier()`. Note, in particular, that a type modifier can be const or volatile, hence the use of the `get_constVolatileModifier()` function followed by `isVolatile()`.
 
 Next, let's look at lines 40-53:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 40  // Note that the "volatile" madifier is not in the SgVariableDeclaration nor the SgVariableDefinition
 41  SgVariableDeclaration* variableDeclaration = isSgVariableDeclaration(n);
 42  if (variableDeclaration != NULL)
@@ -202,7 +203,8 @@ Next, let's look at lines 40-53:
 51      printf ("SgVariableDefinition: isVolatile = %s \n",(isVolatile == true) ? "true" : "false");
 52    }
 53  }
-```
+{% endhighlight %}
+</figure>
 
 This portion of the code demonstrates that the volatile modifier type is *not* exposed in the `SgVariableDeclaration` nor `SgVariableDefinition` IR nodes, despite being exposed to the API. We expect this portion of the code to always print `false` for any IR nodes of these types encountered.
 
@@ -384,7 +386,8 @@ int main( int argc, char * argv[] )
 
 Let's start by looking at lines 17-24:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 16  // Build a list of functions within the AST
 17  Rose_STL_Container<SgNode*> functionDeclarationList = NodeQuery::querySubTree (project,V_SgFunctionDeclaration);
 19  int functionCounter = 0;
@@ -393,7 +396,8 @@ Let's start by looking at lines 17-24:
 22    // Build a pointer to the current type so that we can call the get_name() member function.
 23    SgFunctionDeclaration* functionDeclaration = isSgFunctionDeclaration(*i);
 24    ROSE_ASSERT(functionDeclaration != NULL);
-```
+{% endhighlight %}
+</figure>
 
 Note we do not explicitly traverse the AST as in previous examples; instead, we can use the alternate method of using the Query Library to search for nodes with a specific type. This is useful for simple translators, such as this one. To query the AST in this regard, we use the `NodeQuery` namespace to obtain a container of `SgNode`s corresponding to the type being searched for. `NodeQuery::querySubTree` takes as parameters the root `SgProject` node and the IR node type to search for. In our case, we are looking for `V_SgFunctionDeclaration`. Many SAGE classes/nodes in ROSE contain static variants, prefixed by `V_`, that can be used for queries.
 
@@ -407,7 +411,8 @@ Hence, we need to extract these parameters from the `SgFunctionDeclaration` node
 
 Next, let's take a look at the remaining lines of the translator.
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 26  // DQ (3/5/2006): Only output the non-compiler generated IRnodes
 27  if ( (*i)->get_file_info()->isCompilerGenerated() == false)
 28  {
@@ -429,7 +434,8 @@ Next, let's take a look at the remaining lines of the translator.
 44  {
 45    printf ("Compiler generated function name #%3d is %s \n",functionCounter++,functionDeclaration->get_name().str());
 46  }
-```
+{% endhighlight %}
+</figure>
 
 Note that there are a number of builtin functions defined as part of the g++ and gcc compatibility and these are output as well. These are marked as *compiler generated functions* within ROSE. We would like to differentiate between the two different types, and this is what the conditional on line 27 is doing. We continue so long as we are not working with a compiler generated function.
 
@@ -556,7 +562,8 @@ int main( int argc, char * argv[] )
 
 Let's begin with lines 20-31.
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 20  for (Rose_STL_Container<SgNode*>::iterator i = functionCallList.begin(); i != functionCallList.end(); i++)
 21  {
 22    SgFunctionCallExp* functionCallExp = isSgFunctionCallExp(*i);
@@ -569,7 +576,8 @@ Let's begin with lines 20-31.
 29    SgFunctionRefExp* functionRefExp = isSgFunctionRefExp(functionExpression);
 30
 31    SgFunctionSymbol* functionSymbol = NULL;
-```
+{% endhighlight %}
+</figure>
 
 In this translator, we follow much of the same initial procedure to perform a subtree query as in the previous section. This time, however, we are interested in `SgFunctionCallExp` nodes, and so we use `V_SgFunctionCallExp` as the parameter to the subtree query. `SgFunctionCallExp` represents the *general* concept of a C++ function call and is an expression. Once we have it on lines 22-23, we obtain the actual expression using the `get_function()` member function. This object will let us perform a more detailed analysis of function expressions in the input source code.
 
@@ -579,7 +587,8 @@ Of course, the left-hand side of a function call can be significantly more compl
 
 With this kept in mind, we can look into the core of translator on lines 32-59.
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 32  if (functionRefExp != NULL)
 33  {
 34    // Case of non-member function
@@ -608,7 +617,8 @@ With this kept in mind, we can look into the core of translator on lines 32-59.
 57  functionCounter++,
 58  functionCallExp->get_file_info()->get_line(),
 59  functionDeclaration->get_file_info()->get_line());
-```
+{% endhighlight %}
+</figure>
 
 In our example here, we keep things simple and look into the case where the left-hand side is either a free-standing function or is a member function accessed via the dot operator. In the latter case, the `SgFunctionRefExp` object obtained previously will be `NULL`, as the left-hand side is more complicated than a simple free-standing function. Otherwise, we can obtain the left-hand side by simply extracting the `SgFunctionSymbol`, which represents the function name, via the `get_symbol()` (lines 32-36). For member functions, we need to obtain the expression from the right-hand side of the dot operator (line 41), which will be of type `SgMemberFunctionRefExp`. Once we have this object, we can obtain the symbol through the same `get_symbol()` function as previously (lines 42-45). Lines 52-60 obtain the function declaration using the obtained symbol, which contains declaration information (e.g., location in source code).
 
@@ -750,7 +760,8 @@ cat ${ROSE_SRC}/tutorial/templateParameter.C
 
 Let's look at the iteration over each `SgTemplateInstanationDecl` node, which contains all template instantiation declarations in our code. This corresponds to lines 24-38.
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 24  SgTemplateInstantiationDecl* instantiatedTemplateClass =isSgTemplateInstantiationDecl(*i);
 25  ROSE_ASSERT(instantiatedTemplateClass != NULL);
 26
@@ -766,7 +777,8 @@ Let's look at the iteration over each `SgTemplateInstanationDecl` node, which co
 36  {
 37    printf ("   TemplateArgument #%d = %s \n",parameterCounter++,(*j)->unparseToString().c_str());
 38  }
-```
+{% endhighlight %}
+</figure>
 
 For each declaration, we obtain a pointer to the `SgTemplateInstanationDecl` object, as usual, and output the template name using `get_templateName()`. To obtain the parameter list, we use the `get_templateArguments()` function, much like we did for function parameter extraction (line 32). We then iterate through each parameter and print the template argument type. This translator is very similar to the function parameter extraction translator in Section B; however, it showcases working with template parameters instead. This can be trickier due to the ability to nest template parameters.
 

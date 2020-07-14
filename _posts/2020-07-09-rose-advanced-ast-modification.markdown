@@ -96,7 +96,8 @@ Note that inclusion of the two `SageBuilder` and `SageInterface` namespaces. The
 
 Of interest is the `SimpleInstrumentation::visit()` function, shown below; the other components of the code are the usual AST traversal routines.
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 15  void
 16  SimpleInstrumentation::visit (SgNode * astNode)
 17  {
@@ -108,7 +109,8 @@ Of interest is the `SimpleInstrumentation::visit()` function, shown below; the o
 23        prependStatement (variableDeclaration, block);
 24      }
 25  }
-```
+{% endhighlight %}
+</figure>
 
 Within our traversal, we look for `SgBasicBlocks` that represent code blocks. We then create an AST fragment (a variable declaration) on line 21. We use the `buildVariableDeclaration()` builder function from the `SageBuilder` namespace. This function takes as parameter the name and type to build a variable declaration node.
 
@@ -240,7 +242,7 @@ int main (int argc, char *argv[])
 
 The goal here is to build two expressions:
 
-```cpp
+```c++
 double result = 2.0 * (1.0 - gama * gama);
 double result2 = alpha * beta;
 ```
@@ -249,7 +251,8 @@ before the last statement in `main()`. Because we know we are only interested in
 
 Building these two expressions involves using various `buildXXX()` functions to build up the full expression. For example, on line 24 you can see we use the `buildMultiplyOp()` function to create the multiplication operator in the expression. This can be done in either a bottomup fashion (recommended), as in the case for our first expression, or a topdown fashion, as in the case for our second expression. Let's view lines 21-31, corresponding to a bottomup build:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 21  // bottomup: build operands first, create expression later on
 22  //  double result = 2 * (1 - gama * gama);
 23  SgExpression * init_exp =
@@ -261,11 +264,13 @@ Building these two expressions involves using various `buildXXX()` functions to 
 29
 30  SgStatement* laststmt = getLastStatement(topScopeStack());
 31  insertStatementBefore(laststmt,decl);
-```
+{% endhighlight %}
+</figure>
 
 Bottomup builds the expression by operands first, and then the expression later. Most of these operand building functions are self-explanatory as can be seen in the translator code on lines 23-27, but note that `buildVarRefExp()` allows us to build a variable reference from an initialized name (in this case, `gama` already exists in our input code). Next, let's view lines 33-41 for the topdown build:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 33  // topdown: build expression first, set operands later on
 34  // double result2 = alpha * beta;
 35  SgExpression * init_exp2 = buildMultiplyOp();
@@ -275,7 +280,8 @@ Bottomup builds the expression by operands first, and then the expression later.
 39  SgVariableDeclaration* decl2 = buildVariableDeclaration("result2",buildDoubleType(),buildAssignInitializer(init_exp2));
 40  laststmt = getLastStatement(topScopeStack());
 41  insertStatementBefore(laststmt,decl2);
-```
+{% endhighlight %}
+</figure>
 
 Topdown builds the expression first, and sets the operands later. In this case, we create the multiplication expression on line 35 and then use the `setRhsOperand()` and `setLhsOperand()` functions to set the operands.
 
@@ -422,7 +428,8 @@ main ( int argc, char * argv[] )
 
 Let's first focus on lines 20-35 that build up our function declaration and its parameters:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 20  // ********************************************************************
 21  // Create a parameter list with a parameter
 22  // ********************************************************************
@@ -439,7 +446,8 @@ Let's first focus on lines 20-35 that build up our function declaration and its 
 33  SgFunctionDeclaration * func        = buildDefiningFunctionDeclaration
 34    (func_name, buildIntType(), parameterList,globalScope);
 35  SgBasicBlock*  func_body    = func->get_definition()->get_body();
-```
+{% endhighlight %}
+</figure>
 
 Just like before, we need to build up the function definition with various `buildXXX()` function calls. First, we construct the parameter list on lines 20-27. Here, our function has a single reference parameter: `int &var_name`. The code is quite self-explanatory, but do note that we must create an `SgInitializedName` for the variable and create the parameter list with `buildFunctionParameterList()`.
 
@@ -447,7 +455,8 @@ Next, we create a function declaration (lines 29-35). Again, the code is self-ex
 
 Let's now look at the creation of the function body n lines 37-47:
 
-```c++
+<figure class="customlines-container">
+{% highlight c++ %}
 37  // ********************************************************
 38  // Insert a statement in the function body
 39  // *******************************************************
@@ -459,7 +468,8 @@ Let's now look at the creation of the function body n lines 37-47:
 45  // insert a statement into the function body
 46  prependStatement(new_stmt,func_body);
 47  prependStatement(func,globalScope);
-```
+{% endhighlight %}
+</figure>
 
 In this case, we are adding the statement
 
@@ -511,19 +521,19 @@ cat -n rose_function_input.cxx
 
 <figure class="lineno-container">
 {% highlight c++ linenos %}
-1
-2  int my_function(int &var_name)
-3  {
-4    ++var_name;
-5  }
-6
-7  int main()
-8  {
-9    for (int i = 0; i < 4; i++) {
-10      int x;
-11    }
-12    return 0;
-13  }
+
+int my_function(int &var_name)
+{
+  ++var_name;
+}
+
+int main()
+{
+  for (int i = 0; i < 4; i++) {
+    int x;
+  }
+  return 0;
+}
 {% endhighlight %}
 </figure>
 
