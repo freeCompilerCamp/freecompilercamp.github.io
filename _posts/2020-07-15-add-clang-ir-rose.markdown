@@ -48,6 +48,9 @@ Check the create source code and you should see the same content as above.
 cat hello-world.c
 ```
 
+### Clang IR - `clang::Decl::Var`
+
+
 By default, ROSE compiler with Clang frontend can't compile this example due to unsupported Clang IR. While traversing the Clang AST, ROSE will encounter an unknown Clang IR node and can't continue.
 
 ```.term1
@@ -75,9 +78,10 @@ case clang::Decl::Var:
 ```
 
 ```.term1
-vim /home/freecc/source/rose_src/src/frontend/CxxFrontend/Clang/clang-frontend-decl.cpp
+vim /home/freecc/source/rose_src/src/frontend/CxxFrontend/Clang/clang-frontend-decl.cpp +315
 ```
 
+### Clang IR - `clang::Stmt::CallExprClass`
 
 After making the modification, we can recompile ROSE to see whether it works now.
 
@@ -109,8 +113,10 @@ case clang::Stmt::CallExprClass:
 ```
 
 ```.term1
-vim /home/freecc/source/rose_src/src/frontend/CxxFrontend/Clang/clang-frontend-stmt.cpp
+vim /home/freecc/source/rose_src/src/frontend/CxxFrontend/Clang/clang-frontend-stmt.cpp +486
 ```
+
+### Clang IR - `clang::ValueStmt`
 
 Again, we need to recompiler ROSE to see the result.
 
@@ -143,6 +149,12 @@ At the specified line 1488 of file `clang-frontend-stmt.cpp`, we can see that it
 ```
 ROSE_ASSERT(FAIL_TODO == 0); // TODO
 ```
+
+```.term1
+vim /home/freecc/source/rose_src/src/frontend/CxxFrontend/Clang/clang-frontend-stmt.cpp +1488
+```
+
+### Result
 
 Now let's compile ROSE the third time.
 
