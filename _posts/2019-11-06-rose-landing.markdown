@@ -42,6 +42,9 @@ Give ROSE a try with the following tutorials:
 [Debugging Translators](/rose-debugging)
   * This is a tutorial for debugging ROSE translators.
 
+[Supporting a Clang IR](/add-clang-ir-rose)
+  * This is a tutorial for supporting a unknown Clang IR in ROSE.
+
 ### Program Transformation and Optimization
 [Advanced AST Construction](/rose-advanced-ast-modification)
   * This is a tutorial covering more advanced topics of AST modification and transformation.
