@@ -36,9 +36,6 @@ Give ROSE a try with the following tutorials:
   * This is a tutorial for working with more complex types when traversing the ROSE AST.
   * Check your understanding with the [Practical](/rose-complex-types-practical) for this chapter.
 
-[Modifying the ROSE AST](/rose-ast-modification)
-  * This is a tutorial to build your own source code translator by modifying ROSE AST.
-
 [Debugging Translators](/rose-debugging)
   * This is a tutorial for debugging ROSE translators.
 
@@ -46,8 +43,11 @@ Give ROSE a try with the following tutorials:
   * This is a tutorial for supporting a unknown Clang IR in ROSE.
 
 ### Program Transformation and Optimization
-[Advanced AST Construction](/rose-advanced-ast-modification)
-  * This is a tutorial covering more advanced topics of AST modification and transformation.
+[AST Modification - Declarations and Expressions](/rose-ast-modification-part1)
+  * This is part one of a two-part tutorial on AST modification for source-to-source transformations.
+
+[AST Modification - Functions and Function Calls](/rose-ast-modification-part2)
+  * This is part two of a two-part tutorial on AST modification for source-to-source transformations.
 
 ### Parallelism
 [Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)

@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Advanced AST Construction"
+title: "AST Modification - Declarations and Expressions"
 author: "@vec4"
 date: 2020-07-09
 categories: intermediate
-tags: [rose,dataflow]
+tags: [rose, ast-modification]
 ---
 
 # Tips:
@@ -28,7 +28,7 @@ Code snippets are shown in one of three ways throughout this environment:
    ```
 
 ## Features ##
-In a previous tutorial, we looked at a simple example of modifying the AST for some given source code in ROSE by adding a function call into the AST. In this tutorial, we will work with some more additional and more advanced AST modifications for supporting various source-to-source transformations. We particularly focus on common language constructs, such as variable declarations, functions, etc., and how to insert them into an existing AST. Note that AST modifications are most often done using high level interfaces for their simplicity, although low level interfaces can also be used to give users the maximum possible freedom for AST manipulation. In this tutorial, we rely on the high-level SAGE interface as the low-level interface is being phased out.
+Thus far, we've looked at how to work with the AST in ROSE, but we have not yet made any explicit changes to the AST. In this two-part tutorial, we will look at how to modify the AST to support various source-to-source transformations. We particularly focus on common language constructs, such as variable declarations, functions, etc., and how to insert them into an existing AST. Note that AST modifications are most often done using high level interfaces for their simplicity, although low level interfaces can also be used to give users the maximum possible freedom for AST manipulation. In this tutorial, we rely on the high-level SAGE interface as the low-level interface is being phased out.
 
 AST construction is generally done by using such an interface to construct a subtree for a particular modification before inserting it into the existing AST.
 
@@ -38,6 +38,8 @@ In this section, we show an example of how to construct a SAGE III AST subtree f
 Let's take a look at the source code for the translator.
 
 ```.term1
+cd ${ROSE_SRC}/tutorial && rm addVariableDeclaration2.C
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-ast-modification/addVariableDeclaration2.C
 cat -n ${ROSE_SRC}/tutorial/addVariableDeclaration2.C
 ```
 
@@ -67,7 +69,7 @@ SimpleInstrumentation::visit (SgNode * astNode)
   if (block != NULL)
     {
       SgVariableDeclaration *variableDeclaration =
-                buildVariableDeclaration ("newVariable", buildIntType ());
+                buildVariableDeclaration ("newVariable", buildIntType (), NULL, block);
       prependStatement (variableDeclaration, block);
     }
 }
@@ -105,14 +107,16 @@ Of interest is the `SimpleInstrumentation::visit()` function, shown below; the o
 19    if (block != NULL)
 20      {
 21        SgVariableDeclaration *variableDeclaration =
-22                  buildVariableDeclaration ("newVariable", buildIntType ());
+22                  buildVariableDeclaration ("newVariable", buildIntType (), NULL, block);
 23        prependStatement (variableDeclaration, block);
 24      }
 25  }
 {% endhighlight %}
 </figure>
 
-Within our traversal, we look for `SgBasicBlocks` that represent code blocks. We then create an AST fragment (a variable declaration) on line 21. We use the `buildVariableDeclaration()` builder function from the `SageBuilder` namespace. This function takes as parameter the name and type to build a variable declaration node.
+Within our traversal, we look for `SgBasicBlock`s that represent code blocks. We then create an AST fragment (a variable declaration) on line 21. We use the `buildVariableDeclaration()` builder function from the `SageBuilder` namespace. This function takes as parameter the name and type to build a variable declaration node. Additionally, many builder functions, especially those for statements, take an optional initializer (`NULL` here since we are not initializing the declaration) and an optional scope parameter that describes the insertion's placement with respect to the scope, allowing declarations to have a local context. By default, the stack scope is used. An alternative method of specifying the scope is to use scope stack interfaces as we will see in Section B. See the [API reference](http://rosecompiler.org/ROSE_HTML_Reference/classSgScopeStatement.html) for SgScopeStatement for more details.
+
+Although the scope parameter optional, the recommended practice is to always pass the scope parameter explicitly to reduce mistakes and promote good programming style. We follow this practice in these tutorials where useful. In this example, we use the `SgBasicBlock` as the explicit scope parameter using the same object obtained from the AST traversal, since we want to insert a declaration at the top of each block and thus have this scope. Because we specified block scope, this means that each declaration of `newVariable` have separate scopes, as we expect.
 
 From there, we insert this fragment into the AST at the top of *each block*. We use the `prependStatement()` function from `SageInterface`, which inserts the declaration at the top of a basic block node. Details for parent and scope pointers, symbol tables, source file position information and so on are handled transparently by this high-level interface.
 
@@ -247,7 +251,7 @@ double result = 2.0 * (1.0 - gama * gama);
 double result2 = alpha * beta;
 ```
 
-before the last statement in `main()`. Because we know we are only interested in the `main()` function, we do not explicitly have to perform an AST traversal and can instead use `findMain()` as in line 16. From there, we can get the body of the `main()` function as in line 18-19.
+before the last statement in `main()`. Because we know we are only interested in the `main()` function, we do not explicitly have to perform an AST traversal and can instead use `findMain()` as in line 16. From there, we can get the body of the `main()` function as in line 18-19. Note that we use the alternative method of using scope stack interfaces (i.e., `pushScopeStack` and `popScopeStack()`) instead of passing the scope to each builder function.
 
 Building these two expressions involves using various `buildXXX()` functions to build up the full expression. For example, on line 24 you can see we use the `buildMultiplyOp()` function to create the multiplication operator in the expression. This can be done in either a bottomup fashion (recommended), as in the case for our first expression, or a topdown fashion, as in the case for our second expression. Let's view lines 21-31, corresponding to a bottomup build:
 
@@ -341,211 +345,13 @@ int main()
 
 Note that our two expressions have been correctly added in the proper location of the input source code.
 
-## C. Functions ##
-As our final example, we will take a look at a translator that shows how to add a function at the top of a global scope in a file.
-
-The source can be viewed with the command below.
-
-```.term1
-cat -n ${ROSE_SRC}/tutorial/addFunctionDeclaration2.C
-```
-
-<details class="code-collapsible">
-<summary>Click to view output code.</summary>
-
-<figure class="lineno-container">
-{% highlight c++ linenos %}
-// This example shows how to construct a defining function (with a function body)
-// using high level AST construction interfaces.
-//
-#include "rose.h"
-using namespace SageBuilder;
-using namespace SageInterface;
-
-class SimpleInstrumentation : public SgSimpleProcessing
-   {
-     public:
-          void visit ( SgNode* astNode );
-   };
-
-void
-SimpleInstrumentation::visit ( SgNode* astNode )
-   {
-     SgGlobal* globalScope = isSgGlobal(astNode);
-     if (globalScope != NULL)
-        {
-       // ********************************************************************
-       // Create a parameter list with a parameter
-       // ********************************************************************
-          SgName var1_name = "var_name";
-          SgReferenceType *ref_type = buildReferenceType(buildIntType());
-          SgInitializedName *var1_init_name = buildInitializedName(var1_name, ref_type);
-          SgFunctionParameterList* parameterList = buildFunctionParameterList();
-          appendArg(parameterList,var1_init_name);
-
-       // *****************************************************
-       // Create a defining functionDeclaration (with a function body)
-       // *****************************************************
-          SgName func_name                    = "my_function";
-          SgFunctionDeclaration * func        = buildDefiningFunctionDeclaration
-                        (func_name, buildIntType(), parameterList,globalScope);
-          SgBasicBlock*  func_body    = func->get_definition()->get_body();
-
-       // ********************************************************
-       // Insert a statement in the function body
-       // *******************************************************
-
-          SgVarRefExp *var_ref = buildVarRefExp(var1_name,func_body);
-          SgPlusPlusOp *pp_expression = buildPlusPlusOp(var_ref);
-          SgExprStatement* new_stmt = buildExprStatement(pp_expression);
-
-       // insert a statement into the function body
-          prependStatement(new_stmt,func_body);
-          prependStatement(func,globalScope);
-
-        }
-   }
-
-int
-main ( int argc, char * argv[] )
-   {
-  // Initialize and check compatibility. See Rose::initialize
-     ROSE_INITIALIZE;
-
-     SgProject* project = frontend(argc,argv);
-     ROSE_ASSERT(project != NULL);
-
-     SimpleInstrumentation treeTraversal;
-     treeTraversal.traverseInputFiles ( project, preorder );
-
-     AstTests::runAllTests(project);
-     return backend(project);
-   }
-{% endhighlight %}
-</figure>
-
-</details>
-
-Let's first focus on lines 20-35 that build up our function declaration and its parameters:
-
-<figure class="customlines-container">
-{% highlight c++ %}
-20  // ********************************************************************
-21  // Create a parameter list with a parameter
-22  // ********************************************************************
-23  SgName var1_name = "var_name";
-24  SgReferenceType *ref_type = buildReferenceType(buildIntType());
-25  SgInitializedName *var1_init_name = buildInitializedName(var1_name, ref_type);
-26  SgFunctionParameterList* parameterList = buildFunctionParameterList();
-27  appendArg(parameterList,var1_init_name);
-28
-29  // *****************************************************
-30  // Create a defining functionDeclaration (with a function body)
-31  // *****************************************************
-32  SgName func_name                    = "my_function";
-33  SgFunctionDeclaration * func        = buildDefiningFunctionDeclaration
-34    (func_name, buildIntType(), parameterList,globalScope);
-35  SgBasicBlock*  func_body    = func->get_definition()->get_body();
-{% endhighlight %}
-</figure>
-
-Just like before, we need to build up the function definition with various `buildXXX()` function calls. First, we construct the parameter list on lines 20-27. Here, our function has a single reference parameter: `int &var_name`. The code is quite self-explanatory, but do note that we must create an `SgInitializedName` for the variable and create the parameter list with `buildFunctionParameterList()`.
-
-Next, we create a function declaration (lines 29-35). Again, the code is self-explanatory; take note, however, that we provide the return type (`int`) of the function in the `buildDefiningFunction()` function and provide it the parameter list. We also specify that this function is of global scope. Note, also, that we obtain a pointer to the function body which will allow us to add statements to the body.
-
-Let's now look at the creation of the function body n lines 37-47:
-
-<figure class="customlines-container">
-{% highlight c++ %}
-37  // ********************************************************
-38  // Insert a statement in the function body
-39  // *******************************************************
-40
-41  SgVarRefExp *var_ref = buildVarRefExp(var1_name,func_body);
-42  SgPlusPlusOp *pp_expression = buildPlusPlusOp(var_ref);
-43  SgExprStatement* new_stmt = buildExprStatement(pp_expression);
-44
-45  // insert a statement into the function body
-46  prependStatement(new_stmt,func_body);
-47  prependStatement(func,globalScope);
-{% endhighlight %}
-</figure>
-
-In this case, we are adding the statement
-
-```c++
-++var_name;
-```
-
-We again use the `buildVarRefExp()` function to obtain the initialized name corresponding to the `var_name` variable. Once we have done this, we use `buildPlusPlusOp()` to build the `++var_name` expression, followed by building the statement containing the expression on line 43. Finally, lines 46-47 insert the statement into the body.
-
-The resulting function we have constructed is below.
-
-```c++
-int my_function(int &var_name) {
-  ++var_name;
-}
-```
-
-Let's build our tool.
-
-```.term1
-cd ${ROSE_BUILD}/tutorial
-make addFunctionDeclaration2
-```
-
-We will run our translator with the following input code.
-
-<figure class="lineno-container">
-{% highlight cpp linenos %}
-int main() {
-  for (int i = 0; i < 4; i++) {
-    int x;
-  }
-
-  return 0;
-}
-{% endhighlight %}
-</figure>
-
-We expect that the function we have constructed will be inserted to the top of this source code (the global scope). Let's verify this:
-
-```.term1
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-advanced-ast-modification/function_input.cxx
-./addFunctionDeclaration2 function_input.cxx
-cat -n rose_function_input.cxx
-```
-
-<details class="code-collapsible">
-<summary>Click to view output code.</summary>
-
-<figure class="lineno-container">
-{% highlight c++ linenos %}
-
-int my_function(int &var_name)
-{
-  ++var_name;
-}
-
-int main()
-{
-  for (int i = 0; i < 4; i++) {
-    int x;
-  }
-  return 0;
-}
-{% endhighlight %}
-</figure>
-
-</details>
-
-The translator works as expected.
+### Next Step... ###
+When you are ready, click [here](/rose-ast-modification-part2) to continue to part two of this tutorial.
 
 ## Additional Resources ##
-  * The introductory ["Modifying the ROSE AST"](http://freecompilercamp.org/rose-ast-modification/) tutorial provides an example of modifying the AST to insert function calls.
   * More examples of constructing the AST using high-level interfaces can be found at `rose/tests/nonsmoke/functional/roseTests/astInterfaceTests`.
   * The source files of the high level interfaces are located in `rose/src/frontend/SageIII/sageInterface`.
   * [API reference for `SageBuilder`](http://rosecompiler.org/ROSE_HTML_Reference/namespaceSageBuilder.html).
   * [API reference for `SageInterface`](http://rosecompiler.org/ROSE_HTML_Reference/namespaceSageInterface.html).
 
-Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-09-rose-advanced-ast-modification.markdown)
+Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-09-rose-ast-modification-part1.markdown)
