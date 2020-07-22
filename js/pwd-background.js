@@ -68,7 +68,8 @@ PwdBg.prototype.newSession = function(opts, cb) {
       self.createInstance(opts, function(resp) {
         if (resp.status == 200) {
           var i = JSON.parse(resp.responseText);
-          self.instances[i.name] = i; // add instance to container
+          // here we are assuming there is only ONE instance for a session
+          self.instances = i; // add instance to container
 
           if (cb) {
             cb(resp); // callback upon successful instance creation
@@ -180,15 +181,17 @@ PwdBg.prototype.closeSession = function(cb) {
  * This is not called within the API, but is provided as a user function.
  * We use it in PWC for upload source code for closed-book testing.
 */
-PwdBg.prototype.upload = function(instanceName, data, cb) {
+PwdBg.prototype.upload = function(name, path, data, cb) {
 
+  /*
   var request = new XMLHttpRequest();
-  var endpoint = this.opts.baseUrl + '/sessions' + this.sessionId + '/instances/'
-                    + name + '/uploads';
+  var endpoint = this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
+                    + name + '/uploads?path=' + path;
   var method = 'POST';
 
   request.open(method, endpoint, true);
 
+  request.setRequestHeader('content-type', 'multipart/form-data;');
   request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
   request.onload = function() {
@@ -196,6 +199,23 @@ PwdBg.prototype.upload = function(instanceName, data, cb) {
   }
 
   request.send(JSON.stringify(data));
+  */
+
+  // For some reason, only AJAX worked here....
+  $.ajax({
+      url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
+            + name + '/uploads?path=' + path,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'POST',
+      type: 'POST', // For jQuery < 1.9
+      success: function(data) {
+        console.log("Successfully uploaded file to instance.");  
+        cb(data);
+      }
+  });
 }
 
 /*
