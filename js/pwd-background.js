@@ -46,8 +46,11 @@ PwdBg.prototype.constructor = PwdBg;
  * Creates a new PWD session in the "background"; i.e., does not do any frontend
  * processing (creating terminals, web socket, etc.).
  * Session includes a session itself and one instance within the session.
+ *
+ * Callback function can be optionally provided and is fired once an instance
+ * has been created for the session.
 */
-PwdBg.prototype.newSession = function(opts) {
+PwdBg.prototype.newSession = function(opts, cb) {
 
   var self = this;
 
@@ -66,6 +69,10 @@ PwdBg.prototype.newSession = function(opts) {
         if (resp.status == 200) {
           var i = JSON.parse(resp.responseText);
           self.instances[i.name] = i; // add instance to container
+
+          if (cb) {
+            cb(resp); // callback upon successful instance creation
+          }
         } else {
           console.error('Could not create PWC instance.');
         }
