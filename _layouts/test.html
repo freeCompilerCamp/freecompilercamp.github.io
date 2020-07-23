@@ -1,0 +1,192 @@
+---
+layout: default
+---
+
+<div class="panel-container">
+    <div class="panel-left content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+            <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+                <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+
+            </header>
+
+            <div class="post-content" itemprop="articleBody">
+                {{ content }}
+            </div>
+        </article>
+        {% include social-share.html %}
+    </div>
+
+    <div class="splitter">
+    </div>
+
+    <div class="panel-right">
+      <div class="code-editor" id="code-editor">
+#ifdef __cplusplus
+extern "C" {
+  #endif
+
+  extern int foo(double x);
+  extern int bar(double x);
+
+
+  #ifdef __cplusplus
+}
+#endif
+      </div>
+      <span class="align-bottom code-editor-status">
+        <div class="pull-left">
+          <button type="button" class="btn btn-success pull-left" id="code-editor-submit">Submit Code</button>
+          <div class="loader pull-right" id="code-submit-loader"></div>
+        </div>
+        <div class="pull-right">
+          <p id="code-editor-status-indicator">Currently disconnected from PWC.</p>
+          <p id="code-editor-status-timer">Session time remaining:</p>
+        </div>
+
+      </span>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        var font3 = document.createElement('link');
+        font3.type = 'text/css';
+        font3.rel = 'stylesheet';
+        font3.href = '{{site.baseurl}}/css/syntax-highlighting.css';
+        var q = document.getElementsByTagName('link')[0];
+        q.parentNode.insertBefore(font3, q);
+    })();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="https://rawgit.com/RickStrahl/jquery-resizable/master/dist/jquery-resizable.min.js"></script>
+<script src="https://cdn.rawgit.com/play-with-docker/sdk/74a853bbc404ce08c091a4b2c6f1de52df0da933/dist/pwd.js"></script>
+
+<script src="{{site.baseurl}}/js/quiz.js"></script>
+<script src="{{site.baseurl}}/js/pwd-background.js"></script>
+
+<!-- text editor for code (ace.js) -->
+<!-- need another language or theme? see: https://cdnjs.com/libraries/ace/ for CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-c_cpp.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+  // ace.js stuff
+  var editor = ace.edit('code-editor')
+  //editor.setTheme("ace/theme/solarized_light");
+  editor.session.setMode('ace/mode/c_cpp');
+</script>
+
+<script>
+
+    var pwdUrl = "{{ site.pwdurl }}";
+
+    var pwdbg = new PwdBg();
+
+    // Instead of using PWD SDK, which makes the terminals in the document,
+    // we instead use components of the SDK and modify to do it without
+    // terminals created. Set this up on load (create session and instance).
+    $(document).ready(function() {
+
+      var dockerImage = '{{page.image}}';
+      if (dockerImage == '') {
+        dockerImage = '{{site.default_docker_image}}';
+      };
+
+      // Specify the PWC server that will be used
+      var pwcUrl = '{{page.pwc}}';
+      if (pwcUrl == '') {
+        pwcUrl = '{{site.pwdurl}}';
+      };
+
+      // Just like in PWD, all we have to do is call newSession()
+      pwdbg.newSession({baseUrl: pwcUrl, ImageName: dockerImage}, function(resp) {
+
+        // TODO: We should periodically check if the instance is still bound
+        $('#code-editor-status-indicator').text('Currently connected to PWC.');
+        $('#code-editor-status-indicator').css('color', 'green');
+        startSessionTimer(2); // start session timer with 2 hours
+
+        $('#code-editor-submit').prop('disabled', false);
+
+      });
+
+    });
+
+    // Uploads the code in the text editor to the bound PWC instance.
+    $('#code-editor-submit').click(function() {
+
+        // Some front-end processing
+        $(this).prop('disabled', true); // disable the button while processing
+        $('#code-submit-loader').css('visibility', 'visible');
+
+        // Perform the actual upload
+        var editor = ace.edit('code-editor');
+
+        var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
+        var filePath = '/home/freecc/test.C'; // temp for test
+        var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
+        var data = new FormData();
+
+        data.append('fileName', fileName);
+        data.append('fileData', fileData);
+        data.append('filePath', filePath);
+
+        pwdbg.upload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+          // TODO: here we would use HTTP request to execute some commands to compile the uploaded code
+          // On success, we could switch to a checkmark
+          // On failure, we could switch to an x-mark, would be nice if we could have the compilation error show
+          // when hovering over it.
+          $('#code-submit-loader').css('visibility', 'hidden');
+          $('#code-editor-submit').prop('disabled', false);
+        });
+
+    });
+
+    // Close session when leaving the page
+    window.onbeforeunload = function(e) {
+      pwdbg.closeSession(function(){});
+      return;
+    }
+
+    // Resize element for code editor
+    $(".panel-left").resizable({
+        handleSelector: ".splitter",
+        resizeHeight: false,
+    });
+
+    // Starts the session timer and updates the p element to show the time
+    // remaining.
+    // Parameter is length in hours.
+    // Call this only once the PWD instance has been created.
+    // TODO: maybe do some checking if the instance has already been created.
+    function startSessionTimer(length) {
+      // Set the date 2 hours from now
+      var countDownDate = new Date().getTime() + length*60*60*1000;
+
+      // Update the count down every 1 second
+      var x = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+        $('#code-editor-status-timer').text('Session time remaining: ' + hours + 'h ' + minutes + 'm');
+        if (distance < 0) {
+          clearInterval(x);
+          $('#code-editor-status-timer').text('SESSION EXPIRED');
+          $('#code-editor-status-timer').css('color', 'red');
+        }
+      }, 1000);
+    }
+
+</script>
