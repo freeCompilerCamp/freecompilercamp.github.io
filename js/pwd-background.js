@@ -124,7 +124,7 @@ PwdBg.prototype.createInstance = function(opts, cb) {
     method: 'POST',
     type: 'POST', // For jQuery < 1.9
     success: function(r) {
-      cb(r);
+      cb(JSON.parse(r));
     },
     error: function(e) {
       console.error('Could not create PWC instance.');
@@ -176,7 +176,6 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
       method: 'POST',
       type: 'POST',
       success: function(data) {
-        console.log("Successfully uploaded file to instance.");
         cb(data);
       }
   });
