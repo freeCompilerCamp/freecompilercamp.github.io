@@ -69,7 +69,7 @@ Generally, to use this tool, we insert some special pragmas (e.g., `#pragma rose
 If you want to use the "low-level" method in your own translators to leverage outlining support in ROSE, a programming API (`Outliner` namespace) is available and defined in the midend (`src/midend/programTransformation/astOutlining`). Relevant functions include `Outliner::outline()` and `Outliner::isOutlineable()`. See Chapter 36 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) for more details and examples. In this tutorial, we focus only on the user-level builtin translator.
 
 
-## C. Example Input ##
+## B. Example Input ##
 In this section, we use the built-in outlining tool on various example inputs of increasing complexity. This will help us understand the capabilities of outlining in ROSE. You should have already built this tool from above.
 
 #### Simple Example ####
