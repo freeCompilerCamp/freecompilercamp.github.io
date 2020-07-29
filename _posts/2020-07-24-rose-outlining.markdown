@@ -40,7 +40,7 @@ ROSE provides a builtin translator that can outline a specified portion of code 
   * "Low-level" method: call low-level outlining routines that directly operate on the AST nodes you want to outline.
   * "User-level" method: use a special pragma to mark outline targets in the input program, and then call a high-level driver routine to process these pragmas. You could also use the command line option to specify outlining targets using abstract handle strings (advanced - see Chapter 46 of ROSE tutorial)
 
-Before discussing how to use the ROSE outline mechanism, it is important to note its limitations. ROSE can only outline single `SgStatement` nodes; note, however, that an `SgStatement` node may be a block (i.e., an `SgBasicBlock` node), allowing a "single statement" to compromise a sequence of complex statements. This is done to avoid subtly changing the program's semantics when outlining code.
+Before discussing how to use the ROSE outline mechanism, it is important to note its limitations. ROSE can only outline single `SgStatement` nodes; note, however, that an `SgStatement` node may be a block (i.e., an `SgBasicBlock` node), allowing a "single statement" to comprise a sequence of complex statements. This is done to avoid subtly changing the program's semantics when outlining code.
 
 Additionally, only some `SgStatement` nodes can be outlined. The outliner interface provides a `isOutlineable()` function for testing whether or not a given `SgStatement` object satisfies the preconditions. In general, the following is outlineable, although this is not a comprehensive list:
 
@@ -66,7 +66,7 @@ The tool will be installed to the `astOutliningTests` directory above and can be
 
 Generally, to use this tool, we insert some special pragmas (e.g., `#pragma rose_outline`) into our input code. We could also use abstract handles, as mentioned, but as this is an advanced technique, we will focus on the former in this tutorial. For example, we could call `./outline test.cpp` to outline code portions in the input file `test.cpp` that marked with the special `rose_outline` pragma.
 
-If you want to use the "low-level" method in your own translators to leverage outlining support in ROSE, a programming API (`Outliner` namespace) is available and defined in the midend (`src/midend/programTransformation/astOutlining`). Relevant functions include `Outliner::outline()` and `Outliner::isOutlineable()`. See Chapter 36 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) for more details and examples. In this tutorial, we focus only on the user-level builtin translator.
+If you want to use the "low-level" method in your own translators to leverage outlining support in ROSE, a programming API (`Outliner` namespace) is available and defined in the midend (`src/midend/programTransformation/astOutlining`). Relevant functions include `Outliner::outline()` and `Outliner::isOutlineable()`. See Chapter 37 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) for more details and examples. In this tutorial, we focus only on the user-level builtin translator.
 
 
 ## B. Example Input ##
@@ -352,6 +352,6 @@ We see that ROSE has added the corresponding friend function and passes the `thi
 
 ## Additional Resources ##
   * This tutorial is based on the [ROSE WikiBook tutorial on outlining](https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/outliner). Some additional examples and explanation, particularly about the outlining algorithm itself, can be found there.
-  * Chapter 36 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) contains some additional examples of the inline mechanism, especially for the low-level method.
+  * Chapter 37 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) contains some additional examples of the outline mechanism, especially for the low-level method.
 
 Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-17-rose-outlining.markdown)
