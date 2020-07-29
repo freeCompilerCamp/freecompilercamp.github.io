@@ -666,5 +666,7 @@ We have successfully inserted the definition of the template `swap()` function i
 ## Additional Resources ##
   * This tutorial is based on the [ROSE WikiBook tutorial on inlining](https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/Inliner#Source_code). Some additional examples and explanation can be found there.
   * Many more demos of inlining can be found [here](https://github.com/chunhualiao/inliner-demo) from @chunhualiao.
-  * Chapter 36 of the [ROSE Tutorial PDF]() contains some additional examples of the inline mechanism.
+  * Chapter 36 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) contains some additional examples of the inline mechanism.
   * The [Wikipedia](https://en.wikipedia.org/wiki/Inline_expansion) page on inlining contains additional explanations, especially for discussing the performance gain or loss of inlining.
+
+  Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-17-rose-inlining.markdown)

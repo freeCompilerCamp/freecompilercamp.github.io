@@ -52,6 +52,9 @@ Give ROSE a try with the following tutorials:
 [Inlining Transformations](/rose-inlining)
   * This is a tutorial on using the inline mechanism in ROSE for inlining transformations.
 
+[Outlining Transformations](/rose-outlining)
+  * This is a tutorial on using the outline mechanism in ROSE for outlining transformations.
+
 ### Parallelism
 [Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)
   * This is a tool which can automatically insert OpenMP pragmas into input serial C/C++ codes.
