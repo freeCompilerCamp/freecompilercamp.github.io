@@ -23,19 +23,12 @@ layout: default
     </div>
 
     <div class="panel-right">
-      <div class="code-editor" id="code-editor">
-#ifdef __cplusplus
-extern "C" {
-  #endif
-
-  extern int foo(double x);
-  extern int bar(double x);
-
-
-  #ifdef __cplusplus
+<div class="code-editor" id="code-editor">
+int main() {
+  printf("Hello world.");
+  return 0;
 }
-#endif
-      </div>
+</div>
       <span class="align-bottom code-editor-status">
         <div class="pull-left">
           <button type="button" class="btn btn-success pull-left" id="code-editor-submit">Submit Code</button>
@@ -108,7 +101,7 @@ extern "C" {
         // TODO: We should periodically check if the instance is still bound
         $('#code-editor-status-indicator').text('Currently connected to PWC.');
         $('#code-editor-status-indicator').css('color', 'green');
-        startSessionTimer(2); // start session timer with 2 hours
+        startSessionTimer(1.5); // start session timer with 1.5 hours/90m
 
         $('#code-editor-submit').prop('disabled', false);
 
@@ -131,12 +124,11 @@ extern "C" {
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
-        data.append('fileName', fileName);
-        data.append('fileData', fileData);
-        data.append('filePath', filePath);
+        data.append('fileData', fileData, fileName);
+        data.append('path', filePath);
 
         pwdbg.upload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
-          // TODO: here we would use HTTP request to execute some commands to compile the uploaded code
+          // TODO: here we would use HTTP request to execute some commands to compile the uploaded code see pwd.exec
           // On success, we could switch to a checkmark
           // On failure, we could switch to an x-mark, would be nice if we could have the compilation error show
           // when hovering over it.
