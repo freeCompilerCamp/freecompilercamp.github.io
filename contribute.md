@@ -35,20 +35,13 @@ Write freely in Markdown.
 
 Some special syntax:
 * For the code only for browsing, use a pair of triple backticks \`\`\` to include them. You can style your syntax based on various languages by placing the language name immediately after the first three backticks. A list of supported languages can be found [here](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers).
-* For browsing code with line numbers, use the following syntax, replacing ```cpp``` and ```<your_code>``` with your choice of language and your input code:
-```markdown
-<figure class="lineno-container">
-{% highlight cpp linenos %}
-<your_code>
-{% endhighlight %}
-</figure>
-```
 * For the code clickable and executed in the sandbox, use ```.term1``` as code snippet type (after the first three backticks).
+* For more advanced styling (e.g., code with line numbers, collapsible code snippets, etc.), see the [styling guide](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/styling-guide.md).
 
 For example,  in the following example, ```echo HELLO``` contained in ```.term1``` code snippet will print ``HELLO`` in the sandbox terminal.
 
 There are some built-in environment variables to faciliate the creation of command lines:
-* For ROSE: $ROSE_BUILD,
+* For ROSE: $ROSE_BUILD, $ROSE_SRC$, $ROSE_PATH,
 * For Clang/LLVM: $LLVM_PATH, $LLVM_BUILD, $LLVM_SRC
 
 Sometimes you want to insert a figure into your tutorial. You need to
@@ -81,3 +74,13 @@ The modified section is shown as follows.
 [Fixing a Bug in OpenMP Implementation](/rose-fix-bug-in-omp)
   * This tutorial is to show how to fix OpenMP implementation bugs in ROSE compiler.
 ```
+
+### Best Practices for Writing Tutorials ###
+Here are some practices we recommend following when writing your own tutorials, based on our own experience.
+  * Try to keep the length of the tutorial to around 10-15 minutes for the average user. You may consider having a colleague review your tutorial before submitting the pull request.
+  * Use code snippets to discuss the relevant parts of a tool's source code.
+  * Ensure that your tutorial does not solely rely on the terminal. Some users may choose to only read the tutorial and not use or are not able to use the terminal. This can usually be achieved by including the result of any `cat` or other output commands as a code snippet in the tutorial text (collapsible preferred). The intention is that someone could go through the tutorial and view relevant code snippets without ever touching the terminal, where feasible.
+  * Use clickable terminal commands whenever you want the user to issue some command in the terminal. This avoids users from having to manually type commands in.
+  * We generally provide input code via a separate GitHub repository and use `wget` in the tutorial to obtain the code via the raw source link. This is also done when modifications to a tool are needed to better support the tutorial. Anytime you need the user to obtain some code not already present in the sandbox, submit a pull request to one of the relevant repositories below to upload your code, in addition to a pull request here for the tutorial content.
+    * For Clang/LLVM: https://github.com/freeCompilerCamp/code-for-llvm-tutorials
+    * For ROSE: https://github.com/freeCompilerCamp/code-for-rose-tutorials
