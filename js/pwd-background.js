@@ -162,7 +162,6 @@ PwdBg.prototype.closeSession = function(cb) {
 /*
  * Performs the HTTP request for uploading to an instance.
  * This is not called within the API, but is provided as a user function.
- * We use it in PWC for upload source code for closed-book testing.
 */
 PwdBg.prototype.upload = function(name, path, data, cb) {
 
@@ -180,6 +179,28 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
       }
   });
 }
+
+/*
+ * Similar to the upload endpoint, this is for uploading test code specifically.
+ * We use it in closed-book testing.
+*/
+PwdBg.prototype.testupload = function(name, path, data, cb) {
+
+  $.ajax({
+      url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
+            + name + '/testuploads?path=' + path,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'POST',
+      type: 'POST',
+      success: function(data) {
+        cb(data);
+      }
+  });
+}
+
 
 /*
  * Sets the options for this instance. If none provided, creates default opts.
