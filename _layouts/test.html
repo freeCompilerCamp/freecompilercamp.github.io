@@ -24,8 +24,10 @@ layout: default
 
     <div class="panel-right">
 <div class="code-editor" id="code-editor">
+#include &lt;stdio.h&gt;
+
 int main() {
-  printf("Hello world.");
+  printf("Hello world.\n");
   return 0;
 }
 </div>
@@ -127,7 +129,7 @@ int main() {
         data.append('fileData', fileData, fileName);
         data.append('path', filePath);
 
-        pwdbg.testupload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+        pwdbg.testUpload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           // TODO: here we would use HTTP request to execute some commands to compile the uploaded code see pwd.exec
           // On success, we could switch to a checkmark
           // On failure, we could switch to an x-mark, would be nice if we could have the compilation error show
