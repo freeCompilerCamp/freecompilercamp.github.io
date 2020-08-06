@@ -114,11 +114,10 @@ PwdBg.prototype.createSession = function(cb) {
 PwdBg.prototype.createInstance = function(opts, cb) {
 
   opts.ImageName = opts.ImageName || this.opts.ImageName;
-  opts.Envs = opts.InstanceEnvs || this.opts.InstanceEnvs;
 
   $.ajax({
     url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances',
-    data: opts,
+    data: JSON.stringify(opts),
     contentType: 'application/json',
     headers: {'X-Requested-With': 'XMLHttpRequest'},
     method: 'POST',
