@@ -354,4 +354,4 @@ We see that ROSE has added the corresponding friend function and passes the `thi
   * This tutorial is based on the [ROSE WikiBook tutorial on outlining](https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/outliner). Some additional examples and explanation, particularly about the outlining algorithm itself, can be found there.
   * Chapter 37 of the [ROSE Tutorial PDF](http://rosecompiler.org/uploads/ROSE-Tutorial.pdf) contains some additional examples of the outline mechanism, especially for the low-level method.
 
-Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-17-rose-outlining.markdown)
+Source file for this page: [link](https://github.com/freeCompilerCamp/freecompilercamp.github.io/blob/master/_posts/2020-07-24-rose-outlining.markdown)

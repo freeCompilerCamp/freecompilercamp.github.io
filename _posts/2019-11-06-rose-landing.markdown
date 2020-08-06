@@ -55,6 +55,9 @@ Give ROSE a try with the following tutorials:
 [Outlining Transformations](/rose-outlining)
   * This is a tutorial on using the outline mechanism in ROSE for outlining transformations.
 
+[Loop Optimization](/rose-loop-optimization)
+  * This is a tutorial for performing loop optimizations with ROSE.
+
 ### Parallelism
 [Trying autoPar - Auto Parallelization Tool in ROSE](/rose-autopar)
   * This is a tool which can automatically insert OpenMP pragmas into input serial C/C++ codes.
