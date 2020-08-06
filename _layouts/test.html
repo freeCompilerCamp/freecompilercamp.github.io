@@ -99,6 +99,8 @@ layout: default
         dockerImage = '{{site.default_docker_image}}';
       };
 
+      pwcUrl = '{{site.pwdurl}}';
+
       // Just like in PWD, all we have to do is call newSession()
       pwdbg.newSession({baseUrl: pwcUrl, ImageName: dockerImage}, function(resp) {
 
