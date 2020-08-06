@@ -23,14 +23,7 @@ layout: default
     </div>
 
     <div class="panel-right">
-<div class="code-editor" id="code-editor">
-#include &lt;stdio.h&gt;
-
-int main() {
-  printf("Hello world.\n");
-  return 0;
-}
-</div>
+<div class="code-editor" id="code-editor" style="white-space: pre;"></div>
       <span class="align-bottom code-editor-status">
         <div class="pull-left">
           <button type="button" class="btn btn-success pull-left" id="code-editor-submit">Submit Code</button>
@@ -86,15 +79,24 @@ int main() {
     // terminals created. Set this up on load (create session and instance).
     $(document).ready(function() {
 
+      // Obtain skeleton source
+      $.ajax({
+          url: 'https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/{{ page.test_name }}/practicals/constTypeModifier.C',
+          method: 'GET',
+          type: 'GET',
+          success: function(data) {
+            editor.setValue(data);
+            editor.clearSelection();
+          },
+          error: function(e) {
+            editor.setValue('Could not obtain skeleton code form server :(');
+            console.error('Could not obtain skeleton code from server.');
+          }
+      });
+
       var dockerImage = '{{page.image}}';
       if (dockerImage == '') {
         dockerImage = '{{site.default_docker_image}}';
-      };
-
-      // Specify the PWC server that will be used
-      var pwcUrl = '{{page.pwc}}';
-      if (pwcUrl == '') {
-        pwcUrl = '{{site.pwdurl}}';
       };
 
       // Just like in PWD, all we have to do is call newSession()
@@ -114,6 +116,8 @@ int main() {
     // Uploads the code in the text editor to the bound PWC instance.
     $('#code-editor-submit').click(function() {
 
+        console.log('{{ page.test_name }}');
+
         // Some front-end processing
         $(this).prop('disabled', true); // disable the button while processing
         $('#code-submit-loader').css('visibility', 'visible');
@@ -122,13 +126,16 @@ int main() {
         var editor = ace.edit('code-editor');
 
         var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
-        var filePath = '/home/freecc/test.C'; // temp for test
+        // TODO: Create a special image that has the directory below included; e.g., rose-test
+        //var filePath = '/home/freecc/source/rose_src/freecc_tests/' + '{{ page.test_name }}' + '/submission.cpp';
+        var filePath = '/home/freecc/source/rose_src/tutorial/submission.cpp'; // temp
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
         data.append('fileData', fileData, fileName);
         data.append('path', filePath);
 
+        // Callback function handles success of upload & eval on server
         pwdbg.testUpload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           // TODO: here we would use HTTP request to execute some commands to compile the uploaded code see pwd.exec
           // On success, we could switch to a checkmark
