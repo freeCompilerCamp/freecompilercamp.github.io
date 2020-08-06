@@ -137,9 +137,7 @@ layout: default
         var editor = ace.edit('code-editor');
 
         var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
-        // TODO: Create a special image that has the directory below included; e.g., rose-test
-        //var filePath = '/home/freecc/source/rose_src/freecc_tests/' + '{{ page.test_name }}' + '/submission.cpp';
-        var filePath = '/home/freecc/source/rose_src/tutorial/submission.' + language; // temp
+        var filePath = '/home/freecc/source/rose_src/freecc_tests/submission.' + language;
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
