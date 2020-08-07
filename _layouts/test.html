@@ -70,8 +70,9 @@ layout: default
 
 <script>
 
-    var pwdUrl = '{{ site.pwdurl }}';
+    var testName = '{{ page.test_name }}';
     var language = '{{ page.test_language }}';
+    var pwdUrl = '{{ site.pwdurl }}';
     var pwdbg = new PwdBg();
 
     // Instead of using PWD SDK, which makes the terminals in the document,
@@ -137,7 +138,7 @@ layout: default
         var editor = ace.edit('code-editor');
 
         var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
-        var filePath = '/home/freecc/source/rose_src/freecc_tests/submission.' + language;
+        var filePath = '/home/freecc/source/rose_src/freecc_tests/' + testName + '_submission.' + language;
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
@@ -145,7 +146,7 @@ layout: default
         data.append('path', filePath);
 
         // Callback function handles success of upload & eval on server
-        pwdbg.testUpload(pwdbg.instances.name, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+        pwdbg.testUpload(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           // TODO: here we would use HTTP request to execute some commands to compile the uploaded code see pwd.exec
           // On success, we could switch to a checkmark
           // On failure, we could switch to an x-mark, would be nice if we could have the compilation error show

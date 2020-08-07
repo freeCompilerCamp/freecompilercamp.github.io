@@ -183,11 +183,11 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
  * Similar to the upload endpoint, this is for uploading test code specifically.
  * We use it in closed-book testing.
 */
-PwdBg.prototype.testUpload = function(name, path, data, cb) {
+PwdBg.prototype.testUpload = function(instanceName, testName, path, data, cb) {
 
   $.ajax({
       url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
-            + name + '/testuploads?path=' + path,
+            + instanceName + '/testuploads?path=' + path + '&testname=' + testName,
       data: data,
       cache: false,
       contentType: false,
