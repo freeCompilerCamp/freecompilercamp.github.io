@@ -45,11 +45,11 @@ Some starter code and a corresponding makefile is available for your usage. The 
 
 ```.term1
 mkdir ${ROSE_BUILD}/practicals && cd "$_"
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/practicals/Makefile
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/practicals/const_input.cxx
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/practicals/expected_output.txt
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/practicals/Makefile
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/practicals/const_input.cxx
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/practicals/expected_output.txt
 mkdir ${ROSE_SRC}/practicals && cd "$_"
-wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/complex-types/practicals/constTypeModifier.C
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/rose-complex-types/practicals/constTypeModifier.C
 ```
 
 Make your changes directly to the `constTypeModifier.C` source file and insert your code following the comment `"Insert your tool code here!"`. Vim, nano, and emacs are available within the terminal. Note we have provided an implementation for saving your output to file. When you are done, exit the text editor and return to the terminal.
