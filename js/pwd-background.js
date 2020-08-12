@@ -180,15 +180,37 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
 }
 
 /*
- * Similar to the upload endpoint, this is for uploading test code specifically.
- * We use it in closed-book testing.
+ * Similar to the upload endpoint, this is for uploading exam code specifically.
+ * Uploads the user's code and compiles it. Response contains the compilation
+ * status and errors, if any.
 */
-PwdBg.prototype.testUpload = function(instanceName, testName, path, data, cb) {
+PwdBg.prototype.examUploadAndCompile = function(instanceName, testName, path, data, cb) {
 
   $.ajax({
       url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
             + instanceName + '/testuploads?path=' + path + '&testname=' + testName,
       data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'POST',
+      type: 'POST',
+      success: function(data) {
+        cb(data);
+      }
+  });
+}
+
+/*
+ * Runs the submitted exam on the test cases provdided at the endpoint.
+ * This is only to be called AFTER the code has been uploaded and compiled.
+ * Otherwise, the server will return a StatusBadRequest.
+*/
+PwdBg.prototype.examRun = function(instanceName, cb) {
+
+  $.ajax({
+      url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
+            + instanceName + '/examrun',
       cache: false,
       contentType: false,
       processData: false,

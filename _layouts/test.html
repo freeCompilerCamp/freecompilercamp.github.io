@@ -27,7 +27,10 @@ layout: default
       <span class="align-bottom code-editor-status">
         <div class="row" style="margin-left: 0px; margin-right: 0px;">
           <div class="pull-left">
-            <button type="button" class="btn btn-success pull-left" id="code-editor-submit">
+            <button type="button" class="btn btn-info pull-left" id="code-editor-build">
+              <span class="glyphicon glyphicon-wrench"></span> Build
+            </button>
+            <button type="button" class="btn btn-success pull-left" id="code-editor-submit" disabled>
               <span class="glyphicon glyphicon-play"></span> Run
             </button>
             <button class="btn btn-info" type="button" id="console-button" data-toggle="collapse" data-target="#consoleCollapse" aria-expanded="false" aria-controls="consolecollapse">
@@ -112,7 +115,7 @@ layout: default
 
       // Obtain skeleton source
       $.ajax({
-          url: 'https://raw.githubusercontent.com/freeCompilerCamp/code-for-rose-tutorials/master/{{ page.test_name }}/practicals/constTypeModifier.C',
+          url: 'https://raw.githubusercontent.com/chunhualiao/rose-project-templates/master/template-project-v1/myTranslator.cpp',
           method: 'GET',
           type: 'GET',
           success: function(data) {
@@ -138,14 +141,14 @@ layout: default
         $('#code-editor-status-indicator').css('color', 'green');
         startSessionTimer(1.5); // start session timer with 1.5 hours/90m
 
-        $('#code-editor-submit').prop('disabled', false);
+        $('#code-editor-build').prop('disabled', false);
 
       });
 
     });
 
-    // Uploads the code in the text editor to the bound PWC instance.
-    $('#code-editor-submit').click(function() {
+    // Uploads the code in the text editor to the bound PWC instance and compiles it.
+    $('#code-editor-build').click(function() {
 
         // Some front-end processing
         $(this).prop('disabled', true); // disable the button while processing
@@ -162,11 +165,12 @@ layout: default
         data.append('fileData', fileData, fileName);
         data.append('path', filePath);
 
-        // Callback function handles upload & eval on server
-        pwdbg.testUpload(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+        // Callback function after uploading and compilation is completed.
+        // Report result of compilation, including any errors, from the HTTP response to the console div.
+        pwdbg.examUploadAndCompile(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           console.log(resp);
           $('#code-submit-loader').css('visibility', 'hidden');
-          $('#code-editor-submit').prop('disabled', false);
+          $('#code-editor-build').prop('disabled', false);
 
           // Set console HTML to output.
           var ansi_up = new AnsiUp;
