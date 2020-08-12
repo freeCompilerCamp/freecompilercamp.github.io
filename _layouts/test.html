@@ -25,13 +25,27 @@ layout: default
     <div class="panel-right">
 <div class="code-editor" id="code-editor" style="white-space: pre;"></div>
       <span class="align-bottom code-editor-status">
-        <div class="pull-left">
-          <button type="button" class="btn btn-success pull-left" id="code-editor-submit">Submit Code</button>
-          <div class="loader pull-right" id="code-submit-loader"></div>
+        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+          <div class="pull-left">
+            <button type="button" class="btn btn-success pull-left" id="code-editor-submit">
+              <span class="glyphicon glyphicon-play"></span> Run
+            </button>
+            <button class="btn btn-info" type="button" id="console-button" data-toggle="collapse" data-target="#consoleCollapse" aria-expanded="false" aria-controls="consolecollapse">
+              <span class="glyphicon glyphicon-console"></span> Console
+            </button>
+            <div class="loader pull-right" id="code-submit-loader"></div>
+          </div>
+          <div class="pull-right">
+            <p id="code-editor-status-indicator">Currently disconnected from PWC.</p>
+            <p id="code-editor-status-timer">Session time remaining:</p>
+          </div>
         </div>
-        <div class="pull-right">
-          <p id="code-editor-status-indicator">Currently disconnected from PWC.</p>
-          <p id="code-editor-status-timer">Session time remaining:</p>
+        <div class="row-fluid">
+          <div class="collapse" id="consoleCollapse">
+            <div class="card card-body" id="console">
+              Compilation output will appear here.
+            </div>
+          </div>
         </div>
 
       </span>
@@ -60,6 +74,9 @@ layout: default
 <!-- need another language or theme? see: https://cdnjs.com/libraries/ace/ for CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-c_cpp.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- ansi up -->
+<script src="{{site.baseurl}}/js/ansi_up.js"></script>
 
 <script>
   // ace.js stuff
@@ -145,14 +162,16 @@ layout: default
         data.append('fileData', fileData, fileName);
         data.append('path', filePath);
 
-        // Callback function handles success of upload & eval on server
+        // Callback function handles upload & eval on server
         pwdbg.testUpload(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
-          // TODO: here we would use HTTP request to execute some commands to compile the uploaded code see pwd.exec
-          // On success, we could switch to a checkmark
-          // On failure, we could switch to an x-mark, would be nice if we could have the compilation error show
-          // when hovering over it.
+          console.log(resp);
           $('#code-submit-loader').css('visibility', 'hidden');
           $('#code-editor-submit').prop('disabled', false);
+
+          // Set console HTML to output.
+          var ansi_up = new AnsiUp;
+          var html = ansi_up.ansi_to_html(resp);
+          $('#console').html(html);
         });
 
     });

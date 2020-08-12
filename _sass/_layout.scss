@@ -342,6 +342,7 @@ details[open] {
   #code-editor-status-indicator {
     color: red;
   }
+
 }
 
 // CSS for loader from https://www.w3schools.com/howto/howto_css_loader.asp
@@ -355,10 +356,31 @@ details[open] {
   animation: spin 2s linear infinite;
 }
 
+#code-editor-submit {
+  margin-right: 5px;
+}
+
+#console-button {
+  margin-left: 5px;
+  background-color: #000000;
+  border-color: #000000;
+}
+
 #code-submit-loader {
   visibility: hidden;
-  margin-left: 5px;
+  margin-left: 10px;
 }
+
+#console {
+  font-family: "Lucida Console", Courier, monospace;
+  white-space: pre-wrap;
+  background-color: #ffffff;
+  border: 1px solid;
+  border-color: #1887c6;
+  margin-top: 10px;
+}
+
+
 
 /* Safari */
 @-webkit-keyframes spin {
