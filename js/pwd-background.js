@@ -23,7 +23,7 @@
 /*
  * This wrapper contains client-side functions for using PWD without having to
  * create a terminal in the browser; i.e., in the background. We use it for
- * closed-book testing in FreeCompilerCamp.
+ * closed-book exams in FreeCompilerCamp.
  *
  * All of the following is based on the API endpoints of PWD SDK - we just
  * include only the parts we need.

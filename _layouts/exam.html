@@ -97,8 +97,8 @@ layout: default
 
 <script>
 
-    var testName = '{{ page.test_name }}';
-    var language = '{{ page.test_language }}';
+    var examName = '{{ page.exam_name }}';
+    var language = '{{ page.exam_language }}';
     var pwdUrl = '{{ site.pwdurl }}';
     var pwdbg = new PwdBg();
 
@@ -107,7 +107,7 @@ layout: default
     // terminals created. Set this up on load (create session and instance).
     $(document).ready(function() {
 
-      // Choices for languages in testing is currently C or C++. This is important
+      // Choices for languages in exams is currently C or C++. This is important
       // as we set the file extension for uploaded code with the choice here.
       // Default to C if something other than C or C++ is passed.
       if (language.toLowerCase() != 'c'
@@ -165,7 +165,7 @@ layout: default
         var editor = ace.edit('code-editor');
 
         var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
-        var filePath = '/home/freecc/source/rose_src/freecc_tests/' + testName + '_submission.' + language;
+        var filePath = '/home/freecc/source/rose_src/freecc_tests/' + examName + '_submission.' + language;
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
@@ -174,7 +174,7 @@ layout: default
 
         // Callback function after uploading and compilation is completed.
         // Report result of compilation, including any errors, from the HTTP response to the console div.
-        pwdbg.examUploadAndCompile(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+        pwdbg.examUploadAndCompile(pwdbg.instances.name, examName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           $('#code-submit-loader').css('visibility', 'hidden');
           $('#code-editor-build').prop('disabled', false);
 
