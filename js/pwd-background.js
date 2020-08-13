@@ -184,11 +184,11 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
  * Uploads the user's code and compiles it. Response contains the compilation
  * status and errors, if any.
 */
-PwdBg.prototype.examUploadAndCompile = function(instanceName, testName, path, data, cb_suc, cb_fail) {
+PwdBg.prototype.examUploadAndCompile = function(instanceName, examName, path, data, cb_suc, cb_fail) {
 
   $.ajax({
       url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
-            + instanceName + '/testuploads?path=' + path + '&testname=' + testName,
+            + instanceName + '/examuploadcompile?path=' + path + '&examname=' + examName,
       data: data,
       cache: false,
       contentType: false,
