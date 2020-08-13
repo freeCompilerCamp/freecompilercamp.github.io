@@ -206,6 +206,7 @@ layout: default
       // Some front-end processing
       $(this).prop('disabled', true); // disable the button while processing
       $('#code-submit-loader').css('visibility', 'visible');
+      $('#consoleCollapse').collapse("show"); // open the console if not already open
 
       pwdbg.examRun(pwdbg.instances.name, examName, function(resp) {
         $('#code-submit-loader').css('visibility', 'hidden');
