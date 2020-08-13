@@ -1,0 +1,267 @@
+---
+layout: default
+---
+
+<div class="panel-container">
+    <div class="panel-left content">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+            <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+                <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+
+            </header>
+
+            <div class="post-content" itemprop="articleBody">
+                {{ content }}
+            </div>
+        </article>
+        {% include social-share.html %}
+    </div>
+
+    <div class="splitter">
+    </div>
+
+    <div class="panel-right">
+<div class="code-editor" id="code-editor" style="white-space: pre;"></div>
+      <span class="align-bottom code-editor-status">
+        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+          <div class="pull-left">
+            <button type="button" class="btn btn-primary pull-left" id="code-editor-build" disabled>
+              <span class="glyphicon glyphicon-wrench"></span> Build
+            </button>
+            <button type="button" class="btn btn-success pull-left" id="code-editor-submit" disabled>
+              <span class="glyphicon glyphicon-play"></span> Run
+            </button>
+            <button class="btn btn-info" type="button" id="console-button" data-toggle="collapse" data-target="#consoleCollapse" aria-expanded="false" aria-controls="consolecollapse">
+              <span class="glyphicon glyphicon-console"></span> Console
+            </button>
+            <div class="loader pull-right" id="code-submit-loader"></div>
+          </div>
+          <div class="pull-right">
+            <p id="code-editor-status-indicator">Currently disconnected from PWC.</p>
+            <p id="code-editor-status-timer">Session time remaining:</p>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="collapse" id="consoleCollapse">
+            <div class="card card-body" id="console">
+              Compilation output will appear here.
+            </div>
+          </div>
+        </div>
+
+      </span>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        var font3 = document.createElement('link');
+        font3.type = 'text/css';
+        font3.rel = 'stylesheet';
+        font3.href = '{{site.baseurl}}/css/syntax-highlighting.css';
+        var q = document.getElementsByTagName('link')[0];
+        q.parentNode.insertBefore(font3, q);
+    })();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="https://rawgit.com/RickStrahl/jquery-resizable/master/dist/jquery-resizable.min.js"></script>
+<script src="https://cdn.rawgit.com/play-with-docker/sdk/74a853bbc404ce08c091a4b2c6f1de52df0da933/dist/pwd.js"></script>
+
+<script src="{{site.baseurl}}/js/quiz.js"></script>
+<script src="{{site.baseurl}}/js/pwd-background.js"></script>
+
+<!-- text editor for code (ace.js) -->
+<!-- need another language or theme? see: https://cdnjs.com/libraries/ace/ for CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-c_cpp.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- ansi up -->
+<script src="{{site.baseurl}}/js/ansi_up.js"></script>
+
+<script>
+  // ace.js stuff
+  var editor = ace.edit('code-editor')
+  //editor.setTheme("ace/theme/solarized_light");
+  editor.session.setMode('ace/mode/c_cpp');
+
+  // Disable the run button if there are changes made to the code.
+  // This is useful whenever someone builds the code but doesn't run it and instead
+  // changes something. This will ensure they will rebuild it first.
+  editor.getSession().on('change', function() {
+    $('#code-editor-submit').prop('disabled', true);
+  });
+</script>
+
+<script>
+
+    var examName = '{{ page.exam_name }}';
+    var language = '{{ page.exam_language }}';
+    var pwdUrl = '{{ site.pwdurl }}';
+    var pwdbg = new PwdBg();
+
+    // Instead of using PWD SDK, which makes the terminals in the document,
+    // we instead use components of the SDK and modify to do it without
+    // terminals created. Set this up on load (create session and instance).
+    $(document).ready(function() {
+
+      // Choices for languages in exams is currently C or C++. This is important
+      // as we set the file extension for uploaded code with the choice here.
+      // Default to C if something other than C or C++ is passed.
+      if (language.toLowerCase() != 'c'
+              && language.toLowerCase() != 'cpp'
+              && language.toLowerCase() != 'c++') {
+        console.warn('Language provided in post is not recognized. Defaulted to C.');
+        language = 'c';
+      }
+
+      // If c++, set to cpp
+      if (language.toLowerCase() == 'c++') language = 'cpp';
+
+      // Obtain skeleton source
+      $.ajax({
+          url: '{{site.exam_endpoint}}' + examName + '/skeleton.' + language,
+          method: 'GET',
+          type: 'GET',
+          success: function(data) {
+            editor.setValue(data);
+            editor.clearSelection();
+          },
+          error: function(e) {
+            editor.setValue('Could not obtain skeleton code form server :(');
+            console.error('Could not obtain skeleton code from server.');
+          }
+      });
+
+      var dockerImage = '{{page.image}}';
+      if (dockerImage == '') {
+        dockerImage = '{{site.default_docker_image}}';
+      };
+
+      // Just like in PWD, all we have to do is call newSession()
+      pwdbg.newSession({baseUrl: pwdUrl, ImageName: dockerImage}, function(resp) {
+
+        // TODO: We should periodically check if the instance is still bound
+        $('#code-editor-status-indicator').text('Currently connected to PWC.');
+        $('#code-editor-status-indicator').css('color', 'green');
+        startSessionTimer(1.5); // start session timer with 1.5 hours/90m
+
+        $('#code-editor-build').prop('disabled', false);
+
+      });
+
+    });
+
+    // Uploads the code in the text editor to the bound PWC instance and compiles it.
+    $('#code-editor-build').click(function() {
+
+        // Some front-end processing
+        $(this).prop('disabled', true); // disable the button while processing
+        $('#code-submit-loader').css('visibility', 'visible');
+        $('#consoleCollapse').collapse("show"); // open the console if not already open
+
+        // Perform the actual upload
+        var editor = ace.edit('code-editor');
+
+        var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
+        var filePath = '/home/freecc/source/rose_src/freecc_tests/' + examName + '_submission.' + language;
+        var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
+        var data = new FormData();
+
+        data.append('fileData', fileData, fileName);
+        data.append('path', filePath);
+
+        // Callback function after uploading and compilation is completed.
+        // Report result of compilation, including any errors, from the HTTP response to the console div.
+        pwdbg.examUploadAndCompile(pwdbg.instances.name, examName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+          $('#code-submit-loader').css('visibility', 'hidden');
+          $('#code-editor-build').prop('disabled', false);
+
+          // Set console HTML to output.
+          var ansi_up = new AnsiUp;
+          var html = ansi_up.ansi_to_html(resp);
+          $('#console').html(html);
+
+          // Enable the run button.
+          $('#code-editor-submit').prop('disabled', false);
+        }, function(resp) {
+          $('#code-submit-loader').css('visibility', 'hidden');
+          $('#code-editor-build').prop('disabled', false);
+
+          // Set console HTML to output.
+          var ansi_up = new AnsiUp;
+          var html = ansi_up.ansi_to_html(resp);
+          $('#console').html(html);
+
+          // Disable the run button.
+          $('#code-editor-submit').prop('disabled', true);
+        });
+
+    });
+
+    $('#code-editor-submit').click(function() {
+
+      // Some front-end processing
+      $(this).prop('disabled', true); // disable the button while processing
+      $('#code-submit-loader').css('visibility', 'visible');
+      $('#consoleCollapse').collapse("show"); // open the console if not already open
+
+      pwdbg.examRun(pwdbg.instances.name, examName, function(resp) {
+        $('#code-submit-loader').css('visibility', 'hidden');
+        $('#code-editor-submit').prop('disabled', false);
+
+        // Set console HTML to output.
+        var ansi_up = new AnsiUp;
+        var html = ansi_up.ansi_to_html(resp);
+        $('#console').html(html);
+      });
+
+
+    });
+
+    // Close session when leaving the page
+    window.onbeforeunload = function(e) {
+      pwdbg.closeSession(function(){});
+      return;
+    }
+
+    // Resize element for code editor
+    $(".panel-left").resizable({
+        handleSelector: ".splitter",
+        resizeHeight: false,
+    });
+
+    // Starts the session timer and updates the p element to show the time
+    // remaining.
+    // Parameter is length in hours.
+    // Call this only once the PWD instance has been created.
+    // TODO: maybe do some checking if the instance has already been created.
+    function startSessionTimer(length) {
+      // Set the date 2 hours from now
+      var countDownDate = new Date().getTime() + length*60*60*1000;
+
+      // Update the count down every 1 second
+      var x = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+        $('#code-editor-status-timer').text('Session time remaining: ' + hours + 'h ' + minutes + 'm');
+        if (distance < 0) {
+          clearInterval(x);
+          $('#code-editor-status-timer').text('SESSION EXPIRED');
+          $('#code-editor-status-timer').css('color', 'red');
+        }
+      }, 1000);
+    }
+
+</script>

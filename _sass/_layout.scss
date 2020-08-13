@@ -319,3 +319,82 @@ details[open] {
     padding: 5px;
   }
 }
+
+// Code text editor styling for closed-book tests using ace.js
+.code-editor {
+
+}
+
+// Status bar on bottom of closed-book tests
+.code-editor-status {
+
+  // Span styling
+  padding: 5px;
+  background-color: #eeefff;
+  border-top: solid;
+  border-top-color: #1887c6;
+  border-top-width: 1px;
+
+  p {
+    margin-bottom: 0px;
+  }
+
+  #code-editor-status-indicator {
+    color: red;
+  }
+
+}
+
+// CSS for loader from https://www.w3schools.com/howto/howto_css_loader.asp
+.loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 30px;
+  height: 30px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+#code-editor-submit {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+#code-editor-build {
+  background-color: #1887c6;
+  margin-right: 5px;
+}
+
+#console-button {
+  margin-left: 5px;
+  background-color: #000000;
+  border-color: #000000;
+}
+
+#code-submit-loader {
+  visibility: hidden;
+  margin-left: 10px;
+}
+
+#console {
+  font-family: "Lucida Console", Courier, monospace;
+  white-space: pre-wrap;
+  background-color: #ffffff;
+  border: 1px solid;
+  border-color: #1887c6;
+  margin-top: 10px;
+}
+
+
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
