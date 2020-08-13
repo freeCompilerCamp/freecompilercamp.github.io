@@ -86,6 +86,13 @@ layout: default
   var editor = ace.edit('code-editor')
   //editor.setTheme("ace/theme/solarized_light");
   editor.session.setMode('ace/mode/c_cpp');
+
+  // Disable the run button if there are changes made to the code.
+  // This is useful whenever someone builds the code but doesn't run it and instead
+  // changes something. This will ensure they will rebuild it first.
+  editor.getSession().on('change', function() {
+    $('#code-editor-submit').prop('disabled', true);
+  });
 </script>
 
 <script>
@@ -175,6 +182,9 @@ layout: default
           var ansi_up = new AnsiUp;
           var html = ansi_up.ansi_to_html(resp);
           $('#console').html(html);
+
+          // Enable the run button.
+          $('#code-editor-submit').prop('disabled', false);
         }, function(resp) {
           $('#code-submit-loader').css('visibility', 'hidden');
           $('#code-editor-build').prop('disabled', false);
@@ -183,6 +193,9 @@ layout: default
           var ansi_up = new AnsiUp;
           var html = ansi_up.ansi_to_html(resp);
           $('#console').html(html);
+
+          // Disable the run button.
+          $('#code-editor-submit').prop('disabled', true);
         });
 
     });
