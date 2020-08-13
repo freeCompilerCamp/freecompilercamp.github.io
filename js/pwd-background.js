@@ -213,11 +213,11 @@ PwdBg.prototype.examUploadAndCompile = function(instanceName, examName, path, da
  * This is only to be called AFTER the code has been uploaded and compiled.
  * Otherwise, the server will return a StatusBadRequest.
 */
-PwdBg.prototype.examRun = function(instanceName, cb) {
+PwdBg.prototype.examRun = function(instanceName, examName, cb) {
 
   $.ajax({
       url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
-            + instanceName + '/examrun',
+            + instanceName + '/examrun?examname=' + examName,
       cache: false,
       contentType: false,
       processData: false,

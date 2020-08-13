@@ -27,7 +27,7 @@ layout: default
       <span class="align-bottom code-editor-status">
         <div class="row" style="margin-left: 0px; margin-right: 0px;">
           <div class="pull-left">
-            <button type="button" class="btn btn-primary pull-left" id="code-editor-build">
+            <button type="button" class="btn btn-primary pull-left" id="code-editor-build" disabled>
               <span class="glyphicon glyphicon-wrench"></span> Build
             </button>
             <button type="button" class="btn btn-success pull-left" id="code-editor-submit" disabled>
@@ -160,6 +160,7 @@ layout: default
         // Some front-end processing
         $(this).prop('disabled', true); // disable the button while processing
         $('#code-submit-loader').css('visibility', 'visible');
+        $('#consoleCollapse').collapse("show"); // open the console if not already open
 
         // Perform the actual upload
         var editor = ace.edit('code-editor');
@@ -197,6 +198,25 @@ layout: default
           // Disable the run button.
           $('#code-editor-submit').prop('disabled', true);
         });
+
+    });
+
+    $('#code-editor-submit').click(function() {
+
+      // Some front-end processing
+      $(this).prop('disabled', true); // disable the button while processing
+      $('#code-submit-loader').css('visibility', 'visible');
+
+      pwdbg.examRun(pwdbg.instances.name, examName, function(resp) {
+        $('#code-submit-loader').css('visibility', 'hidden');
+        $('#code-editor-submit').prop('disabled', false);
+
+        // Set console HTML to output.
+        var ansi_up = new AnsiUp;
+        var html = ansi_up.ansi_to_html(resp);
+        $('#console').html(html);
+      });
+
 
     });
 
