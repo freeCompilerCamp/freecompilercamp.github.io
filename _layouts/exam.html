@@ -122,7 +122,7 @@ layout: default
 
       // Obtain skeleton source
       $.ajax({
-          url: 'https://raw.githubusercontent.com/chunhualiao/rose-project-templates/master/template-project-v1/myTranslator.cpp',
+          url: '{{site.exam_endpoint}}/' + examName + '/skeleton.' + language,
           method: 'GET',
           type: 'GET',
           success: function(data) {

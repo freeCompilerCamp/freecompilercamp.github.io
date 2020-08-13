@@ -60,5 +60,8 @@ plugins_dir:
 # Play with Docker
 pwdurl: http://lab.freecompilercamp.org
 
+# Upload endpoint for closed-book exams
+exam_endpoint: http://192.168.64.2/llnl-freecompilercamp/freecc_tests/
+
 # Default docker image
 default_docker_image: freecompilercamp/pwc:full
