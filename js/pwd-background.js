@@ -184,7 +184,7 @@ PwdBg.prototype.upload = function(name, path, data, cb) {
  * Uploads the user's code and compiles it. Response contains the compilation
  * status and errors, if any.
 */
-PwdBg.prototype.examUploadAndCompile = function(instanceName, testName, path, data, cb) {
+PwdBg.prototype.examUploadAndCompile = function(instanceName, testName, path, data, cb_suc, cb_fail) {
 
   $.ajax({
       url: this.opts.baseUrl + '/sessions/' + this.sessionId + '/instances/'
@@ -196,7 +196,14 @@ PwdBg.prototype.examUploadAndCompile = function(instanceName, testName, path, da
       method: 'POST',
       type: 'POST',
       success: function(data) {
-        cb(data);
+        cb_suc(data);
+      },
+      error: function(xhr, status, error) {
+        // The server could reply with others that are real errors. Ignore those,
+        // this is JUST for compilation errors.
+        if (xhr.status == 502) {
+          cb_fail(xhr.responseText);
+        }
       }
   });
 }

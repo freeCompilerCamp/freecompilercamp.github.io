@@ -168,7 +168,14 @@ layout: default
         // Callback function after uploading and compilation is completed.
         // Report result of compilation, including any errors, from the HTTP response to the console div.
         pwdbg.examUploadAndCompile(pwdbg.instances.name, testName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
-          console.log(resp);
+          $('#code-submit-loader').css('visibility', 'hidden');
+          $('#code-editor-build').prop('disabled', false);
+
+          // Set console HTML to output.
+          var ansi_up = new AnsiUp;
+          var html = ansi_up.ansi_to_html(resp);
+          $('#console').html(html);
+        }, function(resp) {
           $('#code-submit-loader').css('visibility', 'hidden');
           $('#code-editor-build').prop('disabled', false);
 
