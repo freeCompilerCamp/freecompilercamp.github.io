@@ -120,9 +120,12 @@ layout: default
       // If c++, set to cpp
       if (language.toLowerCase() == 'c++') language = 'cpp';
 
+      // In the GitHub endpoint, convert the "github.com" part to the raw link
+      var rawEndpoint = '{{ site.exam_endpoint }}'.replace("github", "raw.githubusercontent");
+
       // Obtain skeleton source
       $.ajax({
-          url: '{{site.exam_endpoint}}/exams/' + examName + '/skeleton.' + language,
+          url: rawEndpoint + '/master/exams/' + examName + '/skeleton.' + language,
           method: 'GET',
           type: 'GET',
           success: function(data) {
@@ -130,8 +133,8 @@ layout: default
             editor.clearSelection();
           },
           error: function(e) {
-            editor.setValue('Could not obtain skeleton code form server :(');
-            console.error('Could not obtain skeleton code from server.');
+            editor.setValue('Could not obtain skeleton code.');
+            console.error('Could not obtain skeleton code.');
           }
       });
 
