@@ -169,7 +169,7 @@ layout: default
         var editor = ace.edit('code-editor');
 
         var fileData = new Blob([editor.getValue()], { type: 'text/plain' });
-        var filePath = '/home/freecc/source/rose_src/freecc_tests/' + examName + '_submission.' + language;
+        var filePath = '/home/freecc/source/rose_src/freecc_exams/' + examName + '_submission.' + language;
         var fileName = filePath.substr(filePath.lastIndexOf('/')+1);
         var data = new FormData();
 
