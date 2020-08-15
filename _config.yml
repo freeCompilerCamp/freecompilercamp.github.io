@@ -61,7 +61,7 @@ plugins_dir:
 pwdurl: http://lab.freecompilercamp.org
 
 # Upload endpoint for closed-book exams
-exam_endpoint: http://ec2-54-241-120-89.us-west-1.compute.amazonaws.com/llnl-freecompilercamp/freecc_exams/
+exam_endpoint: https://github.com/freeCompilerCamp/code-for-rose-tutorials
 
 # Default docker image
 default_docker_image: freecompilercamp/pwc:full
