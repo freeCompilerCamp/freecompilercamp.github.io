@@ -101,6 +101,7 @@ layout: default
     var language = '{{ page.exam_language }}';
     var pwdUrl = '{{ site.pwdurl }}';
     var pwdbg = new PwdBg();
+    var compiler;
 
     // Instead of using PWD SDK, which makes the terminals in the document,
     // we instead use components of the SDK and modify to do it without
@@ -120,8 +121,29 @@ layout: default
       // If c++, set to cpp
       if (language.toLowerCase() == 'c++') language = 'cpp';
 
+      var dockerImage = '{{page.image}}';
+      if (dockerImage.includes("rose-exam")) {
+        compiler = "rose";
+      } else if (dockerImage.includes("llvm-exam")) {
+        compiler = "llvm";
+      } else {
+        console.error("FATAL ERROR: A non-exam image was specified.")
+        editor.setValue("FATAL ERROR: A non-exam image was specified.")
+        return;
+      }
+
       // In the GitHub endpoint, convert the "github.com" part to the raw link
-      var rawEndpoint = '{{ site.exam_endpoint }}'.replace("github", "raw.githubusercontent");
+      var rawEndpoint;
+      if (compiler === "rose") {
+        rawEndpoint = '{{ site.RoseExamEndpoint }}'.replace("github", "raw.githubusercontent");
+      } else if (compiler === "llvm") {
+        rawEndpoint = '{{ site.LLVMExamEndpoint }}'.replace("github", "raw.githubusercontent");
+      } else {
+        console.error("FATAL ERROR");
+        return;
+      }
+
+      console.log(rawEndpoint);
 
       // Obtain skeleton source
       $.ajax({
@@ -133,15 +155,10 @@ layout: default
             editor.clearSelection();
           },
           error: function(e) {
-            editor.setValue('Could not obtain skeleton code.');
-            console.error('Could not obtain skeleton code.');
+            console.error('Could not obtain skeleton code or none provided.');
+            editor.setValue('Unable to obtain skeleton code or none provided.');
           }
       });
-
-      var dockerImage = '{{page.image}}';
-      if (dockerImage == '') {
-        dockerImage = '{{site.default_docker_image}}';
-      };
 
       // Just like in PWD, all we have to do is call newSession()
       pwdbg.newSession({baseUrl: pwdUrl, ImageName: dockerImage}, function(resp) {
@@ -178,7 +195,7 @@ layout: default
 
         // Callback function after uploading and compilation is completed.
         // Report result of compilation, including any errors, from the HTTP response to the console div.
-        pwdbg.examUploadAndCompile(pwdbg.instances.name, examName, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
+        pwdbg.examUploadAndCompile(pwdbg.instances.name, examName, compiler, filePath.substr(0, filePath.lastIndexOf('/')), data, function(resp) {
           $('#code-submit-loader').css('visibility', 'hidden');
           $('#code-editor-build').prop('disabled', false);
 
