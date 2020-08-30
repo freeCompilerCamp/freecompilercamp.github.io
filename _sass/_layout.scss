@@ -320,6 +320,14 @@ details[open] {
   }
 }
 
+// Download button for retrieving files from sandbox
+.sandbox-dl {
+  background-color: #eeefff;
+  border: solid;
+  border-color: #1887c6;
+  border-width: 1px;
+}
+
 // Code text editor styling for closed-book tests using ace.js
 .code-editor {
 

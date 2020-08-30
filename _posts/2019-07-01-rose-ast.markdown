@@ -32,7 +32,7 @@ This is a tutorial to use a few tools to visualize AST
 # A. Overview
 
 The goal of this tutorial is to learn how to use a few pre-built tools of ROSE to generate dot graphs of AST.
-AST stands for Abstract Syntax Tree, which is the internal tree representation of an input source code. 
+AST stands for Abstract Syntax Tree, which is the internal tree representation of an input source code.
 Getting familiar with AST is the first step to develop program analysis and translation tools operating on AST.
 
 # B. Build/Install AST Tools
@@ -63,7 +63,7 @@ vim set.rose
 
 Please replace ROSE_INS's value to be /opt/install/rose_install
 
-Finally, source it to set the environment variables. 
+Finally, source it to set the environment variables.
 ```.term1
 source ./set.rose
 ```
@@ -79,7 +79,7 @@ The command line above should generate an output like
 ```
 
 # D. Generate a simple dot graph for an input file
-rose-ast already stores dot graphs and their pdf and png versions for a set of C/CPP/Fortran files. 
+rose-ast already stores dot graphs and their pdf and png versions for a set of C/CPP/Fortran files.
 You can browse these files.
 
 Alternatively, you can clean up everything and generate a dot graph by yourself.
@@ -101,7 +101,7 @@ ls func1.c.dot
 ```
 
 # E. Generate a whole dot graph for an input file
-A whole AST dot graph contains more information related to symbol tables, types, etc. 
+A whole AST dot graph contains more information related to symbol tables, types, etc.
 
 Generate a whole dot graph for func1.c
 ```.term1
@@ -115,7 +115,7 @@ ls func1.c_WholeAST.dot
 
 
 # F. Generator a pdf output of AST
-Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files. 
+Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files.
 
 Generate a pdf output for class.cpp
 ```.term1
@@ -126,6 +126,8 @@ Check the generated pdf file
 ```.term1
 ls class.cpp.pdf
 ```
+
+[Download the generated PDF from the Sandbox here.](/home/freecc/rose-ast/class.cpp.pdf;application/pdf){: .sandbox-dl}
 
 # G. Rebuild all dot graphs
 
