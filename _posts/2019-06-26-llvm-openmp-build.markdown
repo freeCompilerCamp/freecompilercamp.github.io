@@ -199,7 +199,7 @@ OpenMP building is quite small compared to llvm/clang. We can still use the ninj
 The following cmake command line will configure the build we want
 
 ```.term1
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 $(LLVM_SRC)/llvm
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=$LLVM_PATH/bin/clang -DCMAKE_CXX_COMPILER=$LLVM_PATH/bin/clang++ -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_37  -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 $(LLVM_SRC)/llvm
 ```
 
 As always make will build OpenMP
@@ -241,7 +241,7 @@ int main()
 }
 ```
 
-```
+```.term1
 wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-llvm-tutorials/master/openmp-build/ongpu.c
 ```
 
