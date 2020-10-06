@@ -5,7 +5,7 @@ author: "@alokmishra.besu"
 date:   2019-06-26
 categories: beginner
 tags: [llvm,clang,openmp,gpu,offloading]
-image: freecompilercamp/pwc:llvm10
+image: freecompilercamp/pwc:llvm10-gpu
 pwc: http://lab.racedetection.org
 ---
 
@@ -117,7 +117,7 @@ CMAKE_INSTALL_PREFIX specifies the install directory used by install command.
 
 Other commonly used parameter are CMAKE_C_COMPILER and CMAKE_CXX_COMPILER for telling make which C compiler to use.
 ```.term1
-cmake -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC/llvm
+cmake -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_37 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LLVM_SRC/llvm
 ```
 
 You need to know the Compute Capability version of your GPU. https://developer.nvidia.com/cuda-gpus lists such information. For example, some typical GPUs and their CC versions are:
@@ -127,7 +127,7 @@ You need to know the Compute Capability version of your GPU. https://developer.n
 
 Explanation for the cmake options used:
 * We set the CMAKE_C_COMPILER and CMAKE_CXX_COMPILER to point to gcc and g++ respectively
-* CLANG_OPENMP_NVPTX_DEFAULT_ARCH sets the default architecture when not passing the value during compilation. We should adjust the default to match the environment we’ll be using most of the time. The architecture must be prefix with sm_60, so Clang configured with the sm_60 command will build for the Tesla P100 by default.
+* CLANG_OPENMP_NVPTX_DEFAULT_ARCH sets the default architecture when not passing the value during compilation. We should adjust the default to match the environment we’ll be using most of the time. The architecture must be prefix with sm_37, so Clang configured with the sm_37 command will build for the Tesla K80 by default.
 * LIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES applies to the runtime libraries: It specifies a list of architectures that the libraries will be built for. This is an important parameter. As we cannot run on GPUs without a compatible runtime, we should pass all architectures we care about. Also, please note that the values are passed without the dot, so compute capability 7.0 becomes 70. We can also build for multiple compute capabilities by separating them with a comma. For instance, if we want to build for compute capabilities 3.5, 6.0 and 7.0, then use the parameter as -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70. We can only build for compute capabilities over 3.5
 
 For boosting performance sometimes we can use the /dev/shm as our temporary directory. /dev/shm is a temporary file storage filesystem, i.e., tmpfs, that uses RAM for the backing store. In an incremental build system a lot of temporary files are created while compilation. /tmp is the location for temporary files as defined in the Filesystem Hierarchy Standard, which is followed by almost all Unix and Linux distributions. This location is access by the TMPDIR environment variable. To make the process of compilation faster we can set the TMPDIR environment variable to point to a tmpfs directory, like /dev/shm. Caution should be taken before enabling this option. If we do not have enough RAM, this step might have an adverse effect on compilation.
@@ -154,7 +154,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS enables or disables output of compile commands dur
 
 The commands used to build using ninja are as follows:
 ```.term1
-cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_60 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC/llvm
+cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_37 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC/llvm
 ```
 Once the required build files are created, we can start building using ninja just like before.
 ```.term1
