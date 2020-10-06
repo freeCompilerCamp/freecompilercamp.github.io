@@ -242,7 +242,7 @@ int main()
 ```
 
 ```
-wget https://github.com/freeCompilerCamp/code-for-llvm-tutorials/edit/master/openmp-build/ongpu.c
+wget https://raw.githubusercontent.com/freeCompilerCamp/code-for-llvm-tutorials/master/openmp-build/ongpu.c
 ```
 
 Most common parameters are:
