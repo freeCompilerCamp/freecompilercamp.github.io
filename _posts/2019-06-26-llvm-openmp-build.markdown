@@ -16,7 +16,7 @@ This is the way which worked for me.
 
 In this tutorial I will be explaining the steps to first build llvm-10.0.0 with clang-10.0.0 and then use it to build openmp-10.0.0 with offloading support.
 
-Note that the online terminal runs on a virtual machine without GPU. So the instructions here may generate some warnings for unsupported options.  You should find a machine with GPU installed. 
+This online terminal runs on a virtual machine with NVIDIA GPU Tesla K80 and CUDA toolkit 10.1 installed.
 
 ---
 
@@ -217,7 +217,7 @@ Note: The terminal on the right side does not have cuda installed. So you cannot
 
 To compile a code with OpenMP GPU offloading support we must provide some compile time parameters to clang. 
 
-You can copy& paste the following example code into the terminal and save it to be ongpu.c
+You can download the following example code into the terminal and save it to be ongpu.c
 ```
 #include <stdio.h>
 #include <omp.h>
@@ -241,11 +241,17 @@ int main()
 }
 ```
 
-Most common parameters are:
 ```
+wget https://github.com/freeCompilerCamp/code-for-llvm-tutorials/edit/master/openmp-build/ongpu.c
+```
+
+Most common parameters are:
+
+```.term1
 clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda ongpu.c
 ./a.out
 ```
+
 Here, 
 * -fopenmp instructs clang that it need to compile an OpenMP code.
 * -fopenmp-targets instructs clang to use nvptx64-nvidia-cuda as the target device.
