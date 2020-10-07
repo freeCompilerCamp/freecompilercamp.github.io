@@ -30,7 +30,7 @@ int check_gpu_support()
   int runningOnGPU = 0;
 
   /* Test if GPU is available */
-	#pragma omp target map(from:runningOnGPU)
+  #pragma omp target map(from:runningOnGPU)
   {
     // This function returns true if running on the host device, false otherwise.
     if (!omp_is_initial_device())
