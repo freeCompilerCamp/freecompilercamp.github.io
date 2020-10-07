@@ -16,7 +16,7 @@ This purpose of this exam is to evaluate your understanding of working with map 
 This is a "closed-book" test and the terminal has been removed. Write your code in the text editor and click the "Build" button to have the server compile your solution. Any errors will show in the console view. If the build is successful, click the "Run" button to have your submission graded.
 
 ### Task ###
-Implement a ROSE translator that traverses the AST and counts the number of mapped variables for GPU offloading*. Please notice that besides the variables specifed in the map clause, other variables may also be involved.
+Implement a ROSE translator that traverses the AST and counts the number of mapped variables for GPU offloading.
 
 Example input:
 
