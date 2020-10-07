@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	int y = 0;
 
 	#pragma omp target map(to: x, y)
-  x = 6;
+	x = 6;
 
 	return 0;
 }

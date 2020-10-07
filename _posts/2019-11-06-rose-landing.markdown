@@ -67,10 +67,10 @@ Give ROSE a try with the following tutorials:
   * This tutorial is to show how to fix OpenMP implementation bugs in ROSE compiler.
 
 [Working with OpenMP Directives in the ROSE AST]()
-    * This is a tutorial for working with OpenMP directives in ROSE.
-    * Evaluate your understanding with the two-part exam for this chapter:
-        * [Exam Part 1](/rose-map-clause-exam),
-        * [Exam Part 2]() - coming soon.
+  * This is a tutorial for working with OpenMP directives in ROSE.
+  * Evaluate your understanding with the two-part exam for this chapter:
+    * [Exam Part 1](/rose-map-clause-exam),
+    * [Exam Part 2]() - coming soon.
 
 ## More Reading: References
   * [ROSE Github Wiki](https://github.com/rose-compiler/rose/wiki)
