@@ -18,6 +18,8 @@ In this tutorial I will be explaining the steps to first build llvm-10.0.0 with 
 
 This online terminal runs on a virtual machine with NVIDIA GPU Tesla K80 and CUDA toolkit 10.1 installed.
 
+Note: To reduce operation cost, the GPU instance has a limited power-on time window: 6:00 AM to 6 Pm in Pacific Time (Or 9am to 9pm Eastern time). The terminal will not show up if the time you visit this tutorial is outside of this time window. We welcome donations of GPU instances so we can expand the availability of GPU terminals.
+
 ---
 
 # Tips:
