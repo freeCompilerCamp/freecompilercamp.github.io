@@ -37,10 +37,6 @@ Give ROSE a try with the following tutorials:
   * Check your understanding with the [Practical](/rose-complex-types-practical) for this chapter.
   * Evaluate your understanding with the [Exam](/rose-complex-types-exam) for this chapter.
 
-[Working with Map Clause](/rose-map-clause-exam)
-  * This is a tutorial for working with map clause when traversing the ROSE AST.
-  * Evaluate your understanding with the [Exam](/rose-map-clause-exam) for this chapter.
-
 [Debugging Translators](/rose-debugging)
   * This is a tutorial for debugging ROSE translators.
 
@@ -69,6 +65,12 @@ Give ROSE a try with the following tutorials:
 
 [Fixing a Bug in OpenMP Implementation](/rose-fix-bug-in-omp)
   * This tutorial is to show how to fix OpenMP implementation bugs in ROSE compiler.
+
+[Working with OpenMP Directives in the ROSE AST]()
+    * This is a tutorial for working with OpenMP directives in ROSE.
+    * Evaluate your understanding with the two-part exam for this chapter:
+        * [Exam Part 1](/rose-map-clause-exam),
+        * [Exam Part 2]() - coming soon.
 
 ## More Reading: References
   * [ROSE Github Wiki](https://github.com/rose-compiler/rose/wiki)
