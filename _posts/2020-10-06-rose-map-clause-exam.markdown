@@ -1,6 +1,6 @@
 ---
 layout: exam
-title: "Working with OpenMP Directives in the ROSE AST - Exam (Part 1)"
+title: "Working with OpenMP Directives in the ROSE AST - Exam"
 author: "@ouankou"
 date: 2020-10-06
 categories: exam
