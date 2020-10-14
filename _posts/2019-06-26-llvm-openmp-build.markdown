@@ -202,7 +202,7 @@ To build ninja supported files, we use the option -G Ninja
 CMAKE_EXPORT_COMPILE_COMMANDS enables or disables output of compile commands during generation. If enabled, generates a compile_commands.json file containing the exact compiler calls for all translation units of the project in machine-readable form. This option is implemented only by Makefile Generators and the Ninja. Once the cmake command is successful, we need to copy the compile_commands.json file to the LLVM_SRC path.
 
 The commands used to build using ninja are as follows:
-```.term1
+```
 cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_37 -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=37,60,70 -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;lld;openmp" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$LLVM_PATH $LLVM_SRC/llvm
 ```
 Once the required build files are created, we can start building using ninja just like before.
