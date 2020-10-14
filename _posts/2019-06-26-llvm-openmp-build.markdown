@@ -89,7 +89,9 @@ Most common parameters are:
 ```.term1
 clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda ongpu.c
 ./a.out
-
+```
+The execution should generate the following output
+```
 ### Able to use the GPU! ###
 ```
 
