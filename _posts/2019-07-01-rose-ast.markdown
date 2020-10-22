@@ -45,6 +45,11 @@ Build and install the dot graph generators
 make -C $ROSE_BUILD/exampleTranslators/DOTGenerator install
 ```
 
+Build and install the AST text generators
+```.term1
+make -C $ROSE_BUILD/exampleTranslators/defaultTranslator install
+```
+
 # C. Obtain Example Input Codes
 
 Clone the rose-ast git repo
@@ -113,7 +118,7 @@ ls func1.c_WholeAST.dot
 ```
 
 
-# F. Generator a pdf output of AST
+# F. Generate a pdf output of AST
 Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files.
 
 Generate a pdf output for class.cpp
@@ -128,7 +133,42 @@ ls class.cpp.pdf
 
 [Download the generated PDF from the Sandbox here.](/home/freecc/rose-ast/class.cpp.pdf;application/pdf){: .sandbox-dl}
 
-# G. Rebuild all dot graphs
+# G. Generate a text output of AST (horizontally printed)
+
+Try to process func1.c
+```.term1
+textASTGenerator -c func1.c
+```
+It should generate a text file. 
+The entire AST text file has many builtin functions in the beginning. 
+Let's view the last 15 lines of it.
+```.term1
+tail -n 15 func1.c.AST.txt
+```
+You should see something like the following:
+```
+            │   └──@0x7f1c4e998410 SgFunctionDeclaration func1.c 1:1 "::foo"
+            │       ├──@0x7f1c4ec59500 SgFunctionParameterList func1.c 1:1
+            │       │   └──@0x7f1c4e479bf8 SgInitializedName func1.c 1:13 "i"
+            │       │       └── NULL
+            │       ├── NULL
+            │       └──@0x7f1c4e1b9010 SgFunctionDefinition func1.c 2:1
+            │           └──@0x7f1c4e252010 SgBasicBlock func1.c 2:1
+            │               └──@0x7f1c4e157010 SgReturnStmt func1.c 3:3
+            │                   └──@0x7f1c4e186010 SgVarRefExp func1.c 3:10
+            ├── NULL
+            ├── NULL
+            └── NULL
+```
+The text output clearly shows the tree representing the function foo in the input file. Besides the tree structure, each line starts with memory address of an AST node, its source file name, line:column numbers, and qualified names, if applicable. There are NULL pointers in the AST. You can safely ignore them. 
+```
+int foo(int i)
+{
+  return i;
+}
+```
+
+# H. Rebuild all dot graphs
 
 There is a makefile within rose-ast. You can use it to rebuild all the files.
 
