@@ -36,7 +36,7 @@ Getting familiar with AST is the first step to develop program analysis and tran
 
 # B. Build/Install AST Tools
 
-Build and install the AST text generators
+Build and install the AST text generator
 ```.term1
 make -C $ROSE_BUILD/exampleTranslators/defaultTranslator install
 ```
