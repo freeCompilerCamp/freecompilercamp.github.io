@@ -35,6 +35,12 @@ AST stands for Abstract Syntax Tree, which is the internal tree representation o
 Getting familiar with AST is the first step to develop program analysis and translation tools operating on AST.
 
 # B. Build/Install AST Tools
+
+Build and install the AST text generators
+```.term1
+make -C $ROSE_BUILD/exampleTranslators/defaultTranslator install
+```
+
 Build the pdf generator
 ```.term1
 make -C $ROSE_BUILD/exampleTranslators/PDFGenerator install
@@ -43,11 +49,6 @@ make -C $ROSE_BUILD/exampleTranslators/PDFGenerator install
 Build and install the dot graph generators
 ```.term1
 make -C $ROSE_BUILD/exampleTranslators/DOTGenerator install
-```
-
-Build and install the AST text generators
-```.term1
-make -C $ROSE_BUILD/exampleTranslators/defaultTranslator install
 ```
 
 # C. Obtain Example Input Codes
@@ -82,58 +83,7 @@ The command line above should generate an output like
 /opt/install/rose_install/bin/rose-compiler
 ```
 
-# D. Generate a simple dot graph for an input file
-rose-ast already stores dot graphs and their pdf and png versions for a set of C/CPP/Fortran files.
-You can browse these files.
-
-Alternatively, you can clean up everything and generate a dot graph by yourself.
-
-
-Clean up all previously generated dot files.
-```.term1
-make distclean
-```
-
-Generate a simple dot graph for func1.c
-```.term1
-dotGenerator -c func1.c
-```
-
-Check the generated dot file
-```.term1
-ls func1.c.dot
-```
-
-# E. Generate a whole dot graph for an input file
-A whole AST dot graph contains more information related to symbol tables, types, etc.
-
-Generate a whole dot graph for func1.c
-```.term1
-dotGeneratorWholeASTGraph -c func1.c
-```
-
-Check the generated whole ast dot file
-```.term1
-ls func1.c_WholeAST.dot
-```
-
-
-# F. Generate a pdf output of AST
-Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files.
-
-Generate a pdf output for class.cpp
-```.term1
-pdfGenerator -c class.cpp
-```
-
-Check the generated pdf file
-```.term1
-ls class.cpp.pdf
-```
-
-[Download the generated PDF from the Sandbox here.](/home/freecc/rose-ast/class.cpp.pdf;application/pdf){: .sandbox-dl}
-
-# G. Generate a text output of AST (horizontally printed)
+# D. Generate a text output of AST (horizontally printed)
 
 Try to process func1.c
 ```.term1
@@ -168,6 +118,56 @@ int foo(int i)
 }
 ```
 
+# E. Generate a simple dot graph for an input file
+rose-ast already stores dot graphs and their pdf and png versions for a set of C/CPP/Fortran files.
+You can browse these files.
+
+Alternatively, you can clean up everything and generate a dot graph by yourself.
+
+
+Clean up all previously generated dot files.
+```.term1
+make distclean
+```
+
+Generate a simple dot graph for func1.c
+```.term1
+dotGenerator -c func1.c
+```
+
+Check the generated dot file
+```.term1
+ls func1.c.dot
+```
+
+# F. Generate a whole dot graph for an input file
+A whole AST dot graph contains more information related to symbol tables, types, etc.
+
+Generate a whole dot graph for func1.c
+```.term1
+dotGeneratorWholeASTGraph -c func1.c
+```
+
+Check the generated whole ast dot file
+```.term1
+ls func1.c_WholeAST.dot
+```
+
+# G. Generate a pdf output of AST
+Dot graphs cannot be easily visualized. So there is another tool to generate pdf file from large input files.
+
+Generate a pdf output for class.cpp
+```.term1
+pdfGenerator -c class.cpp
+```
+
+Check the generated pdf file
+```.term1
+ls class.cpp.pdf
+```
+
+[Download the generated PDF from the Sandbox here.](/home/freecc/rose-ast/class.cpp.pdf;application/pdf){: .sandbox-dl}
+
 # H. Rebuild all dot graphs
 
 There is a makefile within rose-ast. You can use it to rebuild all the files.
@@ -181,3 +181,4 @@ make all
 
 For more information about AST visualization, please check
 * https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/How_to_visualize_AST
+* https://github.com/rose-compiler/rose/wiki/How-to-visualize-AST
