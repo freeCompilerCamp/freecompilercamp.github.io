@@ -35,7 +35,7 @@ But what happens when we try to build a program? Any C compiler can understand t
 3. Assembling
 4. Linking
 
-At the end of these 4 stages we should have a single executable file. Given below are the description of these 4 stages that happens using Clang compier, regardless of the Operating System.
+At the end of these 4 stages we should have a single executable file. Given below are the description of these 4 stages that happens using Clang compiler, regardless of the Operating System.
 
 ### **A.1 Preprocessor**
 This is the first pass of any C compilation. This stage includes:
